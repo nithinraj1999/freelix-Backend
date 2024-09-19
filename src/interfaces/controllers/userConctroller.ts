@@ -1,20 +1,21 @@
+
 import { Request, Response } from "express";
-import { RegisterUser } from "../../application/useCases/registerUser";
-export class UserController {
-  constructor(private registerUser: RegisterUser) {}
+import { IUserUseCase } from "../../application/useCases/interfaces/IUserUseCase";
+
+export class UserController   {
+  private userUseCase : IUserUseCase ;
+  constructor(userUseCase:  IUserUseCase) {
+    this.userUseCase = userUseCase;
+  }
+
+  //================================== user registration =======================================
 
   async register(req: Request, res: Response) {
-    const { id,name, email, password } = req.body;
-
-    if (!password) {
-      return res.status(400).json({ error: 'Password is required' });
-    }
-
     try {
-      await this.registerUser.execute({ id,name, email, password });
-      res.status(201).json({ message: 'User registered successfully' });
-    } catch (error:any) {
-      res.status(400).json({ error: error.message });
+      await this.userUseCase.registerUser(req.body);
+      res.status(201).json("User registration successful. Please verify the OTP sent to your email.");
+    } catch (err) {
+      throw err
     }
   }
 }
