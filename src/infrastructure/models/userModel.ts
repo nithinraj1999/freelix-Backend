@@ -15,7 +15,8 @@ const userSchema: Schema = new Schema({
   isBlock:{type:Boolean,default:false},
   isAdmin:{type:Boolean,default:false},
   isVerified:{type:Boolean,default:false},
-  hasFreelancerAccount:{type:Boolean,default:false}
+  hasFreelancerAccount:{type:Boolean,default:false},
+  isFreelancerBlock:{type:Boolean,default:false},
 });
 
 const userModel: Model<User & Document> = mongoose.model<User & Document>('User', userSchema);

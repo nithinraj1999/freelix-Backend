@@ -1,4 +1,5 @@
-import { IUserRepository } from "../../domain/ports/userRepositoryInterface";
+// import { IUserRepository } from "../../domain/ports/userRepositoryInterface";
+import { IUserRepository } from "../../infrastructure/repositories/interface/userRepositoryInterface";
 import { User } from "../../domain/entities/user";
 import { Ibcrypt } from "../services/interfaces/bcryptInterface";
 import { IUserUseCase } from "./interfaces/IUserUseCase";
@@ -16,7 +17,7 @@ export class UserUseCase implements IUserUseCase {
     userRepository: IUserRepository,
     bcrypt: Ibcrypt,
     emailService: IEmailService,
-    otpService: IOtpService,
+    otpService: IOtpService, 
     jwtToken: jwtInterface
   ) {
     this.userRepository = userRepository;
@@ -54,7 +55,7 @@ export class UserUseCase implements IUserUseCase {
     try {
       const findOTP = await this.userRepository.findOTP(otp, userID);
       if (findOTP) {
-        const token = this.jwtToken.generateToken({ userID: userID });
+        const token = this.jwtToken.generateAccessToken({ userID: userID });
         return { findOTP, token };
       }
     } catch (error) {

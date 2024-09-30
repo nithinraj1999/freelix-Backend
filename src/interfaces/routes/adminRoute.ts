@@ -22,14 +22,15 @@ router.post('/block-client', adminController.blockClient.bind(adminController) )
 router.post('/unblock-client', adminController.unblockClient.bind(adminController) );
 router.post('/create-user', upload.single('profilePicture'),adminController.createUser.bind(adminController) );
 router.post('/edit-user', upload.single('profilePicture'),adminController.editUser.bind(adminController) );
+router.get('/refresh-token', adminController.refreshToken.bind(adminController));
 
 
 router.get('/freelancers-details', adminController.getFreelancerData.bind(adminController) );
 router.post('/create-freelancer',upload.single('profilePicture'), adminController.createFreelancer.bind(adminController) );
 router.post('/edit-freelancer',upload.single('profilePicture'), adminController.editFreelancer.bind(adminController) );
+router.post('/block-freelancer', adminController.blockFreelancer.bind(adminController) );
+router.post('/unblock-freelancer', adminController.unblockFreelancer.bind(adminController) );
 
 
-
-
-
+ 
 export default router

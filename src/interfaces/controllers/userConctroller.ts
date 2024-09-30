@@ -72,6 +72,7 @@ export class UserController {
             description:user.description,
             skills:user.skills,
             languages:user.languages,
+            isFreelancerBlock:user.isFreelancerBlock,
 
           },
           message: "Login successfull",

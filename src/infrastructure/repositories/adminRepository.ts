@@ -102,11 +102,11 @@ export class AdminRepository implements IAdminRepository {
 
 
     // Block a freelancer
-async blockFreelancer(freelancerID: string) {
+  async blockFreelancer(freelancerID: string) {
     try {
       const freelancer = await userModel.updateOne(
         { _id: freelancerID },
-        { $set: { isBlock: true } }
+        { $set: { isFreelancerBlock: true } }
       );
       return freelancer;
     } catch (error) {
@@ -120,7 +120,7 @@ async blockFreelancer(freelancerID: string) {
     try {
       const freelancer = await userModel.updateOne(
         { _id: freelancerID },
-        { $set: { isBlock: false } }
+        { $set: { isFreelancerBlock: false } }
       );
       return freelancer;
     } catch (error) {

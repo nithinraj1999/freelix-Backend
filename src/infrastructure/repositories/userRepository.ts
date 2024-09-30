@@ -1,4 +1,5 @@
-import { IUserRepository } from "../../domain/ports/userRepositoryInterface";
+// import { IUserRepository } from "../../domain/ports/userRepositoryInterface";
+import { IUserRepository } from "./interface/userRepositoryInterface";
 import { User } from "../../domain/entities/user";
 import userModel from "../models/userModel";
 import Otp from "../models/otpModel";
