@@ -2,11 +2,13 @@
 import { User } from "./user";
 
 
-export interface IFreelancer extends User {
-  role: "freelancer"; // Role should be exactly "freelancer"
-  bio: string;
+export interface IFreelancer {
+  // role: "freelancer"; // Role should be exactly "freelancer"
+  userID:string;
+  name:string;
+  description: string;
   skills: string[];
-  experience: string[];
-  portfolio: string[];
+  education: string[];
+  languages:string[]
 }
 

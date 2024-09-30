@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IOtp extends Document {
     userID: mongoose.Types.ObjectId;
     otp: string;
+    email:string
     createdAt: Date;
 }
 
@@ -16,10 +17,14 @@ const otpSchema: Schema<IOtp> = new Schema({
         type: String,
         required: true
     },
+    email:{
+        type:String,
+        required:true,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 120
+        expires: 60
     }
 });
 
