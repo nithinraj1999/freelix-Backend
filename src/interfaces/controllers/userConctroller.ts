@@ -27,7 +27,6 @@ export class UserController {
       const { otp, userID } = req.body;
       const verify = await this.userUseCase.verification(otp, userID);
       if (verify) {
-        console.log(verify);
         const token = verify.token;
         res.cookie("jwt", token, {
           httpOnly: true,

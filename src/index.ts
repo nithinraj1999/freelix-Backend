@@ -5,9 +5,12 @@ import adminRoute from './interfaces/routes/adminRoute'
 import freelancerRoute from './interfaces/routes/freelancerRoute'
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const port = 5000;
 const app = express(); 
+
+app.use(cookieParser());
 
 app.use(cors({
     origin: 'http://localhost:5173', 

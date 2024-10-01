@@ -9,7 +9,6 @@ export class FreelancerController {
 
   async createFreelancerAccount(req: Request, res: Response) {
     try {
-      console.log(req.body);
       const profileImagePath = req.file?.path || null;
       const createFreelancer = await this.freelancerUseCase.createFreelancer(
         req.body,

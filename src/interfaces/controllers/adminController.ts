@@ -115,8 +115,6 @@ export class AdminController {
 
   async getFreelancerData(req: Request, res: Response) {
     try {
-      
-      
       const freelancers = await this.adminUseCase.getFreelancerData();
       res.json({ success: true, freelancers: freelancers });
     } catch (error) {
@@ -193,16 +191,15 @@ async editFreelancer(req: Request, res: Response) {
 
 async refreshToken(req: Request, res: Response) {
   try {
-    const refreshToken = req.cookies.refreshToken; // Assuming you store the refresh token in a cookie
+    const refreshToken = req.cookies.adminRefreshJWT; 
     if (!refreshToken) {
       return res.status(401).json({ success: false, message: "Refresh token not found" });
     }
 
     // Verify the refresh token
-    const userData = this.jwt.verifyRefreshToken(refreshToken); // Pass true to indicate it's a refresh token
-
+    const userData = this.jwt.verifyRefreshToken(refreshToken); // Pass true to indicate it's a refresh token    
     // If valid, generate a new access token
-    const newAccessToken = this.jwt.generateAccessToken({ userID: userData.userID });
+    const newAccessToken = this.jwt.generateAccessToken({_id: userData._id,role:userData.role});
 
     res.status(200).json({ success: true, accessToken: newAccessToken });
   } catch (error) {
@@ -210,6 +207,4 @@ async refreshToken(req: Request, res: Response) {
     res.status(401).json({ success: false, message: "Invalid or expired refresh token" });
   }
 }
-
-
 }
