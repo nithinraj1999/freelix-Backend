@@ -93,7 +93,6 @@ export class AdminController {
       const profilePicPath: string | null = req.file?.path ? req.file.path : null;
       const response = await this.adminUseCase.createUser(data,profilePicPath);
       res.json({succes:true})
-
     }catch(error){
       console.error(error);
       
@@ -103,7 +102,7 @@ export class AdminController {
     try {
       const data = req.body;
       const profilePicPath: string | null = req.file?.path || null;
-      
+
       // Pass the data and profile picture path to the use case for updating the user
       const response = await this.adminUseCase.editUser(data, profilePicPath);
       res.json({ success: true, message: "User updated successfully", data: response });
@@ -175,7 +174,6 @@ async editFreelancer(req: Request, res: Response) {
     const skills = JSON.parse(req.body.skills); // Parse skills array
     const languages = JSON.parse(req.body.languages); // Parse languages array
     const profilePicPath: string | null = req.file?.path || null;
-      
     const response = await this.adminUseCase.editFreelancer(data, profilePicPath);
     res.json({ success: true, message: "Freelancer updated successfully", data: response });
   } catch (error) {
@@ -195,7 +193,6 @@ async refreshToken(req: Request, res: Response) {
     if (!refreshToken) {
       return res.status(401).json({ success: false, message: "Refresh token not found" });
     }
-
     // Verify the refresh token
     const userData = this.jwt.verifyRefreshToken(refreshToken); // Pass true to indicate it's a refresh token    
     // If valid, generate a new access token

@@ -14,12 +14,12 @@ export class JWT implements jwtInterface {
 
   // Generate Access Token (short-lived)
   generateAccessToken(payload: any): string {
-    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: '2s' }); 
+    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: '2d' }); 
   }
 
   // Generate Refresh Token (long-lived)
   generateRefreshToken(payload: any): string {
-    return jwt.sign(payload, this.refreshTokenSecret, { expiresIn: '10s' }); // Refresh Token expires in 7 days
+    return jwt.sign(payload, this.refreshTokenSecret, { expiresIn: '20d' }); // Refresh Token expires in 7 days
   }
 
   // Verify Access Token

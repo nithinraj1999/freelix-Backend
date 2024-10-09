@@ -92,6 +92,16 @@ export class UserController {
     }catch(error){
       throw error
     }
-  } 
-  
+  }  
+ 
+  async createJobPost(req:Request,res:Response){
+    try{
+      const file = req.file ?req.file.path :null
+      const response = await this.userUseCase.createJobPost(req.body,file)
+      res.status(200).json({ success: true, data: response });
+    }catch(error){
+      console.error(error);
+      res.status(500).json({ success: false, error: "Failed to create job post" });
+    }
+  }
 }

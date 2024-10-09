@@ -6,7 +6,7 @@ import { IUserUseCase } from "./interfaces/IUserUseCase";
 import { IEmailService } from "../services/interfaces/IEmailService";
 import { IOtpService } from "../services/interfaces/IOtpService";
 import { jwtInterface } from "../services/interfaces/jwtInterface";
-
+import { IJobPost } from "../../infrastructure/models/jobPostModel";
 export class UserUseCase implements IUserUseCase {
   private userRepository: IUserRepository;
   private bcrypt: Ibcrypt;
@@ -99,6 +99,15 @@ export class UserUseCase implements IUserUseCase {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  async createJobPost(data:IJobPost,file:string){
+    try{
+      const response = await this.userRepository.createJobPost(data,file)
+      return response
+    }catch(error){
+      console.error(error);
     }
   }
 }

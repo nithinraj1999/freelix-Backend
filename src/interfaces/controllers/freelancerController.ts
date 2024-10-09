@@ -25,9 +25,7 @@ export class FreelancerController {
 
 
 async switchToBuying(req: Request, res: Response) {
-    try {
-      console.log(req.body);
-      
+    try {      
       const switchToBuying = await this.freelancerUseCase.switchToBuying(
         req.body.userID,
       );
@@ -42,8 +40,6 @@ async switchToBuying(req: Request, res: Response) {
 
   async switchToSelling(req: Request, res: Response) {
     try {
-      console.log(req.body);
-      
       const switchToBuying = await this.freelancerUseCase.switchToSelling(
         req.body.userID,
       );

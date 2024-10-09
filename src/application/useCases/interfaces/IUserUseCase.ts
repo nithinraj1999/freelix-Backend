@@ -5,4 +5,5 @@ export interface IUserUseCase{
     verification(otp:string,userID:string) :Promise<any>
     authenticateUser(email:string,password:string) :Promise<any>
     resendOTP(userID:string):Promise<any>
+    createJobPost(data:object,file:string | null):Promise<any>
 }
