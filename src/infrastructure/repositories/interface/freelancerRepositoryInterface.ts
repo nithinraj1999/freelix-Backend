@@ -4,4 +4,5 @@ export interface IFreelancerRepository {
     findFreelancerById(id:string) :Promise<any>
     switchToBuying(id:string):Promise<any>
     switchToSelling(id:string):Promise<any>
+    jobList():Promise<any>
 }

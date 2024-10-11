@@ -18,6 +18,9 @@ const freelancerController = new FreelancerController(freelancerUseCase);
 router.post('/create-freelancer-account',upload.single('profilePicture'), freelancerController.createFreelancerAccount.bind(freelancerController));
 router.post('/switch-to-buying', freelancerController.switchToBuying.bind(freelancerController));
 router.post('/switch-to-selling', freelancerController.switchToSelling.bind(freelancerController));
+router.get('/job-list', freelancerController.getJobList.bind(freelancerController));
+
+
 
 
 export default router

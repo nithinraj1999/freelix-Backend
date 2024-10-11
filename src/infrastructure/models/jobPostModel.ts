@@ -10,10 +10,11 @@ export interface IJobPost extends Document {
   file?: string;
   skills: string[]; // Array of strings
   experience: string;
+  paymentType:string;
   fixedPrice?: number;
   hourlyPrice?: {
-    from: number;
-    to: number;
+    from: number; // Start of hourly rate range
+    to: number; // End of hourly rate range
   };
   createdAt?: Date;
 }
@@ -43,7 +44,6 @@ const jobPostSchema: Schema<IJobPost> = new Schema({
   },
   file: {
     type: String,
-    
   },
   skills: {
     type: [String],
@@ -52,6 +52,10 @@ const jobPostSchema: Schema<IJobPost> = new Schema({
   experience: {
     type: String,
     required: true,
+  },
+  paymentType:{
+    type:String,
+    required:true 
   },
   fixedPrice: {
     type: Number, // Optional fixed price

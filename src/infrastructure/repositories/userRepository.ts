@@ -5,6 +5,7 @@ import userModel from "../models/userModel";
 import Otp from "../models/otpModel";
 import jobPostModel from "../models/jobPostModel";
 import { IJobPost } from "../models/jobPostModel";
+
 export class UserRepository implements IUserRepository {
     async findByEmail(email: string): Promise<User | null> {
         const user = await userModel.findOne({ email:email,isAdmin:false,isBlock:false });
@@ -56,25 +57,37 @@ export class UserRepository implements IUserRepository {
           console.log(data);
           console.log(file);
       
-          const { userID, title, category, skills, subCategory, description, experience, fixedPrice, hourlyPrice } = data;
-      
-          const response = await new jobPostModel({
-            userID: userID, 
+          const { userID, title, category, skills, subCategory, description, experience, fixedPrice,paymentType, hourlyPrice } = data;
+          console.log(skills);
+          const skillsArray: string[] = Array.isArray(skills)
+        ? skills
+        : typeof skills === "string"
+        ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
+        : []; // Default to an empty array if skills is undefined or not a string
+
+          const response = await jobPostModel.create({
+            userID: userID,
             title: title,
             category: category,
             subCategory: subCategory,
-            skills: skills,
+            skills: skillsArray,
             file: file, // File will either be a string or null
             description: description,
             experience: experience,
-            fixedPrice: fixedPrice,
-            hourlyPrice: hourlyPrice,
+            paymentType:paymentType,
+            fixedPrice: fixedPrice,  
+            hourlyPrice: {
+              from: hourlyPrice?.from,
+              to: hourlyPrice?.to,
+            },
           });
       
+          console.log("Job post created:", response);
           return response;
         } catch (error) {
-          console.error("Error creating job post:", error); // Log the error properly
-          throw new Error("Failed to create job post"); // Optional: Throw an error if needed
+          console.error("Error creating job post:", error);
+          // Rethrow the error so that it can be handled by the use case or controller
+          throw new Error("Failed to create job post");
         }
       }
       

@@ -4,4 +4,5 @@ export interface FreelancerUseCaseInterface{
     findFreelancerById (id:string):Promise<any>
     switchToBuying(id:string):Promise<any>
     switchToSelling(id:string):Promise<any>
+    getJobList():Promise<any>
 }

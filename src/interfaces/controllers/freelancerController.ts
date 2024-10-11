@@ -14,24 +14,27 @@ export class FreelancerController {
         req.body,
         profileImagePath
       );
-      if(createFreelancer){
-        const freelancerData = await this.freelancerUseCase.findFreelancerById (req.body.userID)
-        res.json({success:true,freelancerData})
+      if (createFreelancer) {
+        const freelancerData = await this.freelancerUseCase.findFreelancerById(
+          req.body.userID
+        );
+        res.json({ success: true, freelancerData });
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-
-async switchToBuying(req: Request, res: Response) {
-    try {      
+  async switchToBuying(req: Request, res: Response) {
+    try {
       const switchToBuying = await this.freelancerUseCase.switchToBuying(
-        req.body.userID,
+        req.body.userID
       );
-      if(switchToBuying){
-        const freelancerData = await this.freelancerUseCase.findFreelancerById (req.body.userID)
-        res.json({success:true,freelancerData})
+      if (switchToBuying) {
+        const freelancerData = await this.freelancerUseCase.findFreelancerById(
+          req.body.userID
+        );
+        res.json({ success: true, freelancerData });
       }
     } catch (error) {
       console.error(error);
@@ -41,15 +44,25 @@ async switchToBuying(req: Request, res: Response) {
   async switchToSelling(req: Request, res: Response) {
     try {
       const switchToBuying = await this.freelancerUseCase.switchToSelling(
-        req.body.userID,
+        req.body.userID
       );
-      if(switchToBuying){
-        const freelancerData = await this.freelancerUseCase.findFreelancerById (req.body.userID)
-        res.json({success:true,freelancerData})
+      if (switchToBuying) {
+        const freelancerData = await this.freelancerUseCase.findFreelancerById(
+          req.body.userID
+        );
+        res.json({ success: true, freelancerData });
       }
     } catch (error) {
       console.error(error);
     }
   }
- 
+
+  async getJobList(req: Request, res: Response) {
+    try {
+      const jobList = await this.freelancerUseCase.getJobList()
+      res.status(200).json({success:true,jobList:jobList})
+    } catch (error) {
+      console.error();
+    }
+  }
 }
