@@ -95,9 +95,8 @@ export class FreelancerRepository implements IFreelancerRepository {
 
   async editProfile(data: any) {
     try {
-      const { userID, name ,title,description} = data;
-      const updateObject: any = {};
-  
+      const { userID, name ,title,description,skills} = data;
+      const updateObject: any = {};  
       // Add fields to the update object if they exist
       if (name) {
         updateObject.name = name;
@@ -106,9 +105,12 @@ export class FreelancerRepository implements IFreelancerRepository {
       if (title) {
         updateObject.title = title;
       }
-
+      
       if(description){
         updateObject.description = description
+      }
+      if(skills){
+        updateObject.skills = skills
       }
       // Update the user by userID
       const updatedUser = await userModel.findOneAndUpdate(

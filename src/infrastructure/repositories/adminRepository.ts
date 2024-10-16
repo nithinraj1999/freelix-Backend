@@ -3,7 +3,6 @@ import { User } from "../../domain/entities/user";
 import userModel from "../models/userModel";
 
 export interface editUser {
-   
     name?: string;
     email?: string;
     phone?:number;

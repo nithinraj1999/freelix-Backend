@@ -54,9 +54,6 @@ export class UserRepository implements IUserRepository {
 
       async createJobPost(data: IJobPost, file: string | null) {
         try {
-          console.log(data);
-          console.log(file);
-      
           const { userID, title, category, skills, subCategory, description, experience, fixedPrice,paymentType, hourlyPrice } = data;
           console.log(skills);
           const skillsArray: string[] = Array.isArray(skills)

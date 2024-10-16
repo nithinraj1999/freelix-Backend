@@ -26,9 +26,7 @@ router.post('/signup', userController.register.bind(userController));
 router.post('/verification', userController.verification.bind(userController));
 router.post('/login', userController.loginUser.bind(userController));
 router.post('/resend-otp', userController.resendOTP.bind(userController));
-
 router.post('/create-job-post',userAuthMiddleware,upload.single('file') ,userController.createJobPost.bind(userController));
-
 
 export default router
 
