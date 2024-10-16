@@ -2,6 +2,7 @@ import { IFreelancer } from "../../domain/entities/freelancer";
 import { IFreelancerRepository } from "./interface/freelancerRepositoryInterface";
 import userModel from "../models/userModel";
 import jobPostModel from "../models/jobPostModel";
+import { Cloudinary } from "../../application/services/cloudinary";
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -9,6 +10,14 @@ export class FreelancerRepository implements IFreelancerRepository {
   ) {
     try {
       const { name, description, skills, languages, education, userID } = data;
+      let profileUrl: string | null = null;
+
+      // If profilePic is provided, upload it to Cloudinary
+      if (profileImagePath) {
+        const cloudinaryInstance = new Cloudinary();
+        const image = await cloudinaryInstance.uploadProfilePic(profileImagePath);
+        profileUrl = image.url; // Get the image URL from Cloudinary
+      }
       const skillsArray: string[] = Array.isArray(skills)
         ? skills
         : typeof skills === "string"
@@ -25,9 +34,11 @@ export class FreelancerRepository implements IFreelancerRepository {
         { _id: userID },
         {
           $set: {
+            title:name,
             description: description,
             languages: languageArray,
             skills: skillsArray,
+            profilePicture:profileUrl,
             role:"freelancer",
             hasFreelancerAccount: true,
           },
@@ -80,4 +91,39 @@ export class FreelancerRepository implements IFreelancerRepository {
       throw error;
     }
   }
+
+
+  async editProfile(data: any) {
+    try {
+      const { userID, name ,title,description} = data;
+      const updateObject: any = {};
+  
+      // Add fields to the update object if they exist
+      if (name) {
+        updateObject.name = name;
+      }
+  
+      if (title) {
+        updateObject.title = title;
+      }
+
+      if(description){
+        updateObject.description = description
+      }
+      // Update the user by userID
+      const updatedUser = await userModel.findOneAndUpdate(
+        { _id: userID },        // Filter: find user by userID
+        { $set: updateObject },  // Update: set the new name (and other fields)
+        { new: true, projection: { password: 0 } }  // Option: return the updated document
+      );
+      
+  console.log(updatedUser);
+  
+      return updatedUser;  // Return the result of the update operation
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
+    }
+  }
+  
 }

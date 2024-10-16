@@ -7,7 +7,7 @@ import { UserUseCase } from '../../application/useCases/userUseCase';
 import { OtpService } from '../../application/services/otpService';
 import { JWT } from '../../application/services/jwt';
 import { upload } from '../../application/services/multer';
-
+import userAuthMiddleware from '../middleware/auth';
 const router = express.Router();
 
 // Set up dependencies
@@ -19,7 +19,7 @@ const otpService = new OtpService()
 const userRepository = new UserRepository();
 
 const userUseCase = new UserUseCase(userRepository,bcrypt,emailService,otpService,jwtToken)
-const userController = new UserController(userUseCase);
+const userController = new UserController(userUseCase,jwtToken);
 
 
 router.post('/signup', userController.register.bind(userController));
@@ -27,7 +27,7 @@ router.post('/verification', userController.verification.bind(userController));
 router.post('/login', userController.loginUser.bind(userController));
 router.post('/resend-otp', userController.resendOTP.bind(userController));
 
-router.post('/create-job-post',upload.single('file') ,userController.createJobPost.bind(userController));
+router.post('/create-job-post',userAuthMiddleware,upload.single('file') ,userController.createJobPost.bind(userController));
 
 
 export default router

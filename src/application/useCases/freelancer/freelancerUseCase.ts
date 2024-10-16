@@ -69,4 +69,14 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
       
     }
   }
+
+  async editProfile(data:any){
+    try{
+      const jobList = await this.freelancerRepository.editProfile(data)
+      return jobList
+    }catch(error){
+      console.error(error);
+      
+    }
+  }
 }

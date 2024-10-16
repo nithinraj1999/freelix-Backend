@@ -14,7 +14,7 @@ export class JWT implements jwtInterface {
 
   // Generate Access Token (short-lived)
   generateAccessToken(payload: any): string {
-    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: '2d' }); 
+    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: '10d' }); 
   }
 
   // Generate Refresh Token (long-lived)

@@ -19,6 +19,8 @@ router.post('/create-freelancer-account',upload.single('profilePicture'), freela
 router.post('/switch-to-buying', freelancerController.switchToBuying.bind(freelancerController));
 router.post('/switch-to-selling', freelancerController.switchToSelling.bind(freelancerController));
 router.get('/job-list', freelancerController.getJobList.bind(freelancerController));
+router.post('/profile/edit', freelancerController.editprofile.bind(freelancerController));
+
 
 
 

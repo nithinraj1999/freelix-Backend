@@ -9,6 +9,7 @@ const userSchema: Schema = new Schema({
   phone:{ type: Number, required: true },
   role: { type: String, enum: ["client", "freelancer", "admin"], default: "client" }, 
   profilePicture: { type: String },
+  title: { type: String },
   description: { type: String },
   skills: { type: [String],  },
   languages: { type: [String], }, 
