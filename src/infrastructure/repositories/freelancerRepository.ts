@@ -93,9 +93,11 @@ export class FreelancerRepository implements IFreelancerRepository {
   }
 
 
-  async editProfile(data: any) {
+  async editProfile(data: any,portfolioUrl:string) {
     try {
       const { userID, name ,title,description,skills} = data;
+      console.log(portfolioUrl);
+      
       const updateObject: any = {};  
       // Add fields to the update object if they exist
       if (name) {
@@ -112,6 +114,21 @@ export class FreelancerRepository implements IFreelancerRepository {
       if(skills){
         updateObject.skills = skills
       }
+      if (portfolioUrl) {
+        const portfolioItem = {
+            image: portfolioUrl, // Set the image URL
+            title: title || '',   // Optionally add a title
+            description: description || '', // Optionally add a description
+        };
+
+        // Use $push to add the new portfolio item to the existing array
+        const updatedPortfolio = await userModel.findOneAndUpdate(
+            { _id: userID },                    // Filter: find user by userID
+            { $push: { portfolio: portfolioItem } }, // Push new portfolio item to the array
+            { new: true, projection: { password: 0 } } // Option: return the updated document
+        );
+        return updatedPortfolio
+    }
       // Update the user by userID
       const updatedUser = await userModel.findOneAndUpdate(
         { _id: userID },        // Filter: find user by userID
@@ -119,7 +136,6 @@ export class FreelancerRepository implements IFreelancerRepository {
         { new: true, projection: { password: 0 } }  // Option: return the updated document
       );
       
-  console.log(updatedUser);
   
       return updatedUser;  // Return the result of the update operation
     } catch (error) {

@@ -70,16 +70,14 @@ export class FreelancerController {
 
   async editprofile(req: Request, res: Response) {
     try {
-      console.log(req.body);
-  
-      const updatedProfile = await this.freelancerUseCase.editProfile(req.body);
-  
+      const updatedProfile = await this.freelancerUseCase.editProfile(req.body, req.file ?? null);
+      console.log(req.file);
+      
       return res.status(200).json({
         success: true,
         message: "Profile updated successfully",
         data: updatedProfile,
       });
-  
     } catch (error) {
       console.error("Error updating profile:", error);
       return res.status(500).json({
@@ -88,5 +86,4 @@ export class FreelancerController {
       });
     }
   }
-  
 }

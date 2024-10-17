@@ -14,4 +14,5 @@ export interface User {
   education?: string[];
   languages?: string[];
   isFreelancerBlock?:boolean;
+  
 }

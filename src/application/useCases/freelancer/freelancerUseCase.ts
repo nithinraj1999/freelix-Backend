@@ -10,11 +10,11 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
   private bcrypt: Ibcrypt;
   private jwtToken: jwtInterface;
   constructor(
-    adminRepository: IFreelancerRepository,
+    reelancerRepository: IFreelancerRepository,
     bcrypt: Ibcrypt,
     jwtToken: jwtInterface
   ) {
-    this.freelancerRepository = adminRepository;
+    this.freelancerRepository = reelancerRepository;
     this.bcrypt = bcrypt;
     this.jwtToken = jwtToken;
   }
@@ -70,9 +70,19 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     }
   }
 
-  async editProfile(data:any){
+  async editProfile(data:any,file: Express.Multer.File |null){
     try{
-      const jobList = await this.freelancerRepository.editProfile(data)
+      let portfolioUrl: string | null = null;
+      console.log("useCase",file?.path);
+
+      // If profilePic is provided, upload it to Cloudinary
+      if (file) {
+        const cloudinaryInstance = new Cloudinary();
+        const image = await cloudinaryInstance.uploadProfilePic(file.path);
+        portfolioUrl = image.url; // Get the image URL from Cloudinary
+      }
+      const jobList = await this.freelancerRepository.editProfile(data,portfolioUrl)
+
       return jobList
     }catch(error){
       console.error(error);

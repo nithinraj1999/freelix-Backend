@@ -6,5 +6,5 @@ export interface IFreelancerRepository {
     switchToBuying(id:string):Promise<any>
     switchToSelling(id:string):Promise<any>
     jobList():Promise<any>
-    editProfile(data:any):Promise<any>
+    editProfile(data:any,file: string | null):Promise<any>
 }
