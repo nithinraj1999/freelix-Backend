@@ -87,7 +87,16 @@ export class UserRepository implements IUserRepository {
           throw new Error("Failed to create job post");
         }
       }
-      
+
+      async getAllFreelancers(){
+        try{
+          const freelancer = await userModel.find({hasFreelancerAccount:true},{_id:1} );
+          return freelancer
+        }catch(error){
+          console.error(error);
+          throw error
+        }
+      }
 } 
 
 

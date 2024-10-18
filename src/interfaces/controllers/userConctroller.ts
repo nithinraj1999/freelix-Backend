@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { IUserUseCase } from "../../application/useCases/interfaces/IUserUseCase";
 import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
-
+import { User as UserEntity } from "../../domain/entities/user"; // Change this to match your import path
+import { NotificationService } from "../../application/services/notificationService";
 export class UserController {
   private userUseCase: IUserUseCase;
   private jwt: jwtInterface;
@@ -103,17 +104,29 @@ export class UserController {
     }
   }
 
-
   async createJobPost(req: Request, res: Response) {
     try {
       const file = req.file ? req.file.path : null;
       const response = await this.userUseCase.createJobPost(req.body, file);
+      const freelancers: UserEntity[] = await this.userUseCase.getAllFreelancers(); // Specify the type of freelancers
+
+      const notifications = freelancers.map((freelancer: UserEntity) => ({
+        userId: freelancer._id, // Freelancer receiving the notification
+        type: 'job',
+        isRead: false, 
+        jobId: response._id, 
+        jobTitle:response.title,
+        createdAt: new Date(), 
+      }));
+
+      // Save notifications to the database (you should call the method to save notifications here)
+      // await this.notificationUseCase.createNotifications(notifications);
+      NotificationService.sendJobPostNotification(freelancers, response);
+
       res.status(200).json({ success: true, data: response });
     } catch (error) {
       console.error("Error in controller:", error);
-      res
-        .status(500)
-        .json({ success: false, error: "Failed to create job post" });
+      res.status(500).json({ success: false, error: "Failed to create job post" });
     }
   }
 }

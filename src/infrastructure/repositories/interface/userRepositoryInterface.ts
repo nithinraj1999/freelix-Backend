@@ -8,4 +8,5 @@ export interface IUserRepository {
   findOTP(otp:string,id:string):Promise<Boolean>
   findById(userID:string):Promise<User | null>;
   createJobPost(data:IJobPost,file:string|null):Promise<any>
+  getAllFreelancers():Promise<any>
 }

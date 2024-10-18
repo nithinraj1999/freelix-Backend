@@ -73,8 +73,6 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
   async editProfile(data:any,file: Express.Multer.File |null){
     try{
       let portfolioUrl: string | null = null;
-      console.log("useCase",file?.path);
-
       // If profilePic is provided, upload it to Cloudinary
       if (file) {
         const cloudinaryInstance = new Cloudinary();

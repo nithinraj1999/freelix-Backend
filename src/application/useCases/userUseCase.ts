@@ -102,16 +102,6 @@ export class UserUseCase implements IUserUseCase {
     }
   }
 
-//   async createJobPost(data:IJobPost,file:string){
-//     try{
-//       const response = await this.userRepository.createJobPost(data,file)
-//       return response
-//     }catch(error){
-//       console.error(error);
-//     }
-//   }
-
-
 async createJobPost(data: IJobPost, file: string | null) {
   try {
     const response = await this.userRepository.createJobPost(data, file);
@@ -122,4 +112,16 @@ async createJobPost(data: IJobPost, file: string | null) {
     throw error;
   }
 }
+
+async getAllFreelancers(){
+  try {
+    const response = await this.userRepository.getAllFreelancers();
+    return response;
+  } catch (error) {
+    console.error("Error in use case:", error);
+    // Rethrow the error to be handled by the controller
+    throw error;
+  }
+}
+
 }

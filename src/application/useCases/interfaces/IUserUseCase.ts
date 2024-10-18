@@ -6,4 +6,5 @@ export interface IUserUseCase{
     authenticateUser(email:string,password:string) :Promise<any>
     resendOTP(userID:string):Promise<any>
     createJobPost(data:object,file:string | null):Promise<any>
+    getAllFreelancers():Promise<any>;
 }
