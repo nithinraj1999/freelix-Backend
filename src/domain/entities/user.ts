@@ -1,6 +1,7 @@
 export interface User {
   _id?: any;
   name: string;
+  socketId?:string;
   hasFreelancerAccount?:boolean;
   email: string;
   password?: string;

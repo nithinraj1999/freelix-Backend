@@ -24,16 +24,34 @@ const io = new Server(server, {
   },
 });
 
+
+export const userSocketMap = new Map<string, string>();
+
+
 io.on('connection', (socket: Socket) => {
-  console.log(`User connected: ${socket.id}`);
-  // Handle disconnect
+
+  socket.on('registerUser', (userId: string) => {
+    userSocketMap.set(userId, socket.id); // Associate userId with socket.id
+    console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
+  });
+
+
   socket.on('disconnect', () => {
     console.log('User disconnected');
+    // Remove user from map on disconnect
+    userSocketMap.forEach((value, key) => {
+      if (value === socket.id) {
+        userSocketMap.delete(key);
+        console.log(`User unregistered: ${key}`);
+      }
+    });
   });
-}); 
+});
 
+
+  
 // Apply middlewares
-app.use(cookieParser());
+app.use(cookieParser()); 
 app.use(cors({
   origin: 'http://localhost:5173', 
   credentials: true, // Allow credentials (cookies)

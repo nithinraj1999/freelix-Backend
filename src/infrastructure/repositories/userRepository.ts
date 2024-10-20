@@ -90,7 +90,7 @@ export class UserRepository implements IUserRepository {
 
       async getAllFreelancers(){
         try{
-          const freelancer = await userModel.find({hasFreelancerAccount:true},{_id:1} );
+          const freelancer = await userModel.find({hasFreelancerAccount:true},{_id:1} ).lean();
           return freelancer
         }catch(error){
           console.error(error);
