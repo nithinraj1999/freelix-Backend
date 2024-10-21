@@ -70,9 +70,12 @@ export class FreelancerController {
 
   async editprofile(req: Request, res: Response) {
     try {
-      const updatedProfile = await this.freelancerUseCase.editProfile(req.body, req.file ?? null);
+      const updatedProfile = await this.freelancerUseCase.editProfile(
+        req.body,
+        req.file ?? null
+      );
       console.log(req.file);
-      
+
       return res.status(200).json({
         success: true,
         message: "Profile updated successfully",
@@ -83,6 +86,25 @@ export class FreelancerController {
       return res.status(500).json({
         success: false,
         message: "An error occurred while updating the profile",
+      });
+    }
+  }
+
+  async getJobDetails(req: Request, res: Response) {
+    try {
+      const {jobID} =req.body
+      const jobDetails = await this.freelancerUseCase.getJobDetails(jobID)
+
+      return res.status(200).json({
+        success: true,
+        message: "job details fetched successfully",
+        jobDetails: jobDetails,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while fetching job details",
       });
     }
   }

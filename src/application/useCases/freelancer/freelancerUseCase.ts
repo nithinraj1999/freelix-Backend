@@ -87,4 +87,15 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
       
     }
   }
+
+  async getJobDetails(jobID:string){
+    try{
+      const jobDetails = await this.freelancerRepository.jobDetails(jobID)
+      return jobDetails
+    }catch(error){
+      console.error(error);
+      throw error
+      
+    }
+  }
 }

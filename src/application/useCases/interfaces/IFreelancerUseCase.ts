@@ -6,4 +6,5 @@ export interface FreelancerUseCaseInterface{
     switchToSelling(id:string):Promise<any>
     getJobList():Promise<any>
     editProfile(data:any,file: Express.Multer.File | null):Promise<any>
+    getJobDetails(jobID:string):Promise<any>
 }

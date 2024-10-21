@@ -18,10 +18,23 @@ export class AdminRepository implements IAdminRepository {
         return user
     }
 
-    async getAllClientData(){
-        const clients = await userModel.find({isAdmin:false });
+    async getAllClientData(skip:number,limit:number){
+        const clients = await userModel.find({isAdmin:false }).skip(skip).limit(limit);
+        console.log(clients);
+        
         if (!clients) return null;
         return clients
+    }
+
+    async totalClients(){
+      try{
+        const totalClients = await userModel.countDocuments({
+          role: { $ne: "admin" }
+        });
+        return totalClients
+      }catch(error){
+        throw error
+      }
     }
 
 

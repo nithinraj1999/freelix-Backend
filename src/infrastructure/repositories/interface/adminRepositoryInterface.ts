@@ -1,7 +1,8 @@
 import { User } from "../../../domain/entities/user";
 export interface IAdminRepository {
   findByEmail(email: string): Promise<User | null>;
-  getAllClientData():Promise<any>
+  getAllClientData(skip:number,limit:number):Promise<any>
+  totalClients():Promise<any>
   blockClient(clientID:string):Promise<any>
   unblockClient(clientID:string):Promise<any>
   createUser(data:object,imagePath:string | null,hashedPassword:string):Promise<any>

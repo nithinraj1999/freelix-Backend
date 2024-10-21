@@ -15,7 +15,9 @@ export class FreelancerRepository implements IFreelancerRepository {
       // If profilePic is provided, upload it to Cloudinary
       if (profileImagePath) {
         const cloudinaryInstance = new Cloudinary();
-        const image = await cloudinaryInstance.uploadProfilePic(profileImagePath);
+        const image = await cloudinaryInstance.uploadProfilePic(
+          profileImagePath
+        );
         profileUrl = image.url; // Get the image URL from Cloudinary
       }
       const skillsArray: string[] = Array.isArray(skills)
@@ -34,12 +36,12 @@ export class FreelancerRepository implements IFreelancerRepository {
         { _id: userID },
         {
           $set: {
-            title:name,
+            title: name,
             description: description,
             languages: languageArray,
             skills: skillsArray,
-            profilePicture:profileUrl,
-            role:"freelancer",
+            profilePicture: profileUrl,
+            role: "freelancer",
             hasFreelancerAccount: true,
           },
         }
@@ -92,56 +94,62 @@ export class FreelancerRepository implements IFreelancerRepository {
     }
   }
 
-
-  async editProfile(data: any,portfolioUrl:string) {
+  async editProfile(data: any, portfolioUrl: string) {
     try {
-      const { userID, name ,title,description,skills} = data;
+      const { userID, name, title, description, skills } = data;
       console.log(portfolioUrl);
-      
-      const updateObject: any = {};  
+
+      const updateObject: any = {};
       // Add fields to the update object if they exist
       if (name) {
         updateObject.name = name;
       }
-  
+
       if (title) {
         updateObject.title = title;
       }
-      
-      if(description){
-        updateObject.description = description
+
+      if (description) {
+        updateObject.description = description;
       }
-      if(skills){
-        updateObject.skills = skills
+      if (skills) {
+        updateObject.skills = skills;
       }
       if (portfolioUrl) {
         const portfolioItem = {
-            image: portfolioUrl, // Set the image URL
-            title: title || '',   // Optionally add a title
-            description: description || '', // Optionally add a description
+          image: portfolioUrl, // Set the image URL
+          title: title || "", // Optionally add a title
+          description: description || "", // Optionally add a description
         };
 
         // Use $push to add the new portfolio item to the existing array
         const updatedPortfolio = await userModel.findOneAndUpdate(
-            { _id: userID },                    // Filter: find user by userID
-            { $push: { portfolio: portfolioItem } }, // Push new portfolio item to the array
-            { new: true, projection: { password: 0 } } // Option: return the updated document
+          { _id: userID }, // Filter: find user by userID
+          { $push: { portfolio: portfolioItem } }, // Push new portfolio item to the array
+          { new: true, projection: { password: 0 } } // Option: return the updated document
         );
-        return updatedPortfolio
-    }
+        return updatedPortfolio;
+      }
       // Update the user by userID
       const updatedUser = await userModel.findOneAndUpdate(
-        { _id: userID },        // Filter: find user by userID
-        { $set: updateObject },  // Update: set the new name (and other fields)
-        { new: true, projection: { password: 0 } }  // Option: return the updated document
+        { _id: userID }, // Filter: find user by userID
+        { $set: updateObject }, // Update: set the new name (and other fields)
+        { new: true, projection: { password: 0 } } // Option: return the updated document
       );
-      
-  
-      return updatedUser;  // Return the result of the update operation
+
+      return updatedUser; // Return the result of the update operation
     } catch (error) {
       console.error("Error updating profile:", error);
       throw error;
     }
   }
-  
+
+  async jobDetails(jobID: string) {
+    try {
+      const jobDetails = await jobPostModel.findOne({ _id: jobID });
+      return jobDetails;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

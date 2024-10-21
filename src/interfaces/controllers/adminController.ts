@@ -55,8 +55,13 @@ export class AdminController {
 
   async getClientData(req: Request, res: Response) {
     try {
-      const clients = await this.adminUseCase.getClientData();
-      res.json({ sucees: true, clients: clients });
+      const page = parseInt(req.query.page as string) || 1; // Default page is 1
+      const limit = parseInt(req.query.limit as string) || 5; // Default limit is 5
+  
+      const skip = (page - 1) * limit;
+      const totalClients = await this.adminUseCase.getTotalClients();
+      const clients = await this.adminUseCase.getClientData(skip,limit);
+      res.json({ sucees: true, clients: clients,totalClients, totalPages: Math.ceil(totalClients / limit),currentPage: page});
     } catch (error) {
       throw error;
     }

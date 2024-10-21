@@ -19,6 +19,7 @@ router.post('/switch-to-buying', freelancerController.switchToBuying.bind(freela
 router.post('/switch-to-selling', freelancerController.switchToSelling.bind(freelancerController));
 router.get('/job-list', freelancerController.getJobList.bind(freelancerController));
 router.post('/profile/edit',upload.single('portfolio'), freelancerController.editprofile.bind(freelancerController));
+router.post('/job-detils', freelancerController.getJobDetails.bind(freelancerController));
 
 export default router
 

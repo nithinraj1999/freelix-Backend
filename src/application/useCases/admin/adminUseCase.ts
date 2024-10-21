@@ -40,15 +40,23 @@ export class AdminUseCase implements IAdminUseCase {
     }
   }
 
-  async getClientData() {
+  async getClientData(skip:number,limit:number) {
     try {
-      const clients = await this.adminRepository.getAllClientData();
+      const clients = await this.adminRepository.getAllClientData(skip,limit);
       return clients;
     } catch (error) {
       console.error(error);
     }
   }
 
+async getTotalClients(){
+  try {
+    const totalClients = await this.adminRepository.totalClients();
+    return totalClients;
+  } catch (error) {
+    console.error(error);
+  }
+}
   async blockClient(clientID: string) {
     try {
       const response = await this.adminRepository.blockClient(clientID);
