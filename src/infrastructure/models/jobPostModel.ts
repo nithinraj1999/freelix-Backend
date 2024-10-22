@@ -4,8 +4,8 @@ import mongoose, { Document, Model, Schema, Types } from "mongoose";
 export interface IJobPost extends Document {
   userID?: Types.ObjectId; // Reference to the User model
   title: string;
-  category: string;
-  subCategory: string;
+  category?: string;
+  subCategory?: string;
   description: string;
   file?: string;
   skills: string[]; // Array of strings
@@ -32,11 +32,11 @@ const jobPostSchema: Schema<IJobPost> = new Schema({
   },
   category: {
     type: String,
-    required: true,
+    
   },
   subCategory: {
     type: String,
-    required: true,
+    
   },
   description: {
     type: String,

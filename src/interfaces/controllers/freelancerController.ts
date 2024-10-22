@@ -100,11 +100,48 @@ export class FreelancerController {
         message: "job details fetched successfully",
         jobDetails: jobDetails,
       });
+
     } catch (error) {
       console.error(error);
       return res.status(500).json({
         success: false,
         message: "An error occurred while fetching job details",
+      });
+    }
+  }
+
+
+  async isExistingBidder(req: Request, res: Response){
+    try{
+      const {jobId,userId}  = req.body
+      console.log(req.body);
+      
+      const isExistingBidder = await this.freelancerUseCase.isBidderAlreadyExist(jobId,userId)
+      if(isExistingBidder){
+        res.json({isExist:true})
+      }else{
+        res.json({isExist:false})
+      }
+    }catch(error){
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+      });
+    }
+  }  
+
+  async submitBid(req: Request, res: Response){
+    try{
+      const {jobId,freelancerId,bidAmount,deliveryDays,proposal} =req.body
+     console.log(req.body);
+     
+      const bid = await this.freelancerUseCase.submitBid(jobId,freelancerId,bidAmount,deliveryDays,proposal)
+      res.status(200).json({success: true,bid:bid})
+    }catch(error){
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while submiting bid",
       });
     }
   }

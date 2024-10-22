@@ -3,6 +3,7 @@ import { IFreelancerRepository } from "./interface/freelancerRepositoryInterface
 import userModel from "../models/userModel";
 import jobPostModel from "../models/jobPostModel";
 import { Cloudinary } from "../../application/services/cloudinary";
+import BidModel from "../models/bidModel";
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -150,6 +151,36 @@ export class FreelancerRepository implements IFreelancerRepository {
       return jobDetails;
     } catch (error) {
       console.error(error);
+      throw error
     }
   }
+
+  async isExistingBidder(jobId:string,userId:string){
+    try{
+      const isExistingBidder = await BidModel.findOne({jobId:jobId,freelancerId:userId})
+      return isExistingBidder
+    }catch(error){
+      throw error
+    }
+  }
+
+  async submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string){
+    try {
+      const bid = new BidModel({
+        jobId:jobId,
+        freelancerId:freelancerId,
+        bidAmount:bidAmount,
+        deliveryDays:deliveryDays,
+        proposal:proposal
+      })
+      await bid.save()
+      return bid;
+    } catch (error) {
+      console.error(error);
+      throw error
+    }
+  }
+
+
+
 }

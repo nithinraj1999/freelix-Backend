@@ -7,4 +7,7 @@ export interface FreelancerUseCaseInterface{
     getJobList():Promise<any>
     editProfile(data:any,file: Express.Multer.File | null):Promise<any>
     getJobDetails(jobID:string):Promise<any>
+
+    isBidderAlreadyExist(jobId:string,userId:string):Promise<any>
+    submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string):Promise<any>
 }

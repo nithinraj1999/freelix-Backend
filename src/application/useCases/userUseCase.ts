@@ -29,6 +29,7 @@ export class UserUseCase implements IUserUseCase {
 
   async registerUser(data: User): Promise<void> {
     try {
+
       const existingUser = await this.userRepository.findByEmail(data.email);
       if (existingUser) {
         throw new Error("User with this email already exists.");
@@ -36,7 +37,8 @@ export class UserUseCase implements IUserUseCase {
         if(data.password){
           data.password = await this.bcrypt.hash(data.password);
         }
-       
+        
+        
         const savedData = await this.userRepository.save(data);
         const email = data.email;
         const otp = await this.otpService.generateOtp();

@@ -8,6 +8,7 @@ import { OtpService } from '../../application/services/otpService';
 import { JWT } from '../../application/services/jwt';
 import { upload } from '../../application/services/multer';
 import userAuthMiddleware from '../middleware/auth';
+
 const router = express.Router();
 
 // Set up dependencies

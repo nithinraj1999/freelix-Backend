@@ -5,7 +5,7 @@ import { FreelancerRepository } from '../../infrastructure/repositories/freelanc
 import { JWT } from '../../application/services/jwt';
 import { FreelancerController } from '../controllers/freelancerController';
 import {upload} from '../../application/services/multer'
-
+import userAuthMiddleware from '../middleware/auth';
 const router = express.Router();
 const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()
@@ -20,6 +20,10 @@ router.post('/switch-to-selling', freelancerController.switchToSelling.bind(free
 router.get('/job-list', freelancerController.getJobList.bind(freelancerController));
 router.post('/profile/edit',upload.single('portfolio'), freelancerController.editprofile.bind(freelancerController));
 router.post('/job-detils', freelancerController.getJobDetails.bind(freelancerController));
+
+
+router.post('/check-for-existing-bidder', freelancerController.isExistingBidder.bind(freelancerController));
+router.post('/submit-bid', freelancerController.submitBid.bind(freelancerController));
 
 export default router
 

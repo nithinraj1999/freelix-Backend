@@ -4,6 +4,7 @@ import { jwtInterface } from "../../application/services/interfaces/jwtInterface
 import { User as UserEntity } from "../../domain/entities/user"; // Change this to match your import path
 import { NotificationService } from "../../application/services/notificationService";
 import { userSocketMap } from "../..";
+
 export class UserController {
   private userUseCase: IUserUseCase;
   private jwt: jwtInterface;

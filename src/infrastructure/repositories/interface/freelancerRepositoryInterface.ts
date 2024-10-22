@@ -8,4 +8,7 @@ export interface IFreelancerRepository {
     jobList():Promise<any>
     editProfile(data:any,file: string | null):Promise<any>
     jobDetails(jobID:string):Promise<any>
+
+    isExistingBidder(jobId:string,userId:string):Promise<any>
+    submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string):Promise<any>
 }

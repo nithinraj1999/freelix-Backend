@@ -98,4 +98,24 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
       
     }
   }
+
+  async isBidderAlreadyExist(jobId:string,userId:string){
+    try{
+      const isExistingBidder = await this.freelancerRepository.isExistingBidder(jobId,userId)
+      return isExistingBidder
+    }catch(error){
+      throw error
+    }
+  }
+
+  async submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string){
+    try{
+      const bid = await this.freelancerRepository.submitBid(jobId,freelancerId,bidAmount,deliveryDays,proposal)
+      return bid
+    }catch(error){
+      console.error(error);
+      throw error
+    }
+  }
 }
+ 

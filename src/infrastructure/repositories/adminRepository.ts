@@ -19,9 +19,7 @@ export class AdminRepository implements IAdminRepository {
     }
 
     async getAllClientData(skip:number,limit:number){
-        const clients = await userModel.find({isAdmin:false }).skip(skip).limit(limit);
-        console.log(clients);
-        
+        const clients = await userModel.find({isAdmin:false }).skip(skip).limit(limit);        
         if (!clients) return null;
         return clients
     }
