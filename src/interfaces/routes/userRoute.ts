@@ -28,6 +28,10 @@ router.post('/verification', userController.verification.bind(userController));
 router.post('/login', userController.loginUser.bind(userController));
 router.post('/resend-otp', userController.resendOTP.bind(userController));
 router.post('/create-job-post',userAuthMiddleware,upload.single('file') ,userController.createJobPost.bind(userController));
+router.post('/my-job-posts',userAuthMiddleware,userController.getAllJobPosts.bind(userController));
+router.post('/delete-post',userAuthMiddleware,userController.deletePost.bind(userController));
+router.post('/edit-post',userAuthMiddleware,userController.editPost.bind(userController));
+
 
 export default router
 

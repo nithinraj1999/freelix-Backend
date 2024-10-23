@@ -125,5 +125,33 @@ async getAllFreelancers(){
     throw error;
   }
 }
+async getAllJobPosts(userID:string){
+  try{
+    const MyjobPosts = await this.userRepository.getAllJobPosts(userID);
+    return MyjobPosts;
+  }catch(error){
+    console.error(error);
+    
+  }
+}
 
+async deleteJobPost(jobId:string){
+  try{
+    const deletedJobPost = await this.userRepository.deleteJobPost(jobId);
+    return deletedJobPost;
+  }catch(error){
+    console.error(error);
+    
+  }
+}
+
+async editPost(data:any){
+  try{
+    const editedPost = await this.userRepository.editPost(data);
+    return editedPost;
+  }catch(error){
+    console.error(error);
+    
+  }
+}
 }

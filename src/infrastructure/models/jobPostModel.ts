@@ -36,7 +36,6 @@ const jobPostSchema: Schema<IJobPost> = new Schema({
   },
   subCategory: {
     type: String,
-    
   },
   description: {
     type: String,
@@ -58,14 +57,19 @@ const jobPostSchema: Schema<IJobPost> = new Schema({
     required:true 
   },
   fixedPrice: {
-    type: Number, // Optional fixed price
+    type: Number,
+    required: function(this: IJobPost) { return this.paymentType === 'fixed'; }
+
   },
   hourlyPrice: {
     from: {
       type: Number,
+      required: function(this: IJobPost) { return this.paymentType === 'hourly'; } 
     },
     to: {
       type: Number,
+      required: function(this: IJobPost) { return this.paymentType === 'hourly'; } 
+
     },
   },
   createdAt: {

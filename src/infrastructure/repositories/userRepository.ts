@@ -97,7 +97,81 @@ export class UserRepository implements IUserRepository {
           throw error
         }
       }
-} 
 
+      async getAllJobPosts(userID:string){
+        try{
+          const MyPost = await jobPostModel.find({userID:userID})
+          return MyPost
+        }catch(error){
+          console.error(error);
+          throw error
+        }
+      }
 
- 
+      async deleteJobPost(jobId:string){
+        try {
+        
+          console.log("delete conytrs");
+      
+          const result = await jobPostModel.deleteOne({ _id: jobId });  // Delete job by ID
+          return result
+        } catch (error) {
+          console.error(`Error deleting job with ID ${jobId}:`, error);
+        }
+      
+      }
+      async editPost(data: any) {
+        try {
+          const { _id, title, description, skills, paymentType, hourlyPrice ,fixedPrice} = data;
+      
+        
+          // Create an object containing the fields to update
+          const updateData: Partial<{
+            title: string;
+            description: string;
+            skills: string[];
+            paymentType: string;
+            hourlyPrice?: {
+              from?: number;
+              to?: number;
+            }|null;
+            fixedPrice?: number|null;
+          }> = {
+            title,
+            description,
+            skills,
+            paymentType,
+          };
+      
+          // Handle payment type: hourly or fixed
+          if (paymentType === "hourly" ) {
+            updateData.hourlyPrice = {
+              from: hourlyPrice.from,
+              to: hourlyPrice.to,
+            };
+            // Set fixedPrice to undefined to remove it
+            updateData.fixedPrice = null;
+          } else if (paymentType === "fixed") {
+            updateData.fixedPrice = fixedPrice;
+            // Set hourlyPrice to undefined to remove it
+            updateData.hourlyPrice = null;
+          }
+      
+          console.log("Update data:", updateData);
+      
+          // Use findByIdAndUpdate to update the document
+          const result = await jobPostModel.findByIdAndUpdate(_id, updateData, { new: true });
+      
+          if (result) {
+            // console.log("Job post updated successfully:", result);
+            return result; // Optionally return the updated post
+          } else {
+            console.log("Job post not found.");
+            return null; // Handle the case where the job post doesn't exist
+          }
+        } catch (error) {
+          console.error(`Error updating job post with ID ${data._id}:`, error);
+          throw error; // Optionally rethrow the error to be handled by the caller
+        }
+      }
+    }      

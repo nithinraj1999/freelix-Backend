@@ -9,7 +9,7 @@ export class UserController {
   private userUseCase: IUserUseCase;
   private jwt: jwtInterface;
 
-  constructor(userUseCase: IUserUseCase,jwt: jwtInterface) {
+  constructor(userUseCase: IUserUseCase, jwt: jwtInterface) {
     this.userUseCase = userUseCase;
     this.jwt = jwt;
   }
@@ -18,7 +18,6 @@ export class UserController {
 
   async register(req: Request, res: Response) {
     try {
-
       const user = await this.userUseCase.registerUser(req.body);
       res.status(201).json({
         userID: user,
@@ -61,15 +60,21 @@ export class UserController {
           .json({ success: false, message: "User not found" });
       } else {
       }
-      const accessToken = await this.jwt.generateAccessToken({_id:user._id,role:user.role});
-      const refreshToken = await this.jwt.generateRefreshToken({_id:user._id,role:user.role})
+      const accessToken = await this.jwt.generateAccessToken({
+        _id: user._id,
+        role: user.role,
+      });
+      const refreshToken = await this.jwt.generateRefreshToken({
+        _id: user._id,
+        role: user.role,
+      });
       res.cookie("userRefreshJWT", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-    
+
       res.status(200).json({
         success: true,
         user: {
@@ -88,7 +93,7 @@ export class UserController {
           isFreelancerBlock: user.isFreelancerBlock,
         },
         message: "Login successfull",
-        accessToken:accessToken,
+        accessToken: accessToken,
       });
     } catch (error) {
       console.error(error);
@@ -110,27 +115,63 @@ export class UserController {
     try {
       const file = req.file ? req.file.path : null;
       const jobPost = await this.userUseCase.createJobPost(req.body, file);
-      const freelancers: UserEntity[] = await this.userUseCase.getAllFreelancers(); // Specify the type of freelancers
+      const freelancers: UserEntity[] =
+        await this.userUseCase.getAllFreelancers(); // Specify the type of freelancers
 
       const freelancersWithSocketIds = freelancers
-        .filter(freelancer => userSocketMap.has(freelancer._id.toString())) // Keep only freelancers with a valid socket ID
-        .map(freelancer => ({
+        .filter((freelancer) => userSocketMap.has(freelancer._id.toString())) // Keep only freelancers with a valid socket ID
+        .map((freelancer) => ({
           ...freelancer,
           socketId: userSocketMap.get(freelancer._id.toString()), // Convert ObjectId to string and get socketId
-      }));
-        console.log(freelancers);
-        console.log(userSocketMap);
-        
+        }));
 
-      console.log("Current userSocketMap:", freelancersWithSocketIds);
-
-      
-      NotificationService.sendJobPostNotification(freelancersWithSocketIds, jobPost);
+      NotificationService.sendJobPostNotification(
+        freelancersWithSocketIds,
+        jobPost
+      );
 
       res.status(200).json({ success: true, data: jobPost });
     } catch (error) {
       console.error("Error in controller:", error);
-      res.status(500).json({ success: false, error: "Failed to create job post" });
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to create job post" });
     }
   }
+
+  async getAllJobPosts(req: Request, res: Response) {
+    try {
+      const { userID } = req.body;
+      const jobPosts = await this.userUseCase.getAllJobPosts(userID);
+      res.status(200).json({ success: true, jobPosts: jobPosts });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to fetch job posts" });
+    }
+  }
+
+  async deletePost(req: Request, res: Response) {
+    try {
+      const { jobId } = req.body;
+      const deletedJobPost = await this.userUseCase.deleteJobPost(jobId);
+      res.status(200).json({ success: true,deletedJobPost:deletedJobPost });
+    } catch (error) {
+      console.error(error);
+      res
+      .status(500)
+      .json({ success: false });
+  }
+    }
+  
+    async editPost(req: Request, res: Response){
+      try{
+        console.log("edit post",req.body);
+        const editedPost = await this.userUseCase.editPost(req.body);
+        res.status(200).json({success:true,editedPost:editedPost})
+      }catch(error){
+        console.error(error);
+      }
+    }
 }
