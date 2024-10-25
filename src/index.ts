@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { createServer } from 'node:http';
 
 dotenv.config(); // Load environment variables
-
+  
 const port = process.env.PORT 
 const app: Application = express();
 const server = createServer(app); // Create HTTP server

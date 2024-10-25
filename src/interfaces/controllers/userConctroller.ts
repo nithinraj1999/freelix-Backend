@@ -60,14 +60,17 @@ export class UserController {
           .json({ success: false, message: "User not found" });
       } else {
       }
+
       const accessToken = await this.jwt.generateAccessToken({
         _id: user._id,
         role: user.role,
       });
+
       const refreshToken = await this.jwt.generateRefreshToken({
         _id: user._id,
         role: user.role,
       });
+      
       res.cookie("userRefreshJWT", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",

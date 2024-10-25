@@ -79,7 +79,6 @@ export class UserRepository implements IUserRepository {
             },
           });
       
-          console.log("Job post created:", response);
           return response;
         } catch (error) {
           console.error("Error creating job post:", error);
@@ -109,10 +108,7 @@ export class UserRepository implements IUserRepository {
       }
 
       async deleteJobPost(jobId:string){
-        try {
-        
-          console.log("delete conytrs");
-      
+        try {      
           const result = await jobPostModel.deleteOne({ _id: jobId });  // Delete job by ID
           return result
         } catch (error) {
@@ -120,6 +116,7 @@ export class UserRepository implements IUserRepository {
         }
       
       }
+      
       async editPost(data: any) {
         try {
           const { _id, title, description, skills, paymentType, hourlyPrice ,fixedPrice} = data;
@@ -157,13 +154,10 @@ export class UserRepository implements IUserRepository {
             updateData.hourlyPrice = null;
           }
       
-          console.log("Update data:", updateData);
-      
-          // Use findByIdAndUpdate to update the document
+
           const result = await jobPostModel.findByIdAndUpdate(_id, updateData, { new: true });
       
           if (result) {
-            // console.log("Job post updated successfully:", result);
             return result; // Optionally return the updated post
           } else {
             console.log("Job post not found.");

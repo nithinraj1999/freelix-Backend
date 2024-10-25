@@ -6,6 +6,9 @@ import { JWT } from '../../application/services/jwt';
 import { FreelancerController } from '../controllers/freelancerController';
 import {upload} from '../../application/services/multer'
 import userAuthMiddleware from '../middleware/auth';
+import validateSchema from '../middleware/validator';
+import { editProfileSchema } from '../../domain/validation/freelancerValidator';
+import { bidSumissionSchema } from '../../domain/validation/freelancerValidator';
 const router = express.Router();
 const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()
@@ -18,12 +21,11 @@ router.post('/create-freelancer-account',upload.single('profilePicture'), freela
 router.post('/switch-to-buying', freelancerController.switchToBuying.bind(freelancerController));
 router.post('/switch-to-selling', freelancerController.switchToSelling.bind(freelancerController));
 router.get('/job-list', freelancerController.getJobList.bind(freelancerController));
-router.post('/profile/edit',upload.single('portfolio'), freelancerController.editprofile.bind(freelancerController));
+router.post('/profile/edit',upload.single('portfolio'),validateSchema(editProfileSchema), freelancerController.editprofile.bind(freelancerController));
 router.post('/job-detils', freelancerController.getJobDetails.bind(freelancerController));
 
-
 router.post('/check-for-existing-bidder', freelancerController.isExistingBidder.bind(freelancerController));
-router.post('/submit-bid', freelancerController.submitBid.bind(freelancerController));
+router.post('/submit-bid',validateSchema(bidSumissionSchema), freelancerController.submitBid.bind(freelancerController));
 
 export default router
 
