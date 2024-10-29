@@ -30,10 +30,13 @@ router.post('/signup',validateSchema(signupSchema), userController.register.bind
 router.post('/verification', userController.verification.bind(userController));
 router.post('/login',validateSchema(loginSchema), userController.loginUser.bind(userController));
 router.post('/resend-otp', userController.resendOTP.bind(userController));
-router.post('/create-job-post',upload.single('file'),validateSchema(jobCreationSchema) ,userController.createJobPost.bind(userController));
+router.post('/create-job-post',userAuthMiddleware,upload.single('file'),validateSchema(jobCreationSchema) ,userController.createJobPost.bind(userController));
 router.post('/my-job-posts',userAuthMiddleware,userController.getAllJobPosts.bind(userController));
 router.post('/delete-post',userAuthMiddleware,userController.deletePost.bind(userController));
 router.post('/edit-post',userAuthMiddleware,userController.editPost.bind(userController));
+router.post('/my-job-details',userAuthMiddleware,userController.jobPostdetails.bind(userController));
+router.post('/all-bids',userAuthMiddleware,userController.fetchAllBids.bind(userController));
+
 
 export default router 
 

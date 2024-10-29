@@ -29,7 +29,7 @@ router.get('/freelancers-details',authMiddleware, adminController.getFreelancerD
 router.post('/create-freelancer',authMiddleware,upload.single('profilePicture'), adminController.createFreelancer.bind(adminController) );
 router.post('/edit-freelancer',authMiddleware,upload.single('profilePicture'), adminController.editFreelancer.bind(adminController) );
 router.post('/block-freelancer',authMiddleware, adminController.blockFreelancer.bind(adminController) );
-router.post('/unblock-freelancer',authMiddleware, adminController.unblockFreelancer.bind(adminController) );
+router.post('/unblock-freelancer',authMiddleware, adminController.unblockFreelancer.bind(adminController));
 
 
 export default router

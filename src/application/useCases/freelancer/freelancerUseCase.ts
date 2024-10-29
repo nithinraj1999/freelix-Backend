@@ -4,6 +4,8 @@ import { Cloudinary } from "../../services/cloudinary";
 import { IFreelancer } from "../../../domain/entities/freelancer";
 import { IFreelancerRepository } from "../../../infrastructure/repositories/interface/freelancerRepositoryInterface";
 import { FreelancerUseCaseInterface } from "../interfaces/IFreelancerUseCase";
+import { NotificationService } from "../../services/notificationService";
+import { userSocketMap } from "../../..";
 
 export class FreelancerUseCase implements FreelancerUseCaseInterface {
   private freelancerRepository: IFreelancerRepository;
@@ -111,10 +113,29 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
   async submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string){
     try{
       const bid = await this.freelancerRepository.submitBid(jobId,freelancerId,bidAmount,deliveryDays,proposal)
+      if(bid){
+        const clientSocketID = userSocketMap.get(bid.jobId.userID.toString());
+
+        if (clientSocketID) {
+          await NotificationService.sendNewBidDetails(clientSocketID, bid);
+        } else {
+          console.warn(`No client socket ID found for user ${bid.jobId.userID}`);
+        }
+      }
       return bid
     }catch(error){
       console.error(error);
       throw error
+    }
+  }
+
+  async getAllBids(jobId:string){
+    try{
+      const allBids = await this.freelancerRepository.getAllBids(jobId)
+      return allBids
+    }catch(error){
+      console.error(error);
+      
     }
   }
 }

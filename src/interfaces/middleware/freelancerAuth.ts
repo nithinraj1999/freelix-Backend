@@ -3,7 +3,7 @@ import { JWT } from '../../application/services/jwt';
 
 const jwtInstance = new JWT();
 
-const userAuthMiddleware = (req: Request & { user?: { id: string; role: string; } }, res: Response, next: NextFunction) => {
+const freelancerAuth = (req: Request & { user?: { id: string; role: string; } }, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
 
     // Check if authHeader is a string and contains the Bearer scheme
@@ -22,7 +22,7 @@ const userAuthMiddleware = (req: Request & { user?: { id: string; role: string; 
         req.user = decoded; // Assign user data from token
 
         // Check if the user has the "admin" role
-        if (req.user?.role === 'client') {
+        if (req.user?.role === 'freelancer') {
             return next(); // Proceed if the role is "admin"
         } else {
             return res.status(403).json({ message: 'Forbidden: You do not have permission' });
@@ -32,4 +32,4 @@ const userAuthMiddleware = (req: Request & { user?: { id: string; role: string; 
     }
 };
 
-export default userAuthMiddleware;
+export default freelancerAuth;

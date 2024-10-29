@@ -10,4 +10,6 @@ export interface IUserUseCase{
     getAllJobPosts(userID:string):Promise<any>;
     deleteJobPost(jobId:string):Promise<any>;
     editPost(data:any):Promise<any>;
+    jobDetails(jobId:string):Promise<any>;
+    fetchAllBids(jobId:string):Promise<any>;
 }

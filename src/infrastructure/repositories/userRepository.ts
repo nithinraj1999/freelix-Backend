@@ -5,12 +5,16 @@ import userModel from "../models/userModel";
 import Otp from "../models/otpModel";
 import jobPostModel from "../models/jobPostModel";
 import { IJobPost } from "../models/jobPostModel";
-
+import BidModel from "../models/bidModel";
 export class UserRepository implements IUserRepository {
     async findByEmail(email: string): Promise<User | null> {
+      try{
         const user = await userModel.findOne({ email:email,isAdmin:false,isBlock:false });
         if (!user) return null;
         return user
+      }catch(error){
+        throw error
+      }
     }
 
     async save(user: User): Promise<User> {
@@ -22,8 +26,6 @@ export class UserRepository implements IUserRepository {
             role: user.role,
             profilePicture: user.profilePicture,
         });
-
-        
         return newUser
     }
 
@@ -46,9 +48,14 @@ export class UserRepository implements IUserRepository {
       }
 
       async findById(userID:string): Promise<User | null> {
-        const user = await userModel.findOne({ _id:userID });
-        if (!user) return null;
-        return user
+        try{
+          const user = await userModel.findOne({ _id:userID });
+          if (!user) return null;
+          return user
+        }
+        catch(error){
+        throw error
+        }
       }
 
 
@@ -167,5 +174,26 @@ export class UserRepository implements IUserRepository {
           console.error(`Error updating job post with ID ${data._id}:`, error);
           throw error; // Optionally rethrow the error to be handled by the caller
         }
+      }
+
+
+      async jobDetails(jobId:string){
+        try{
+          const jobDetails = await jobPostModel.findOne({_id:jobId})
+          return jobDetails
+        }catch(error){
+          console.error(error);
+          
+        }
+      }
+
+      async allBids(jobId:string){
+        try{
+        const allBids = await BidModel.find({jobId:jobId}).populate("freelancerId").sort({ createdAt: -1 })
+        return allBids
+        }catch(error){
+          console.error(error);
+          
+        } 
       }
     }      

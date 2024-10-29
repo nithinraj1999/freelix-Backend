@@ -6,12 +6,12 @@ const BidSchema: Schema = new Schema(
         jobId: {
             type: String,
             required: true,
-            ref: 'Job', // Assuming there's a Job model
+            ref: 'JobPost', 
         },
         freelancerId: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'Freelancer',
+            ref: 'User',
         },
         bidAmount: {
             type: Number,

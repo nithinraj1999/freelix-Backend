@@ -11,4 +11,5 @@ export interface IFreelancerRepository {
 
     isExistingBidder(jobId:string,userId:string):Promise<any>
     submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string):Promise<any>
+    getAllBids(jobId:string):Promise<any>
 }

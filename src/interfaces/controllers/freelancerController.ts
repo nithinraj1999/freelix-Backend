@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
 import { FreelancerUseCaseInterface } from "../../application/useCases/interfaces/IFreelancerUseCase";
 import { Cloudinary } from "../../application/services/cloudinary";
-
+import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
 export class FreelancerController {
   private freelancerUseCase: FreelancerUseCaseInterface;
-  constructor(freelancerUseCase: FreelancerUseCaseInterface) {
+  private jwt: jwtInterface;
+  constructor(
+    freelancerUseCase: FreelancerUseCaseInterface,
+    jwt: jwtInterface
+  ) {
     this.freelancerUseCase = freelancerUseCase;
+    this.jwt = jwt;
   }
 
   async createFreelancerAccount(req: Request, res: Response) {
@@ -33,10 +38,27 @@ export class FreelancerController {
         req.body.userID
       );
       if (switchToBuying) {
+        const accessToken = await this.jwt.generateAccessToken({
+          _id: req.body.userID,
+          role: "client",
+        });
+
+        const refreshToken = await this.jwt.generateRefreshToken({
+          _id: req.body.userID,
+          role: "client",
+        });
+
+        res.cookie("userRefreshJWT", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development",
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
         const freelancerData = await this.freelancerUseCase.findFreelancerById(
           req.body.userID
         );
-        res.json({ success: true, freelancerData });
+        res.json({ success: true, freelancerData, accessToken: accessToken });
       }
     } catch (error) {
       console.error(error);
@@ -49,10 +71,26 @@ export class FreelancerController {
         req.body.userID
       );
       if (switchToBuying) {
+        const accessToken = await this.jwt.generateAccessToken({
+          _id: req.body.userID,
+          role: "freelancer",
+        });
+
+        const refreshToken = await this.jwt.generateRefreshToken({
+          _id: req.body.userID,
+          role: "freelancer",
+        });
+
+        res.cookie("userRefreshJWT", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development",
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
         const freelancerData = await this.freelancerUseCase.findFreelancerById(
           req.body.userID
         );
-        res.json({ success: true, freelancerData });
+        res.json({ success: true, freelancerData, accessToken: accessToken });
       }
     } catch (error) {
       console.error(error);
@@ -92,15 +130,14 @@ export class FreelancerController {
 
   async getJobDetails(req: Request, res: Response) {
     try {
-      const {jobID} =req.body
-      const jobDetails = await this.freelancerUseCase.getJobDetails(jobID)
+      const { jobID } = req.body;
+      const jobDetails = await this.freelancerUseCase.getJobDetails(jobID);
 
       return res.status(200).json({
         success: true,
         message: "job details fetched successfully",
         jobDetails: jobDetails,
       });
-
     } catch (error) {
       console.error(error);
       return res.status(500).json({
@@ -110,39 +147,56 @@ export class FreelancerController {
     }
   }
 
-
-  async isExistingBidder(req: Request, res: Response){
-    try{
-      const {jobId,userId}  = req.body
+  async isExistingBidder(req: Request, res: Response) {
+    try {
+      const { jobId, userId } = req.body;
       console.log(req.body);
-      
-      const isExistingBidder = await this.freelancerUseCase.isBidderAlreadyExist(jobId,userId)
-      if(isExistingBidder){
-        res.json({isExist:true})
-      }else{
-        res.json({isExist:false})
+
+      const isExistingBidder =
+        await this.freelancerUseCase.isBidderAlreadyExist(jobId, userId);
+      if (isExistingBidder) {
+        res.json({ isExist: true });
+      } else {
+        res.json({ isExist: false });
       }
-    }catch(error){
+    } catch (error) {
       console.error(error);
       return res.status(500).json({
         success: false,
       });
     }
-  }  
+  }
 
-  async submitBid(req: Request, res: Response){
-    try{
-      const {jobId,freelancerId,bidAmount,deliveryDays,proposal} =req.body
-     console.log(req.body);
-     
-      const bid = await this.freelancerUseCase.submitBid(jobId,freelancerId,bidAmount,deliveryDays,proposal)
-      res.status(200).json({success: true,bid:bid})
-    }catch(error){
+  async submitBid(req: Request, res: Response) {
+    try {
+      const { jobId, freelancerId, bidAmount, deliveryDays, proposal } =
+        req.body;
+
+      const bid = await this.freelancerUseCase.submitBid(
+        jobId,
+        freelancerId,
+        bidAmount,
+        deliveryDays,
+        proposal
+      );
+      res.status(200).json({ success: true, bid: bid });
+    } catch (error) {
       console.error(error);
       return res.status(500).json({
         success: false,
         message: "An error occurred while submiting bid",
       });
+    }
+  }
+
+  async getAllBids(req: Request, res: Response) {
+    try {
+      const { jobId } = req.body;
+      const allBids = await this.freelancerUseCase.getAllBids(jobId);
+
+      res.status(200).json({ success: true,allBids:allBids});
+    } catch (error) {
+      console.error();
     }
   }
 }

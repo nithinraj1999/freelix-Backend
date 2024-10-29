@@ -31,6 +31,7 @@ export class UserUseCase implements IUserUseCase {
     try {
 
       const existingUser = await this.userRepository.findByEmail(data.email);
+      
       if (existingUser) {
         throw new Error("User with this email already exists.");
       } else {
@@ -149,6 +150,26 @@ async editPost(data:any){
   try{
     const editedPost = await this.userRepository.editPost(data);
     return editedPost;
+  }catch(error){
+    console.error(error);
+    
+  }
+}
+
+async  jobDetails(jobId:string){
+  try{
+    const jobDetails = await this.userRepository.jobDetails(jobId);
+    return jobDetails
+  }catch(error){
+    console.error(error);
+    
+  }
+}
+
+async fetchAllBids(jobId:string){
+  try{
+    const bids = await this.userRepository.allBids(jobId);
+    return bids
   }catch(error){
     console.error(error);
     

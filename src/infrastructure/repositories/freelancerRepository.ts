@@ -101,7 +101,6 @@ export class FreelancerRepository implements IFreelancerRepository {
       console.log(portfolioUrl);
 
       const updateObject: any = {};
-      // Add fields to the update object if they exist
       if (name) {
         updateObject.name = name;
       }
@@ -173,8 +172,12 @@ export class FreelancerRepository implements IFreelancerRepository {
         deliveryDays:deliveryDays,
         proposal:proposal
       })
-      await bid.save()
-      return bid;
+      await bid.save();
+      const populatedBid = await BidModel.findById(bid._id).populate("jobId").populate("freelancerId")
+
+ 
+
+      return populatedBid;
     } catch (error) {
       console.error(error);
       throw error
@@ -182,5 +185,14 @@ export class FreelancerRepository implements IFreelancerRepository {
   }
 
 
+
+async getAllBids(jobId:string){
+  try{
+    const allBids = await BidModel.find({jobId:jobId}).populate("freelancerId").sort({ createdAt: -1 })
+    return allBids
+  }catch(error){
+    throw error
+  }
+}
 
 }

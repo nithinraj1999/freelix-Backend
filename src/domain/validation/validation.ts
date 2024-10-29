@@ -4,7 +4,7 @@ export const signupSchema = Joi.object({
     email: Joi.string().email().lowercase().pattern(/^\S.*\S$/).required(),
     password: Joi.string().min(4).pattern(/^\S.*\S$/).required(),
     name: Joi.string().pattern(/^\S.*\S$/).min(1).required(),   
-    phone:Joi.string().length(10).pattern(/^[0-9]+$/).pattern(/^\S.*\S$/).required()
+    phone:Joi.string().length(10).pattern(/^[0-9]+$/).required()
 });
 
 export const jobCreationSchema = Joi.object({

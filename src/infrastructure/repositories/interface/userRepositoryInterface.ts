@@ -12,4 +12,6 @@ export interface IUserRepository {
   getAllJobPosts(userID:string):Promise<any>;
   deleteJobPost(jobId:string):Promise<any>
   editPost(data:any):Promise<any>
+  jobDetails(jobId:string):Promise<any>
+  allBids(jobId:string):Promise<any>
 }

@@ -70,7 +70,7 @@ export class UserController {
         _id: user._id,
         role: user.role,
       });
-      
+
       res.cookie("userRefreshJWT", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
@@ -159,22 +159,42 @@ export class UserController {
     try {
       const { jobId } = req.body;
       const deletedJobPost = await this.userUseCase.deleteJobPost(jobId);
-      res.status(200).json({ success: true,deletedJobPost:deletedJobPost });
+      res.status(200).json({ success: true, deletedJobPost: deletedJobPost });
     } catch (error) {
       console.error(error);
-      res
-      .status(500)
-      .json({ success: false });
+      res.status(500).json({ success: false });
+    }
   }
+
+  async editPost(req: Request, res: Response) {
+    try {
+      console.log("edit post", req.body);
+      const editedPost = await this.userUseCase.editPost(req.body);
+      res.status(200).json({ success: true, editedPost: editedPost });
+    } catch (error) {
+      console.error(error);
     }
-  
-    async editPost(req: Request, res: Response){
-      try{
-        console.log("edit post",req.body);
-        const editedPost = await this.userUseCase.editPost(req.body);
-        res.status(200).json({success:true,editedPost:editedPost})
-      }catch(error){
-        console.error(error);
-      }
+  }
+
+  async jobPostdetails(req: Request, res: Response) {
+    try {
+      const { jobID } = req.body;
+      const jobDetails = await this.userUseCase.jobDetails(jobID);
+      res.json({ success: true, jobDetails: jobDetails });
+    } catch (error) {
+      console.error(error);
+      res.json({ success: false });
     }
+  }
+
+  async fetchAllBids(req: Request, res: Response) {
+    try {
+      const { jobId } = req.body;
+      const bids = await this.userUseCase.fetchAllBids(jobId);
+      res.json({success:true,bids:bids})
+    } catch (error) {
+      console.error(error);
+      res.json({success:false})
+    }
+  }
 }
