@@ -4,6 +4,7 @@ import userModel from "../models/userModel";
 import jobPostModel from "../models/jobPostModel";
 import { Cloudinary } from "../../application/services/cloudinary";
 import BidModel from "../models/bidModel";
+import { IBid } from "../models/interface/IBidModel";
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -151,7 +152,7 @@ export class FreelancerRepository implements IFreelancerRepository {
     } catch (error) {
       console.error(error);
       throw error
-    }
+    }  
   }
 
   async isExistingBidder(jobId:string,userId:string){
@@ -174,9 +175,6 @@ export class FreelancerRepository implements IFreelancerRepository {
       })
       await bid.save();
       const populatedBid = await BidModel.findById(bid._id).populate("jobId").populate("freelancerId")
-
- 
-
       return populatedBid;
     } catch (error) {
       console.error(error);
@@ -195,4 +193,24 @@ async getAllBids(jobId:string){
   }
 }
 
+async editBid(data: Partial<IBid>){
+  try{
+    const {_id,bidAmount,deliveryDays,proposal} =data
+    const dataToUpdate: Partial<IBid> = {}
+    if(bidAmount){
+      dataToUpdate.bidAmount = bidAmount
+    }
+    if(deliveryDays){
+      dataToUpdate.deliveryDays = deliveryDays
+    }
+    if(proposal){
+      dataToUpdate.proposal = proposal
+    }
+    
+    const editBid = await BidModel.findOneAndUpdate({_id:_id},{$set:dataToUpdate})
+    return editBid
+  }catch(error){
+    throw error
+  }
+}
 }

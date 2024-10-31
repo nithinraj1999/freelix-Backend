@@ -6,7 +6,7 @@ import { IFreelancerRepository } from "../../../infrastructure/repositories/inte
 import { FreelancerUseCaseInterface } from "../interfaces/IFreelancerUseCase";
 import { NotificationService } from "../../services/notificationService";
 import { userSocketMap } from "../../..";
-
+import { IBid } from "../../../infrastructure/models/interface/IBidModel";
 export class FreelancerUseCase implements FreelancerUseCaseInterface {
   private freelancerRepository: IFreelancerRepository;
   private bcrypt: Ibcrypt;
@@ -136,6 +136,17 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     }catch(error){
       console.error(error);
       
+    }
+  }
+
+
+  async editBid(data: Partial<IBid>){
+    try{
+      const edit = await this.freelancerRepository.editBid(data)
+      return edit
+    }catch(error){
+      console.error(error);
+      throw error
     }
   }
 }

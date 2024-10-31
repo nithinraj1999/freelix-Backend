@@ -27,6 +27,8 @@ router.post('/job-detils',freelancerAuth, freelancerController.getJobDetails.bin
 router.post('/check-for-existing-bidder',freelancerAuth, freelancerController.isExistingBidder.bind(freelancerController));
 router.post('/submit-bid',freelancerAuth,validateSchema(bidSumissionSchema), freelancerController.submitBid.bind(freelancerController));
 router.post('/all-bids', freelancerController.getAllBids.bind(freelancerController));
+router.post('/edit-my-bid', freelancerController.editMyBid.bind(freelancerController));
+
 
 export default router
 

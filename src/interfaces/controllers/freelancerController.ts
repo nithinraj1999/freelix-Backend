@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { FreelancerUseCaseInterface } from "../../application/useCases/interfaces/IFreelancerUseCase";
 import { Cloudinary } from "../../application/services/cloudinary";
 import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
+
 export class FreelancerController {
   private freelancerUseCase: FreelancerUseCaseInterface;
   private jwt: jwtInterface;
@@ -150,7 +151,6 @@ export class FreelancerController {
   async isExistingBidder(req: Request, res: Response) {
     try {
       const { jobId, userId } = req.body;
-      console.log(req.body);
 
       const isExistingBidder =
         await this.freelancerUseCase.isBidderAlreadyExist(jobId, userId);
@@ -193,10 +193,22 @@ export class FreelancerController {
     try {
       const { jobId } = req.body;
       const allBids = await this.freelancerUseCase.getAllBids(jobId);
-
       res.status(200).json({ success: true,allBids:allBids});
     } catch (error) {
+      res.json({ success: false});
       console.error();
+    }
+  }
+
+  async editMyBid(req: Request, res: Response){
+    try{
+      const data = req.body
+      const bidEdit = await this.freelancerUseCase.editBid(data);
+    res.status(200).json({success:true,editedBid:bidEdit})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+
     }
   }
 }
