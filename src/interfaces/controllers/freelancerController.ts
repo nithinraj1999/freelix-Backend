@@ -208,7 +208,49 @@ export class FreelancerController {
     }catch(error){
       console.error(error);
       res.status(500).json({success:false})
-
     }
   }
+
+  
+  async myBids(req: Request, res: Response){
+    try{
+       const {userId} = req.body
+       const myBids = await this.freelancerUseCase.myBids(userId);
+
+    res.status(200).json({success:true,myBids:myBids})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+    }
+  }
+
+  
+  async myBidDetails(req: Request, res: Response){
+    try{
+       const {bidID} = req.body
+       
+       const myBidDetails = await this.freelancerUseCase.myBidDetails(bidID);
+
+    res.status(200).json({success:true,myBidDetails:myBidDetails})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+    }
+  }
+
+  async withdrawBid(req: Request, res: Response){
+    try{
+       const {bidId} = req.body
+       console.log(bidId);
+       
+       const withdraw = await this.freelancerUseCase.withdrawBid(bidId);
+
+    res.status(200).json({success:true})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+    }
+  }
+
+
 }

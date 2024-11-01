@@ -149,5 +149,32 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
       throw error
     }
   }
+
+  async myBids(userId:string){
+    try{
+      const myBids = await this.freelancerRepository.myBids(userId)
+      return myBids
+    }catch(error){
+      throw error
+    }
+  }
+
+  async myBidDetails(bidID:string){
+    try{
+      const myBidDetails = await this.freelancerRepository.myBidDetails(bidID)
+      return myBidDetails
+    }catch(error){
+      throw error
+    }
+  }
+
+  async withdrawBid(bidId:string){
+    try{
+      const withdraw = await this.freelancerRepository.withdrawBid(bidId)
+      return withdraw
+    }catch(error){
+      throw error
+    }
+  }
 }
  

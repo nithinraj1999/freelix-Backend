@@ -29,6 +29,10 @@ router.post('/submit-bid',freelancerAuth,validateSchema(bidSumissionSchema), fre
 router.post('/all-bids', freelancerController.getAllBids.bind(freelancerController));
 router.post('/edit-my-bid', freelancerController.editMyBid.bind(freelancerController));
 
+router.post('/my-bids', freelancerController.myBids.bind(freelancerController));
+router.post('/my-bids/details', freelancerController.myBidDetails.bind(freelancerController));
+router.post('/withdraw-my-bid', freelancerController.withdrawBid.bind(freelancerController));
+
 
 export default router
 

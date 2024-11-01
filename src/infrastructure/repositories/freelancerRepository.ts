@@ -186,7 +186,7 @@ export class FreelancerRepository implements IFreelancerRepository {
 
 async getAllBids(jobId:string){
   try{
-    const allBids = await BidModel.find({jobId:jobId}).populate("freelancerId").sort({ createdAt: -1 })
+    const allBids = await BidModel.find({jobId:jobId,status:{$ne:"withdrawn"}}).populate("freelancerId").sort({ createdAt: -1 })
     return allBids
   }catch(error){
     throw error
@@ -209,6 +209,36 @@ async editBid(data: Partial<IBid>){
     
     const editBid = await BidModel.findOneAndUpdate({_id:_id},{$set:dataToUpdate})
     return editBid
+  }catch(error){
+    throw error
+  }
+}
+
+async myBids(userId:string){
+  try{
+    const allMyBids = await BidModel.find({freelancerId:userId},{createdAt:1,bidAmount:1,_id:1,status:1}).populate("jobId","title").sort({ createdAt: -1 })
+    return allMyBids
+  }catch(error){
+    throw error
+  }
+}
+
+
+async myBidDetails(bidID:string){
+  try{
+    const myBidDetails = await BidModel.findOne({_id:bidID}).populate("jobId")
+    return myBidDetails
+  }catch(error){
+    throw error
+  }
+}
+
+async withdrawBid(bidId:string){
+  try{
+    console.log("withdrawBid(bidId:string)",bidId);
+    
+    const withdraw = await BidModel.updateOne({_id:bidId},{$set:{status:"Withdrawn"}})
+    return withdraw
   }catch(error){
     throw error
   }

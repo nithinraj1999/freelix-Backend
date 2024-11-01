@@ -26,6 +26,10 @@ const BidSchema: Schema = new Schema(
             required: true,
            
         },
+        status:{
+            type: String,
+            default: "pending",
+        }
     },
     {
         timestamps: true, // Automatically manages createdAt and updatedAt fields
