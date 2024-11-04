@@ -5,7 +5,7 @@ import { IFreelancer } from "../../../domain/entities/freelancer";
 import { IFreelancerRepository } from "../../../infrastructure/repositories/interface/freelancerRepositoryInterface";
 import { FreelancerUseCaseInterface } from "../interfaces/IFreelancerUseCase";
 import { NotificationService } from "../../services/notificationService";
-import { userSocketMap } from "../../..";
+import { userSocketMap } from "../../services/socket";
 import { IBid } from "../../../infrastructure/models/interface/IBidModel";
 export class FreelancerUseCase implements FreelancerUseCaseInterface {
   private freelancerRepository: IFreelancerRepository;
@@ -75,15 +75,19 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
   async editProfile(data:any,file: Express.Multer.File |null){
     try{
       let portfolioUrl: string | null = null;
+      console.log("usecase port",file);
+      
       // If profilePic is provided, upload it to Cloudinary
       if (file) {
         const cloudinaryInstance = new Cloudinary();
         const image = await cloudinaryInstance.uploadProfilePic(file.path);
         portfolioUrl = image.url; // Get the image URL from Cloudinary
       }
+      console.log("url ",portfolioUrl);
+      
       const jobList = await this.freelancerRepository.editProfile(data,portfolioUrl)
-
-      return jobList
+      
+      return jobList 
     }catch(error){
       console.error(error);
       
@@ -172,6 +176,25 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     try{
       const withdraw = await this.freelancerRepository.withdrawBid(bidId)
       return withdraw
+    }catch(error){
+      throw error
+    }
+  }
+
+
+  async fetchFreelancerDetails(freelancerId:string){
+    try{
+      const details = await this.freelancerRepository.getFreelancerDetails(freelancerId)
+      return details
+    }catch(error){
+      throw error
+    }
+  }
+
+  async deletePortFolioImg(imageId:string,userId:string){
+    try{
+      const portfolioDelition = await this.freelancerRepository.deletePortFolioImg(imageId,userId)
+      return portfolioDelition
     }catch(error){
       throw error
     }

@@ -8,50 +8,30 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { Server, Socket } from 'socket.io';
 import { createServer } from 'node:http';
-
+import { initSocket } from './application/services/socket';
+import morgan from "morgan"
 dotenv.config(); // Load environment variables
   
+
 const port = process.env.PORT 
 const app: Application = express();
 const server = createServer(app); // Create HTTP server
 
+const io = initSocket(server);
+
 // Initialize Socket.IO
-const io = new Server(server, {
-  cors: {
+
+app.use(cors({
     origin: process.env.ORIGIN, // Your frontend origin
     methods: ['GET', 'POST'],
     credentials: true,
   },
-});
+));
 
-
-export const userSocketMap = new Map<string, string>();
-
-
-io.on('connection', (socket: Socket) => {
-
-  socket.on('registerUser', (userId: string) => {
-    userSocketMap.set(userId, socket.id); // Associate userId with socket.id
-    console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
-  });
-
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-    // Remove user from map on disconnect
-    userSocketMap.forEach((value, key) => {
-      if (value === socket.id) {
-        userSocketMap.delete(key);
-        console.log(`User unregistered: ${key}`);
-      }
-    });
-  });
-});
-
-
+app.use(morgan("tiny"))
   
 // Apply middlewares
-app.use(cookieParser()); 
+app.use(cookieParser());  
 app.use(cors({
   origin: process.env.ORIGIN, 
   credentials: true, // Allow credentials (cookies)

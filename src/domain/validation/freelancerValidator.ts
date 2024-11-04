@@ -6,8 +6,13 @@ export const editProfileSchema = Joi.object({
     name: Joi.string().pattern(/^[a-zA-Z\s]*$/).min(1).optional(),
     title: Joi.string().pattern(/^\S.*\S$/).optional(),
     description: Joi.string().pattern(/^\S.*\S$/).optional(),
-    skills:Joi.string().pattern(/^\S.*\S$/).optional(),
+    skills: Joi.array().items(Joi.string().pattern(/^\S.*\S$/)).optional(),
     file: Joi.string().optional(), // Optional file
+    portfolio: Joi.array().items(Joi.object({
+        image: Joi.string().required(),
+        title: Joi.string().required(),
+        description: Joi.string().optional(),
+      })).optional(),
 });
 
 export const bidSumissionSchema = Joi.object({
@@ -16,4 +21,13 @@ export const bidSumissionSchema = Joi.object({
     bidAmount:Joi.number().positive().required(),
     deliveryDays:Joi.number().positive().required(),
     proposal: Joi.string().pattern(/^\S.*\S$/).required(),
+});
+
+
+export const editBidSumissionSchema = Joi.object({
+    _id: Joi.string().pattern(/^[a-fA-F0-9]{24}$/).optional(), 
+    freelancerId: Joi.string().pattern(/^[a-fA-F0-9]{24}$/).optional(), // userID is required
+    bidAmount:Joi.number().positive().optional(),
+    deliveryDays:Joi.number().positive().optional(),
+    proposal: Joi.string().pattern(/^\S.*\S$/).optional(),
 });

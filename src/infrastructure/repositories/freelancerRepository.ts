@@ -99,7 +99,7 @@ export class FreelancerRepository implements IFreelancerRepository {
   async editProfile(data: any, portfolioUrl: string) {
     try {
       const { userID, name, title, description, skills } = data;
-      console.log(portfolioUrl);
+      console.log("repo portfo",portfolioUrl);
 
       const updateObject: any = {};
       if (name) {
@@ -157,7 +157,7 @@ export class FreelancerRepository implements IFreelancerRepository {
 
   async isExistingBidder(jobId:string,userId:string){
     try{
-      const isExistingBidder = await BidModel.findOne({jobId:jobId,freelancerId:userId})
+      const isExistingBidder = await BidModel.findOne({jobId:jobId,freelancerId:userId,status:{$ne:"Withdrawn"}})
       return isExistingBidder
     }catch(error){
       throw error
@@ -207,7 +207,8 @@ async editBid(data: Partial<IBid>){
       dataToUpdate.proposal = proposal
     }
     
-    const editBid = await BidModel.findOneAndUpdate({_id:_id},{$set:dataToUpdate})
+    const editBid = await BidModel.findOneAndUpdate({_id:_id},{$set:dataToUpdate},{ new: true }).populate("freelancerId")
+    
     return editBid
   }catch(error){
     throw error
@@ -239,6 +240,29 @@ async withdrawBid(bidId:string){
     
     const withdraw = await BidModel.updateOne({_id:bidId},{$set:{status:"Withdrawn"}})
     return withdraw
+  }catch(error){
+    throw error
+  }
+}
+
+async getFreelancerDetails(freelancerId:string){
+  try{
+    
+    const details = await userModel.findOne({_id:freelancerId})
+    return details
+  }catch(error){
+    throw error
+  }
+}
+
+async deletePortFolioImg(imageId:string,userId:string){
+  try{
+    
+    const deletePortfolio = await userModel.updateOne(
+      { _id: userId },
+      { $pull: { portfolio: { _id: imageId } } }
+    );
+    deletePortfolio
   }catch(error){
     throw error
   }

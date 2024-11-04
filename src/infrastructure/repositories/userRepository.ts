@@ -7,9 +7,19 @@ import jobPostModel from "../models/jobPostModel";
 import { IJobPost } from "../models/jobPostModel";
 import BidModel from "../models/bidModel";
 export class UserRepository implements IUserRepository {
+  
+  async checkEmailExist(email: string): Promise<User | null> {
+    try{
+      const user = await userModel.findOne({ email:email,isAdmin:false,isBlock:false });
+      if (!user) return null;
+      return user
+    }catch(error){
+      throw error
+    }
+  }
     async findByEmail(email: string): Promise<User | null> {
       try{
-        const user = await userModel.findOne({ email:email,isAdmin:false,isBlock:false });
+        const user = await userModel.findOne({ email:email,isAdmin:false,isBlock:false,isVerified:true });
         if (!user) return null;
         return user
       }catch(error){
@@ -18,33 +28,45 @@ export class UserRepository implements IUserRepository {
     }
 
     async save(user: User): Promise<User> {
-        const newUser = userModel.create({
+        const newUser = userModel.create({ 
             name: user.name,
             email: user.email,
             password: user.password,
             phone: user.phone,
-            role: user.role,
-            profilePicture: user.profilePicture,
+            isVerified:true,
         });
         return newUser
     }
 
-    async saveUserOtp(userId:string,otp:string,email:string):Promise<any>{
+    async saveUserOtp(otp:string,email:string,userDta:any):Promise<any>{
+      const otpExpirationTime = 120000;
         const newOtp = new Otp({
-            userID:userId,
             otp:otp,
-            email:email
+            email:email,
+            userData: {
+              name: userDta.name,
+              email: userDta.email,
+              password: userDta.password,
+              phone: userDta.phone,
+            },
+            createdAt: Date.now(),
         })
        const otpDoc = await newOtp.save()
+       setTimeout(async () => {
+        await Otp.updateOne({ email: email }, { $set: { otp: null } });
+      }, otpExpirationTime);
        return otpDoc
-    }
+    } 
+
+    async updateUserOtp( otp:string,email:string):Promise<any>{
+      const newOtp = await Otp.findOneAndUpdate({email:email},{$set:{otp:otp}})
+      return newOtp
+  }
+  
     
-    async findOTP(otp: string, userID: string): Promise<boolean> {
-        const matchOTP = await Otp.findOne({ userID: userID, otp: otp });
-        if(matchOTP){  
-             await userModel.updateOne({_id:userID},{$set:{isVerified:true}})
-        }
-        return matchOTP !== null;
+      async findOTP(otp: string, email: string) {
+        const matchOTP = await Otp.findOne({ email: email, otp: otp });
+        return matchOTP 
       }
 
       async findById(userID:string): Promise<User | null> {
@@ -106,7 +128,7 @@ export class UserRepository implements IUserRepository {
 
       async getAllJobPosts(userID:string){
         try{
-          const MyPost = await jobPostModel.find({userID:userID})
+          const MyPost = await jobPostModel.find({userID:userID,isDelete:false})
           return MyPost
         }catch(error){
           console.error(error);
@@ -116,7 +138,7 @@ export class UserRepository implements IUserRepository {
 
       async deleteJobPost(jobId:string){
         try {      
-          const result = await jobPostModel.deleteOne({ _id: jobId });  // Delete job by ID
+          const result = await jobPostModel.findByIdAndUpdate({ _id: jobId },{$set:{isDelete:true}});  // Delete job by ID
           return result
         } catch (error) {
           console.error(`Error deleting job with ID ${jobId}:`, error);
@@ -183,17 +205,29 @@ export class UserRepository implements IUserRepository {
           return jobDetails
         }catch(error){
           console.error(error);
-          
+          throw error
         }
       }
 
       async allBids(jobId:string){
         try{
-        const allBids = await BidModel.find({jobId:jobId}).populate("freelancerId").sort({ createdAt: -1 })
+        const allBids = await BidModel.find({jobId:jobId,status:{$ne:"Withdrawn"}}).populate("freelancerId").sort({ createdAt: -1 })
         return allBids
         }catch(error){
           console.error(error);
-          
+          throw error
+
         } 
+      }
+
+
+      async getFreelancerDetails(freelancerId:string){
+        try{
+          
+          const details = await userModel.findOne({_id:freelancerId})
+          return details
+        }catch(error){
+          throw error
+        }
       }
     }      

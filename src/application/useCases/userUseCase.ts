@@ -7,6 +7,7 @@ import { IEmailService } from "../services/interfaces/IEmailService";
 import { IOtpService } from "../services/interfaces/IOtpService";
 import { jwtInterface } from "../services/interfaces/jwtInterface";
 import { IJobPost } from "../../infrastructure/models/jobPostModel";
+
 export class UserUseCase implements IUserUseCase {
   private userRepository: IUserRepository;
   private bcrypt: Ibcrypt;
@@ -27,42 +28,39 @@ export class UserUseCase implements IUserUseCase {
     this.jwtToken = jwtToken;
   }
 
+ 
   async registerUser(data: User): Promise<void> {
     try {
-
       const existingUser = await this.userRepository.findByEmail(data.email);
-      
       if (existingUser) {
         throw new Error("User with this email already exists.");
       } else {
-        if(data.password){
+        if (data.password) {
           data.password = await this.bcrypt.hash(data.password);
         }
         
-        
-        const savedData = await this.userRepository.save(data);
-        const email = data.email;
         const otp = await this.otpService.generateOtp();
-
-        await this.userRepository.saveUserOtp(savedData._id, otp, email);
-        await this.emailService.sendEmail(email, otp);
-
-        return savedData._id;
+        await this.userRepository.saveUserOtp(otp,data.email,data );  // Store user data temporarily in OTP collection
+        await this.emailService.sendEmail(data.email, otp);
+        return;
       }
     } catch (error) {
       throw error;
     }
   }
+  
 
-  async verification(otp: string, userID: string) {
+  async verification(otp: string, email: string) {
     try {
-      const findOTP = await this.userRepository.findOTP(otp, userID);
+      const findOTP = await this.userRepository.findOTP(otp, email);
       if (findOTP) {
-        const token = this.jwtToken.generateAccessToken({ userID: userID });
+        const savedData = await this.userRepository.save(findOTP.userData);
+        const token = this.jwtToken.generateAccessToken({ email: email });
         return { findOTP, token };
       }
-    } catch (error) {
+    } catch (error) { 
       console.error(error);
+      throw error
     }
   }
 
@@ -87,19 +85,13 @@ export class UserUseCase implements IUserUseCase {
     }
   }
 
-  async resendOTP(userID: string) {
+  async resendOTP(email: string) {
     try {
       const otp = await this.otpService.generateOtp();
-      const user = await this.userRepository.findById(userID);
-      if (user) {
-        const email = user.email;
-        const response = await this.userRepository.saveUserOtp(
-          userID,
-          otp,
-          email
-        );
+      
+        const response = await this.userRepository.updateUserOtp(otp,email);
         await this.emailService.sendEmail(response.email, otp);
-      }
+  
     } catch (error) {
       throw error;
     }
@@ -126,7 +118,7 @@ async getAllFreelancers(){
     throw error;
   }
 }
-async getAllJobPosts(userID:string){
+async getAllJobPosts(userID:string){ 
   try{
     const MyjobPosts = await this.userRepository.getAllJobPosts(userID);
     return MyjobPosts;
@@ -173,6 +165,15 @@ async fetchAllBids(jobId:string){
   }catch(error){
     console.error(error);
     
+  }
+}
+
+async fetchFreelancerDetails(freelancerId:string){
+  try{
+    const details = await this.userRepository.getFreelancerDetails(freelancerId)
+    return details
+  }catch(error){
+    throw error
   }
 }
 }

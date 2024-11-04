@@ -109,18 +109,34 @@ export class FreelancerController {
 
   async editprofile(req: Request, res: Response) {
     try {
-      const updatedProfile = await this.freelancerUseCase.editProfile(
-        req.body,
-        req.file ?? null
-      );
-      console.log(req.file);
 
+      console.log(req.body);
+      
+      const files = req.files;
+
+      let firstFile: Express.Multer.File | null = null;
+      
+      if (files) {
+        // Check if files is an array
+        if (Array.isArray(files)) {
+          firstFile = files[0] ?? null; // Access the first file if it exists
+        } else {
+          // If files is an object, you can iterate through its properties
+          const fileArray = Object.values(files).flat(); // Flatten the arrays into one array
+          firstFile = fileArray[0] ?? null; // Access the first file if it exists
+        }
+      }
+      
+      const updatedProfile = await this.freelancerUseCase.editProfile(req.body, firstFile);
+      
+     
+ 
       return res.status(200).json({
         success: true,
         message: "Profile updated successfully",
         data: updatedProfile,
       });
-    } catch (error) {
+    } catch (error) { 
       console.error("Error updating profile:", error);
       return res.status(500).json({
         success: false,
@@ -210,7 +226,7 @@ export class FreelancerController {
       res.status(500).json({success:false})
     }
   }
-
+ 
   
   async myBids(req: Request, res: Response){
     try{
@@ -253,4 +269,32 @@ export class FreelancerController {
   }
 
 
+  async fetchFreelancerDetails(req: Request, res: Response){
+    try{
+      
+      console.log(req.body);
+      const {freelancerId} = req.body
+      const details = await this.freelancerUseCase.fetchFreelancerDetails(freelancerId);
+
+   res.status(200).json({success:true,freelancerDetails:details})
+   }catch(error){
+     console.error(error);
+     res.status(500).json({success:false})
+   }
+  }
+
+
+  async deletePortfolioImg(req: Request, res: Response){
+    try{
+      const {imageId} =req.body
+      const {userId} =req.body
+      
+      const details = await this.freelancerUseCase.deletePortFolioImg(imageId,userId);
+
+   res.status(200).json({success:true})
+   }catch(error){
+     console.error(error);
+     res.status(500).json({success:false})
+   }
+  }
 }

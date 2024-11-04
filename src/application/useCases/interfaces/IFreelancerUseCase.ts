@@ -18,4 +18,7 @@ export interface FreelancerUseCaseInterface{
     myBids(userId:string):Promise<any>
     myBidDetails(bidID:string):Promise<any>
     withdrawBid(bidId:string):Promise<any>
+
+    fetchFreelancerDetails(freelancerId:string):Promise<any>;
+    deletePortFolioImg(imageId:string,userId:string):Promise<any>
 }

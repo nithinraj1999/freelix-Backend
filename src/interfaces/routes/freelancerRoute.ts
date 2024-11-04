@@ -9,8 +9,8 @@ import validateSchema from '../middleware/validator';
 import { editProfileSchema } from '../../domain/validation/freelancerValidator';
 import { bidSumissionSchema } from '../../domain/validation/freelancerValidator';
 import freelancerAuth from '../middleware/freelancerAuth';
+import { editBidSumissionSchema } from '../../domain/validation/freelancerValidator';
 const router = express.Router();
-
 const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()
 
@@ -22,16 +22,19 @@ router.post('/create-freelancer-account',upload.single('profilePicture'), freela
 router.post('/switch-to-buying',freelancerAuth, freelancerController.switchToBuying.bind(freelancerController));
 router.post('/switch-to-selling', freelancerController.switchToSelling.bind(freelancerController));
 router.get('/job-list',freelancerAuth, freelancerController.getJobList.bind(freelancerController));
-router.post('/profile/edit',freelancerAuth,upload.single('portfolio'),validateSchema(editProfileSchema), freelancerController.editprofile.bind(freelancerController));
+router.post('/profile/edit',freelancerAuth,upload.array('portfolio'),validateSchema(editProfileSchema), freelancerController.editprofile.bind(freelancerController));
 router.post('/job-detils',freelancerAuth, freelancerController.getJobDetails.bind(freelancerController));
 router.post('/check-for-existing-bidder',freelancerAuth, freelancerController.isExistingBidder.bind(freelancerController));
 router.post('/submit-bid',freelancerAuth,validateSchema(bidSumissionSchema), freelancerController.submitBid.bind(freelancerController));
-router.post('/all-bids', freelancerController.getAllBids.bind(freelancerController));
-router.post('/edit-my-bid', freelancerController.editMyBid.bind(freelancerController));
+router.post('/all-bids',freelancerAuth, freelancerController.getAllBids.bind(freelancerController));
+router.post('/edit-my-bid',freelancerAuth,validateSchema(editBidSumissionSchema), freelancerController.editMyBid.bind(freelancerController));
 
-router.post('/my-bids', freelancerController.myBids.bind(freelancerController));
-router.post('/my-bids/details', freelancerController.myBidDetails.bind(freelancerController));
-router.post('/withdraw-my-bid', freelancerController.withdrawBid.bind(freelancerController));
+router.post('/my-bids',freelancerAuth, freelancerController.myBids.bind(freelancerController));
+router.post('/my-bids/details',freelancerAuth, freelancerController.myBidDetails.bind(freelancerController));
+router.post('/withdraw-my-bid',freelancerAuth, freelancerController.withdrawBid.bind(freelancerController));
+
+router.post('/freelancer-details',freelancerAuth, freelancerController.fetchFreelancerDetails.bind(freelancerController));
+router.post('/delete-portfolio',freelancerAuth, freelancerController.deletePortfolioImg.bind(freelancerController));
 
 
 export default router

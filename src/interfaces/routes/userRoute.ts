@@ -12,6 +12,7 @@ import validateSchema from '../middleware/validator';
 import { signupSchema } from '../../domain/validation/validation';
 import { jobCreationSchema } from '../../domain/validation/validation';
 import { loginSchema } from '../../domain/validation/validation';
+import { editJobPostSchema } from '../../domain/validation/validation';
 const router = express.Router();
 
 // Set up dependencies
@@ -33,10 +34,11 @@ router.post('/resend-otp', userController.resendOTP.bind(userController));
 router.post('/create-job-post',userAuthMiddleware,upload.single('file'),validateSchema(jobCreationSchema) ,userController.createJobPost.bind(userController));
 router.post('/my-job-posts',userAuthMiddleware,userController.getAllJobPosts.bind(userController));
 router.post('/delete-post',userAuthMiddleware,userController.deletePost.bind(userController));
-router.post('/edit-post',userAuthMiddleware,userController.editPost.bind(userController));
+router.post('/edit-post',validateSchema(editJobPostSchema),userAuthMiddleware,userController.editPost.bind(userController));
 router.post('/my-job-details',userAuthMiddleware,userController.jobPostdetails.bind(userController));
 router.post('/all-bids',userAuthMiddleware,userController.fetchAllBids.bind(userController));
 
+router.post('/freelancer-details',userAuthMiddleware, userController.fetchFreelancerDetails.bind(userController));
 
 export default router 
 

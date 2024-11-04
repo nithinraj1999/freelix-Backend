@@ -16,6 +16,7 @@ export interface IJobPost extends Document {
     from: number; // Start of hourly rate range
     to: number; // End of hourly rate range
   };
+  isDelete?:boolean;
   createdAt?: Date;
 }
 
@@ -76,6 +77,10 @@ const jobPostSchema: Schema<IJobPost> = new Schema({
     type: Date,
     default: Date.now,
   },
+  isDelete:{
+    type:Boolean,
+    default:false
+  }
 });
 
 const jobPostModel: Model<IJobPost> = mongoose.model<IJobPost>(

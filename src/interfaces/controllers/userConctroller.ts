@@ -3,8 +3,7 @@ import { IUserUseCase } from "../../application/useCases/interfaces/IUserUseCase
 import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
 import { User as UserEntity } from "../../domain/entities/user"; // Change this to match your import path
 import { NotificationService } from "../../application/services/notificationService";
-import { userSocketMap } from "../..";
-
+import { userSocketMap } from "../../application/services/socket";
 export class UserController {
   private userUseCase: IUserUseCase;
   private jwt: jwtInterface;
@@ -18,35 +17,36 @@ export class UserController {
 
   async register(req: Request, res: Response) {
     try {
+      console.log(req.body);
+      const {password,confirmPassword} =req.body
+      if(password !== confirmPassword){
+        res.json({message:"password is not matching"})
+      }else{
+
+    
       const user = await this.userUseCase.registerUser(req.body);
       res.status(201).json({
+        success:true,
         userID: user,
+        email:req.body.email,
         message:
           "User registration successful. Please verify the OTP sent to your email.",
       });
-    } catch (err) {
-      throw err;
     }
+    } catch (err) {
+      res.json({ success: false,message:"Email already exist" });    }
   }
 
   async verification(req: Request, res: Response) {
     try {
-      const { otp, userID } = req.body;
-      const verify = await this.userUseCase.verification(otp, userID);
-      if (verify) {
-        const token = verify.token;
-        res.cookie("jwt", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV !== "development",
-          sameSite: "strict",
-          maxAge: 30 * 24 * 60 * 60 * 1000,
-        });
+      const { otp, email } = req.body;
+      const verify = await this.userUseCase.verification(otp, email);
+      
         res.status(201).json({ success: true, message: "otp verified." });
-      } else {
-        res.json({ success: false, message: "otp not verified." });
-      }
+      
     } catch (error) {
-      throw error;
+      res.json({ success: false, message: "otp not verified." });
+      
     }
   }
 
@@ -106,11 +106,11 @@ export class UserController {
 
   async resendOTP(req: Request, res: Response) {
     try {
-      const { userID } = req.body;
-      const resend = await this.userUseCase.resendOTP(userID);
+      const { email } = req.body;
+      const resend = await this.userUseCase.resendOTP(email);
       res.json({ success: true });
     } catch (error) {
-      throw error;
+      res.json({ success: false,error:error });
     }
   }
 
@@ -173,6 +173,7 @@ export class UserController {
       res.status(200).json({ success: true, editedPost: editedPost });
     } catch (error) {
       console.error(error);
+      res.json({ success: false });
     }
   }
 
@@ -197,4 +198,21 @@ export class UserController {
       res.json({success:false})
     }
   }
+
+
+  
+  async fetchFreelancerDetails(req: Request, res: Response){
+    try{
+      
+      console.log(req.body);
+      const {freelancerId} = req.body
+      const details = await this.userUseCase.fetchFreelancerDetails(freelancerId);
+
+   res.status(200).json({success:true,freelancerDetails:details})
+   }catch(error){
+     console.error(error);
+     res.status(500).json({success:false})
+   }
+  }
+
 }
