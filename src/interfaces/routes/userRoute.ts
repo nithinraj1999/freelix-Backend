@@ -40,6 +40,9 @@ router.post('/all-bids',userAuthMiddleware,userController.fetchAllBids.bind(user
 
 router.post('/freelancer-details',userAuthMiddleware, userController.fetchFreelancerDetails.bind(userController));
 
+router.post('/all-notifications',userAuthMiddleware, userController.fetchAllNotifications.bind(userController));
+router.get('/get-skills',userAuthMiddleware, userController.getSkills.bind(userController));
+
 export default router 
 
  

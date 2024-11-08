@@ -30,6 +30,7 @@ router.post('/create-freelancer',authMiddleware,upload.single('profilePicture'),
 router.post('/edit-freelancer',authMiddleware,upload.single('profilePicture'), adminController.editFreelancer.bind(adminController) );
 router.post('/block-freelancer',authMiddleware, adminController.blockFreelancer.bind(adminController) );
 router.post('/unblock-freelancer',authMiddleware, adminController.unblockFreelancer.bind(adminController));
+router.post('/add-skills',authMiddleware, adminController.addSkills.bind(adminController));
 
 
 export default router

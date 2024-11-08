@@ -39,16 +39,23 @@ export class UserController {
 
   async verification(req: Request, res: Response) {
     try {
-      const { otp, email } = req.body;
-      const verify = await this.userUseCase.verification(otp, email);
-      
-        res.status(201).json({ success: true, message: "otp verified." });
-      
+        const { otp, email } = req.body;
+        console.log("verification", req.body);
+
+        const verify = await this.userUseCase.verification(otp, email);
+        if (verify) {
+            res.status(201).json({ success: true, message: "otp verified." });
+        }else{
+          res.json({ success: false, message: "otp not verified." });
+
+        }
     } catch (error) {
-      res.json({ success: false, message: "otp not verified." });
-      
+        // res.status(500).json({ success: false, message: "otp not verified." });
+        console.log(error);
+        
     }
-  }
+}
+
 
   async loginUser(req: Request, res: Response) {
     try {
@@ -209,6 +216,34 @@ export class UserController {
       const details = await this.userUseCase.fetchFreelancerDetails(freelancerId);
 
    res.status(200).json({success:true,freelancerDetails:details})
+   }catch(error){
+     console.error(error);
+     res.status(500).json({success:false})
+   }
+  }
+
+
+  async fetchAllNotifications(req: Request, res: Response){
+    try{
+      
+     const {userID} = req.body
+     const notifications = await this.userUseCase.fetchAllNotifications(userID);
+
+   res.status(200).json({success:true,notifications:notifications})
+   }catch(error){
+     console.error(error);
+     res.status(500).json({success:false})
+   }
+  }
+
+  async getSkills(req: Request, res: Response){
+    try{
+      
+     
+     const skills = await this.userUseCase.getSkills();
+    console.log(skills);
+
+   res.status(200).json({success:true,skills:skills})
    }catch(error){
      console.error(error);
      res.status(500).json({success:false})

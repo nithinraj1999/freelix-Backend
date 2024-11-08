@@ -1,6 +1,18 @@
 
 import Joi from 'joi';
 
+
+
+export const becomeFreelancerSchema = Joi.object({
+    userID: Joi.string().pattern(/^[a-fA-F0-9]{24}$/).required(), // userID is required
+
+    name: Joi.string().pattern(/^\S.*\S$/).required(),
+    description:Joi.string().pattern(/^\S.*\S$/).required(),
+    skills:Joi.string().pattern(/^\S.*\S$/).required(),
+    languages:Joi.string().pattern(/^\S.*\S$/).required()
+});
+
+
 export const editProfileSchema = Joi.object({
     userID: Joi.string().pattern(/^[a-fA-F0-9]{24}$/).required(), // userID is required
     name: Joi.string().pattern(/^[a-zA-Z\s]*$/).min(1).optional(),

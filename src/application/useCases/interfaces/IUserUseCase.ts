@@ -13,5 +13,6 @@ export interface IUserUseCase{
     jobDetails(jobId:string):Promise<any>;
     fetchAllBids(jobId:string):Promise<any>;
     fetchFreelancerDetails(freelancerId:string):Promise<any>;
-
+    fetchAllNotifications(userID:string):Promise<any>
+    getSkills():Promise<any>
 }

@@ -176,4 +176,22 @@ async fetchFreelancerDetails(freelancerId:string){
     throw error
   }
 }
+
+async fetchAllNotifications(userID:string){
+  try{
+    const notifications = await this.userRepository.fetchAllNotifications(userID)
+    return notifications
+  }catch(error){
+    throw error
+  }
+}
+
+async getSkills(){
+  try{
+    const skills = await this.userRepository.getSkills()
+    return skills
+  }catch(error){
+    throw error
+  }
+}
 }

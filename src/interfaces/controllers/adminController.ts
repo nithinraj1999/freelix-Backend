@@ -209,4 +209,19 @@ async refreshToken(req: Request, res: Response) {
     res.status(401).json({ success: false, message: "Invalid or expired refresh token" });
   }
 }
+
+
+async addSkills(req: Request, res: Response){
+  try{
+
+const {skill,description} =req.body
+const skills = await this.adminUseCase.addSkills(skill,description);
+    if(skills){
+      res.json({success:true})
+    }
+  }catch(error){
+    console.error(error);
+    
+  }
+}
 }

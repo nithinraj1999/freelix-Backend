@@ -13,4 +13,5 @@ export interface IAdminRepository {
   unblockFreelancer(clientID:string):Promise<any>
   createFreelancer(data:object,imagePath:string | null,hashedPassword:string):Promise<any>
   editFreelancer(data:object,imagePath:string | null):Promise<any>
+  addSkills(skill:string,description:string):Promise<any>
 }

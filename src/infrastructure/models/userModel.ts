@@ -21,7 +21,7 @@ const userSchema: Schema = new Schema({
   isVerified: { type: Boolean, default: false },
   hasFreelancerAccount: { type: Boolean, default: false },
   isFreelancerBlock: { type: Boolean, default: false },
-  portfolio: [{
+  portfolio: [{ 
     image: {
       type: String,
     },

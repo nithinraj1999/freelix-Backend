@@ -6,6 +6,8 @@ import Otp from "../models/otpModel";
 import jobPostModel from "../models/jobPostModel";
 import { IJobPost } from "../models/jobPostModel";
 import BidModel from "../models/bidModel";
+import notificationModel from "../models/notification";
+import skillsModel from "../models/skillsModel";
 export class UserRepository implements IUserRepository {
   
   async checkEmailExist(email: string): Promise<User | null> {
@@ -223,11 +225,29 @@ export class UserRepository implements IUserRepository {
 
       async getFreelancerDetails(freelancerId:string){
         try{
-          
           const details = await userModel.findOne({_id:freelancerId})
           return details
         }catch(error){
           throw error
         }
       }
+
+      async fetchAllNotifications(userID:string){
+        try{
+          const notifications = await notificationModel.find({userID:userID})
+          return notifications
+        }catch(error){
+          throw error
+        }
+      }
+
+      async getSkills(){
+        try{
+          const skills = await skillsModel.find({},{skill:1,_id:0})
+          return skills
+        }catch(error){
+          throw error
+        }
+      }
+
     }      

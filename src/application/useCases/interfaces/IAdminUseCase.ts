@@ -15,4 +15,5 @@ export interface IAdminUseCase{
     unblockFreelancer(clientID:string):Promise<any>
     createFreelancer(data:User,profileUrl:string | null):Promise<any>
     editFreelancer(data:User,profileUrl:string | null):Promise<any>
+    addSkills(skill:string,description:string):Promise<any>
 }

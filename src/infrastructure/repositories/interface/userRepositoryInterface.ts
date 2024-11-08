@@ -18,5 +18,7 @@ export interface IUserRepository {
   jobDetails(jobId:string):Promise<any>
   allBids(jobId:string):Promise<any>
   getFreelancerDetails(freelancerId:string):Promise<any>
+  fetchAllNotifications(userID:string):Promise<any>
+  getSkills():Promise<any>
 
 }

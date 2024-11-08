@@ -19,4 +19,5 @@ export interface IFreelancerRepository {
 
     getFreelancerDetails(freelancerId:string):Promise<any>
     deletePortFolioImg(imageId:string,userId:string):Promise<any>
+    storeNotification(userID:string,freelancerId:string,freelancerName:string,createdAt:string,bidAmount:string):Promise<any>
 }

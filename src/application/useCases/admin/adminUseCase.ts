@@ -210,4 +210,14 @@ async editFreelancer(data: User, profilePic: string | null) {
     throw new Error("Failed to edit freelancer");
   }
 }
+
+
+async addSkills(skill:string,description:string){
+  try{
+    const skills = await this.adminRepository.addSkills(skill,description)
+    return skills
+  }catch(error){
+    throw error
+  }
+}
 }

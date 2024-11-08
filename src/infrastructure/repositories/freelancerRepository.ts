@@ -5,6 +5,7 @@ import jobPostModel from "../models/jobPostModel";
 import { Cloudinary } from "../../application/services/cloudinary";
 import BidModel from "../models/bidModel";
 import { IBid } from "../models/interface/IBidModel";
+import notificationModel from "../models/notification";
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -88,7 +89,7 @@ export class FreelancerRepository implements IFreelancerRepository {
 
   async jobList() {
     try {
-      const jobList = await jobPostModel.find({});
+      const jobList = await jobPostModel.find({isDelete:false});
       return jobList;
     } catch (error) {
       console.error(error);
@@ -236,9 +237,8 @@ async myBidDetails(bidID:string){
 
 async withdrawBid(bidId:string){
   try{
-    console.log("withdrawBid(bidId:string)",bidId);
     
-    const withdraw = await BidModel.updateOne({_id:bidId},{$set:{status:"Withdrawn"}})
+    const withdraw = await BidModel.findOneAndUpdate({_id:bidId},{$set:{status:"Withdrawn"}},{ new: true }).populate('jobId')
     return withdraw
   }catch(error){
     throw error
@@ -267,4 +267,21 @@ async deletePortFolioImg(imageId:string,userId:string){
     throw error
   }
 }
+
+
+async storeNotification(userID:string,freelancerId:string,freelancerName:string,createdAt:string,bidAmount:string){
+  try{
+    const newNotification =  notificationModel.create({
+      userID:userID,
+      freelancerId:freelancerId,
+      freelancerName:freelancerName,
+      bidAmount:bidAmount,
+      createdAt:createdAt,
+    })
+    return newNotification
+  }catch(error){
+     throw error    
+  }
+}
+
 }

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose, { Document, Model, Schema } from "mongoose";
 
 import { Types } from "mongoose";
 
@@ -10,7 +10,7 @@ export enum NotificationType {
 
 export interface INotification {
   userId: Types.ObjectId;
-  type: NotificationType;
+  freelancerId: Types.ObjectId;
   isRead: boolean;
   jobId?: Types.ObjectId;
   bidId?: Types.ObjectId;
@@ -18,16 +18,30 @@ export interface INotification {
   createdAt: Date;
 }
 
-const Schema = mongoose.Schema;
+ interface NotifikcationType{
+  userID:string,
+  freelancerId:string,
+  freelancerName:string,
+  isRead:string,
+  bidAmount:string,
+  createdAt:string,
+}
+
 
 const notificationSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user receiving the notification
-  type: { type: String, enum: ["job", "bidding", "message"], required: true }, // Type of notification
+  userID: { type: Schema.Types.ObjectId, ref: "User", required: true }, 
+  freelancerId: { type: Schema.Types.ObjectId, required: true }, // Reference to the user receiving the notification
+
+  freelancerName: { type: String,  required: true }, // Type of notification
   isRead: { type: Boolean, default: false },
-  jobId: { type: Schema.Types.ObjectId, ref: "JobPost" },  // Fields for job notifications
-  bidId: { type: Schema.Types.ObjectId, ref: "Bid" },  // Fields for bidding notifications
-  messageId: { type: Schema.Types.ObjectId, ref: "Message" },  // Fields for message notifications
+  bidAmount: { type: Number,required: true  },  // Fields for job notifications
+  
   createdAt: { type: Date, default: Date.now }, // Timestamp
 });
 
-module.exports = mongoose.model("Notification", notificationSchema);
+const notificationModel: Model<NotifikcationType & Document> = mongoose.model<NotifikcationType & Document>(
+  "Notification",
+  notificationSchema
+);
+
+export default notificationModel;

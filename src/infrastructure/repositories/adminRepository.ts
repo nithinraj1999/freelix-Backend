@@ -1,7 +1,7 @@
 import { IAdminRepository } from "./interface/adminRepositoryInterface";
 import { User } from "../../domain/entities/user";
 import userModel from "../models/userModel";
-
+import skillsModel from "../models/skillsModel";
 export interface editUser {
     name?: string;
     email?: string;
@@ -240,7 +240,17 @@ export class AdminRepository implements IAdminRepository {
     }
   }
   
-
+async addSkills(skill:string,description:string){
+  try{
+    const skills = await skillsModel.create({
+      skill:skill,
+      description:description
+    })
+    return skills
+  }catch(error){
+    throw error
+  }
+}
 
 
 
