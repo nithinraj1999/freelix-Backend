@@ -43,6 +43,10 @@ router.post('/freelancer-details',userAuthMiddleware, userController.fetchFreela
 router.post('/all-notifications',userAuthMiddleware, userController.fetchAllNotifications.bind(userController));
 router.get('/get-skills',userAuthMiddleware, userController.getSkills.bind(userController));
 
+
+router.post('/make-payment',userAuthMiddleware, userController.makePayment.bind(userController));
+
+
 export default router 
 
  

@@ -15,4 +15,5 @@ export interface IUserUseCase{
     fetchFreelancerDetails(freelancerId:string):Promise<any>;
     fetchAllNotifications(userID:string):Promise<any>
     getSkills():Promise<any>
+    storeOrder(bidAmount:string,userId:string,bidId:string,freelancerId:string,jobId:string):Promise<any>
 }

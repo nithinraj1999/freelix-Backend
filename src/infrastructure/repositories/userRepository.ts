@@ -8,6 +8,7 @@ import { IJobPost } from "../models/jobPostModel";
 import BidModel from "../models/bidModel";
 import notificationModel from "../models/notification";
 import skillsModel from "../models/skillsModel";
+import OrderModel from "../models/orderModel";
 export class UserRepository implements IUserRepository {
   
   async checkEmailExist(email: string): Promise<User | null> {
@@ -245,6 +246,24 @@ export class UserRepository implements IUserRepository {
         try{
           const skills = await skillsModel.find({},{skill:1,_id:0})
           return skills
+        }catch(error){
+          throw error
+        }
+      }
+
+
+      async storeOrder(bidAmount:string,userId:string,bidId:string,freelancerId:string,jobId:string){
+        try{
+          const order = await OrderModel.create({
+            projectId:jobId,
+            clientId:userId,
+            freelancerId:freelancerId,
+            bidId:bidId,
+            paymentStatus:"completed",
+            total:bidAmount
+
+          })
+          return order
         }catch(error){
           throw error
         }

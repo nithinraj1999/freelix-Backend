@@ -194,4 +194,14 @@ async getSkills(){
     throw error
   }
 }
+async storeOrder(bidAmount:string,userId:string,bidId:string,freelancerId:string,jobId:string){
+  try{
+    
+    const order = await this.userRepository.storeOrder(bidAmount,userId,bidId,freelancerId,jobId)
+    return order
+  }catch(error){
+    console.error(error);
+    
+  }
+}
 }

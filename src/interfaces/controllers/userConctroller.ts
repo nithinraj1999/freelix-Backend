@@ -4,6 +4,8 @@ import { jwtInterface } from "../../application/services/interfaces/jwtInterface
 import { User as UserEntity } from "../../domain/entities/user"; // Change this to match your import path
 import { NotificationService } from "../../application/services/notificationService";
 import { userSocketMap } from "../../application/services/socket";
+import Stripe from "stripe";
+
 export class UserController {
   private userUseCase: IUserUseCase;
   private jwt: jwtInterface;
@@ -238,16 +240,46 @@ export class UserController {
 
   async getSkills(req: Request, res: Response){
     try{
-      
-     
-     const skills = await this.userUseCase.getSkills();
-    console.log(skills);
-
+   const skills = await this.userUseCase.getSkills();
    res.status(200).json({success:true,skills:skills})
    }catch(error){
      console.error(error);
      res.status(500).json({success:false})
    }
   }
+
+  async makePayment(req: Request, res: Response){
+    try{
+      const {bidAmount,userId,bidId,freelancerId,jobId} = req.body
+      const order = await this.userUseCase.storeOrder(bidAmount,userId,bidId,freelancerId,jobId);
+      const stripe = new Stripe('sk_test_51QIqFWLXI5UC7UZcwfCUUCtsFtTkoHuwk6viSqmkxt636cMdhwZ2ZQZjrKfj0mfUl2MQEV0KYyYZeJqm3ylGNjXc00TFDP8rti');
+      const lineItems = [
+        {
+          price_data: {
+            currency: 'usd', 
+            product_data: {
+              name: 'Product 1', 
+            },
+            unit_amount: bidAmount*100, 
+          },
+          quantity: 1, 
+        },
+      ];
+  
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types:["card"],
+        line_items:lineItems,
+        mode:"payment",
+        success_url: `http://localhost:5173/success`,
+        cancel_url:"http://localhost:5173/cencel",
+      })
+      
+      res.json({id:session.id})
+    }catch(error){
+      console.error(error);
+    }  
+  }
+
+
 
 }
