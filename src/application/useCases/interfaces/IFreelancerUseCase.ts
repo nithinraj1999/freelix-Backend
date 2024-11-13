@@ -6,7 +6,8 @@ export interface FreelancerUseCaseInterface{
     findFreelancerById (id:string):Promise<any>
     switchToBuying(id:string):Promise<any>
     switchToSelling(id:string):Promise<any>
-    getJobList():Promise<any>
+    getJobList(projectType:string,minPrice:string,maxPrice:string,skills:any,deliveryDays:string,sort:string,search:string,page:string,experience:string):Promise<any>
+    getJobListCount():Promise<any>
     editProfile(data:any,file: Express.Multer.File | null):Promise<any>
     getJobDetails(jobID:string):Promise<any>
 

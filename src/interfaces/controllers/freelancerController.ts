@@ -100,8 +100,21 @@ export class FreelancerController {
 
   async getJobList(req: Request, res: Response) {
     try {
-      const jobList = await this.freelancerUseCase.getJobList();
-      res.status(200).json({ success: true, jobList: jobList });
+    console.log("query.....",req.query);
+    const projectType = req.query.projectType as string ;
+    const minPrice = req.query.minPrice as string ;
+    const maxPrice = req.query.maxPrice as string ; 
+    const skills = req.query.skills as string || "";
+    const deliveryDays = req.query.deliveryDays as string ;
+    const sort = req.query.sort as string ;
+    const search = req.query.search as string ;
+    const page = req.query.page as string ;
+    const experience = req.query.experience as string ;
+
+      const jobListAndCount = await this.freelancerUseCase.getJobList(projectType,minPrice,maxPrice,skills,deliveryDays,sort,search,page,experience);
+      const jobListCount = await this.freelancerUseCase.getJobListCount()
+      const {jobList,count} =jobListAndCount
+      res.status(200).json({ success: true, jobList: jobList,jobListCount:count });
     } catch (error) {
       console.error();
     }

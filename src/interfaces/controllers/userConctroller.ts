@@ -212,8 +212,6 @@ export class UserController {
   
   async fetchFreelancerDetails(req: Request, res: Response){
     try{
-      
-      console.log(req.body);
       const {freelancerId} = req.body
       const details = await this.userUseCase.fetchFreelancerDetails(freelancerId);
 

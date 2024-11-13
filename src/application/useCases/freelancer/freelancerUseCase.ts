@@ -63,12 +63,20 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     }
   }
 
-  async getJobList() {
+  async getJobList(projectType:string,minPrice:string,maxPrice:string,skills:any,deliveryDays:string,sort:string,search:string,page:string,experience:string) {
     try {
-      const jobList = await this.freelancerRepository.jobList();
+      const jobList = await this.freelancerRepository.jobList(projectType,minPrice,maxPrice,skills,deliveryDays,sort,search,page,experience);
       return jobList;
     } catch (error) {
       console.error(error);
+    }
+  }
+  async getJobListCount(){
+    try{
+      const jobListCount = await this.freelancerRepository.getJobListCount()
+      return jobListCount
+    }catch(error){
+      throw error
     }
   }
 

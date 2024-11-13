@@ -8,6 +8,7 @@ export interface IJobPost extends Document {
   subCategory?: string;
   description: string;
   file?: string;
+  deadline:number;
   skills: string[]; // Array of strings
   experience: string;
   paymentType:string;

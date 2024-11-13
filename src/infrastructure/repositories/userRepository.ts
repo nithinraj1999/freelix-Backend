@@ -261,7 +261,6 @@ export class UserRepository implements IUserRepository {
             bidId:bidId,
             paymentStatus:"completed",
             total:bidAmount
-
           })
           return order
         }catch(error){

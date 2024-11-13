@@ -86,17 +86,182 @@ export class FreelancerRepository implements IFreelancerRepository {
       console.error();
     }
   }
+  // async jobList(
+  //   projectType: string,
+  //   minPrice: string,
+  //   maxPrice: string,
+  //   skills: string[],
+  //   deliveryDays: string,
+  //   sort: string,
+  //   search:string
+  // ) {
+  //   try {
+  //     const query: {
+  //       isDelete: boolean;
+  //       paymentType?: string;
+  //       fixedPrice?: { $gte?: number; $lte?: number };
+  //       $and?: { "hourlyPrice.from"?: { $gte: number }; "hourlyPrice.to"?: { $lte: number } }[];
+  //       skills?: { $in: string[] };
+  //     } = {
+  //       isDelete: false,
+  //     };
+  
+  //     if (projectType) {
+  //       query.paymentType = projectType;
+  //     }
+  
+  //     // Handle price filters
+  //     if (minPrice || maxPrice) {
+  //       const min = minPrice ? parseInt(minPrice, 10) : undefined;
+  //       const max = maxPrice ? parseInt(maxPrice, 10) : undefined;
+  
+  //       if (projectType === 'fixed') {
+  //         query.fixedPrice = {};
+  //         if (min !== undefined) query.fixedPrice.$gte = min;
+  //         if (max !== undefined) query.fixedPrice.$lte = max;
+  //       } else if (projectType === 'hourly') {
+  //         query.$and = [];
+  //         if (min !== undefined) {
+  //           query.$and.push({ "hourlyPrice.from": { $gte: min } });
+  //         }
+  //         if (max !== undefined) {
+  //           query.$and.push({ "hourlyPrice.to": { $lte: max } });
+  //         }
+  //       }
+  //     }
+  
+  //     // Handle skills filter
+  //     if (skills && skills.length > 0) {
+  //       query.skills = { $in: skills };
+  //     }
+  
+  //     // Handle sorting based on the 'sort' parameter
+  //     let sortOption = {};
+  //     if (sort === 'lowToHigh') {
+  //       if (projectType === 'fixed') {
+  //         sortOption = { fixedPrice: 1 };  // Ascending order for fixedPrice
+  //       } else if (projectType === 'hourly') {
+  //         sortOption = { "hourlyPrice.from": 1 };  // Ascending order for hourlyPrice
+  //       }
+  //     } else if (sort === 'highToLow') {
+  //       if (projectType === 'fixed') {
+  //         sortOption = { fixedPrice: -1 };  // Descending order for fixedPrice
+  //       } else if (projectType === 'hourly') {
+  //         sortOption = { "hourlyPrice.from": -1 };  // Descending order for hourlyPrice
+  //       }
+  //     }
+  //     if(search){
 
-  async jobList() {
+  //     }
+  
+  //     // Execute query with sorting
+  //     const jobList = await jobPostModel.find(query).sort(sortOption);
+  //     return jobList;
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw error;
+  //   }
+  // }
+  
+  async jobList(
+    projectType: string,
+    minPrice: string,
+    maxPrice: string,
+    skills: string[],
+    deliveryDays: string,
+    sort: string,
+    search: string,
+    page:string,
+    experience:string,
+  ) {
     try {
-      const jobList = await jobPostModel.find({isDelete:false});
-      return jobList;
+      const query: {
+        isDelete: boolean;
+        paymentType?: string;
+        fixedPrice?: { $gte?: number; $lte?: number };
+        $and?: { "hourlyPrice.from"?: { $gte: number }; "hourlyPrice.to"?: { $lte: number } }[];
+        skills?: { $in: string[] };
+        title?: { $regex: string, $options: string };  
+        experience?:string
+      } = {
+        isDelete: false,
+      };
+  
+      if (projectType) {
+        query.paymentType = projectType;
+      }
+  
+      // Handle price filters
+      if (minPrice || maxPrice) {
+        const min = minPrice ? parseInt(minPrice, 10) : undefined;
+        const max = maxPrice ? parseInt(maxPrice, 10) : undefined;
+  
+        if (projectType === 'fixed') {
+          query.fixedPrice = {};
+          if (min !== undefined) query.fixedPrice.$gte = min;
+          if (max !== undefined) query.fixedPrice.$lte = max;
+        } else if (projectType === 'hourly') {
+          query.$and = [];
+          if (min !== undefined) {
+            query.$and.push({ "hourlyPrice.from": { $gte: min } });
+          }
+          if (max !== undefined) {
+            query.$and.push({ "hourlyPrice.to": { $lte: max } });
+          }
+        }
+      }
+  
+      // Handle skills filter
+      if (skills && skills.length > 0) {
+        query.skills = { $in: skills };
+      }
+  
+      // Handle search by title with regex
+      if (search) {
+        query.title = { $regex: search, $options: 'i' };  // 'i' for case-insensitive search
+      }
+  
+      // Handle sorting based on the 'sort' parameter
+      let sortOption = {};
+      if (sort === 'lowToHigh') {
+        if (projectType === 'fixed') {
+          sortOption = { fixedPrice: 1 };  // Ascending order for fixedPrice
+        } else if (projectType === 'hourly') {
+          sortOption = { "hourlyPrice.from": 1 };  // Ascending order for hourlyPrice
+        }
+      } else if (sort === 'highToLow') {
+        if (projectType === 'fixed') {
+          sortOption = { fixedPrice: -1 };  // Descending order for fixedPrice
+        } else if (projectType === 'hourly') {
+          sortOption = { "hourlyPrice.from": -1 };  // Descending order for hourlyPrice
+        }
+      }
+      
+      if(experience && experience !="any"){
+        query.experience = experience;
+
+      }
+      // Execute query with sorting
+      const skip =parseInt(page) *3 -3
+      const jobList = await jobPostModel.find(query).sort(sortOption).skip(skip).limit(3)
+      const count = await jobPostModel.countDocuments(query);
+      return {jobList,count};
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
+  
 
+  async  getJobListCount(){
+    try{
+      const count = await jobPostModel.countDocuments({ isDelete: false });
+      return count
+    }catch(error){
+      throw error
+    }
+  }
+  
   async editProfile(data: any, portfolioUrl: string) {
     try {
       const { userID, name, title, description, skills } = data;
@@ -267,7 +432,6 @@ async deletePortFolioImg(imageId:string,userId:string){
     throw error
   }
 }
-
 
 async storeNotification(userID:string,freelancerId:string,freelancerName:string,createdAt:string,bidAmount:string){
   try{
