@@ -310,4 +310,35 @@ export class FreelancerController {
      res.status(500).json({success:false})
    }
   }
-}
+
+  async getMyOrders(req: Request, res: Response) {
+    try {
+      const { freelancerId } = req.body; 
+      console.log(freelancerId);
+      
+      const myOrders = await this.freelancerUseCase.getMyOrders(freelancerId); 
+      res.json({success: true,orders: myOrders });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({success: false, message: 'An error occurred while fetching orders.'});
+    }
+  }
+
+
+  async completeOrder(req: Request, res: Response){
+    try {
+   
+      const file = req.file ?req.file.path :null
+     
+      const {orderId,description} =req.body
+      const completeOrder = await this.freelancerUseCase.completeOrder(orderId,description,file);
+      res.json({success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({success: false, message: 'An error occurred .'});
+    }
+  }
+       
+} 
+
+

@@ -14,6 +14,12 @@ export enum PaymentStatus {
   Completed = 'completed',
   Failed = 'failed',
 }
+export interface Delivery {
+  description: string; // Description provided by the freelancer upon delivery
+  fileUrl: string;     // URL of the uploaded PDF file in Cloudinary
+  uploadDate: Date;    // Date the file was uploaded
+}
+
 
 // Interface for Order
 export interface Order {
@@ -26,4 +32,5 @@ export interface Order {
   paymentStatus: PaymentStatus; // Payment status
   total:Number
   orderDate: Date; // Date the order was created
+  delivery:Delivery
 }

@@ -243,4 +243,30 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
       throw error;
     }
   }
+
+  async getMyOrders(freelancrId:string){
+    try {
+      const orders = await this.freelancerRepository.getMyOrders(freelancrId);
+      return orders;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async completeOrder(orderId:string,description:string,file:string){
+    try {
+      let project: string | null = null;
+
+      if (file) {
+        const cloudinaryInstance = new Cloudinary();
+        const image = await cloudinaryInstance.uploadProfilePic(file);
+        project = image.url; 
+      }
+      console.log("url", project);
+      const completeOrder = await this.freelancerRepository.completeOrder(orderId,description,project);
+      return completeOrder;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

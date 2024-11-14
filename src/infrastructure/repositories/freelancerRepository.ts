@@ -6,6 +6,7 @@ import { Cloudinary } from "../../application/services/cloudinary";
 import BidModel from "../models/bidModel";
 import { IBid } from "../models/interface/IBidModel";
 import notificationModel from "../models/notification";
+import OrderModel from "../models/orderModel";
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -448,4 +449,26 @@ async storeNotification(userID:string,freelancerId:string,freelancerName:string,
   }
 }
 
+async getMyOrders(freelancerId:string){
+  try{
+    const orders = await OrderModel.find({ freelancerId: freelancerId })
+    .populate({ path: "projectId", select: "title description" })
+    .populate({ path: "bidId", select: "deliveryDays" })
+    .populate({ path: "clientId", select: "profilePicture" });
+      return orders
+  }catch(error){
+    throw error
+  }
+}
+
+async completeOrder(orderId:string,description:string,file:string){
+  try{
+    
+    const uploadDate = new Date()
+    const orders = await OrderModel.updateOne({ _id: orderId },{$set:{delivery:{description:description,fileUrl:file,uploadDate:uploadDate},status:"Completed"}})
+    return orders
+  }catch(error){
+    throw error
+  }
+}
 }

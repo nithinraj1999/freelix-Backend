@@ -86,7 +86,8 @@ export class UserController {
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-
+      console.log(user.profilePicture);
+      
       res.status(200).json({
         success: true,
         user: {

@@ -38,6 +38,9 @@ router.post('/withdraw-my-bid',freelancerAuth, freelancerController.withdrawBid.
 router.post('/freelancer-details',freelancerAuth, freelancerController.fetchFreelancerDetails.bind(freelancerController));
 router.post('/delete-portfolio',freelancerAuth, freelancerController.deletePortfolioImg.bind(freelancerController));
 
+router.post('/my-orders',freelancerAuth,freelancerController.getMyOrders.bind(freelancerController));
+router.post('/complete-order',freelancerAuth,upload.single('file'),freelancerController.completeOrder.bind(freelancerController));
+
 
 export default router
 

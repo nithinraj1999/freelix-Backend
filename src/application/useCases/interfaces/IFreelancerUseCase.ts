@@ -10,7 +10,6 @@ export interface FreelancerUseCaseInterface{
     getJobListCount():Promise<any>
     editProfile(data:any,file: Express.Multer.File | null):Promise<any>
     getJobDetails(jobID:string):Promise<any>
-
     isBidderAlreadyExist(jobId:string,userId:string):Promise<any>
     submitBid(jobId:string,freelancerId:string,bidAmount:string,deliveryDays:string,proposal:string):Promise<any>
     getAllBids(jobId:string):Promise<any>
@@ -22,4 +21,7 @@ export interface FreelancerUseCaseInterface{
 
     fetchFreelancerDetails(freelancerId:string):Promise<any>;
     deletePortFolioImg(imageId:string,userId:string):Promise<any>
+
+    getMyOrders(freelancrId:string):Promise<any>
+    completeOrder(orderId:string,description:string,file:string|null):Promise<any>
 }
