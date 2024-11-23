@@ -16,6 +16,10 @@ const OrderSchema = new Schema<Order & Document>({
     fileUrl: { type: String },      // URL of the uploaded PDF file in Cloudinary
     uploadDate: { type: Date, default: Date.now },
   },
+  isPaymentReleased:{
+    type:Boolean,
+    default:false
+  }
 });
 
 const OrderModel = mongoose.model<Order & Document>('Order', OrderSchema);

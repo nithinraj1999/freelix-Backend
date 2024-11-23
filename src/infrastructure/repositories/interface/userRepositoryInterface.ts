@@ -21,5 +21,12 @@ export interface IUserRepository {
   fetchAllNotifications(userID:string):Promise<any>
   getSkills():Promise<any>
   storeOrder(bidAmount:string,userId:string,bidId:string,freelancerId:string,jobId:string):Promise<any>
-
+  getAllHirings(clientId:string):Promise<any>
+  releasePayment(projectId:string,clientId:string,freelancerId:string,total:string):Promise<any>
+  submitReview(clientId:string,freelancerId:string,review:string):Promise<any>
+  fetchAllContacts(userId:string):Promise<any>
+  fetchChat(userId:string,contactId:string):Promise<any>
+  updatePassword(userId:string,password:string):Promise<any>
+  getUserData(userId:string):Promise<any>
+  editData(profilePicture:string,name:string,email:string,userId:string):Promise<any>
 }

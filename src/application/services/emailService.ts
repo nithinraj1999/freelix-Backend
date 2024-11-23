@@ -27,5 +27,36 @@ export class EmailService implements IEmailService{
             throw error;
           }
     }
+    async sendEmailToResetPassword(email: string, resetLink: string) {
+    
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+      });
+    
+      // HTML-formatted email
+      let mailOptions = {
+        from: process.env.MAIL_USER,
+        to: email,
+        subject: "Your Reset Password Link",
+        html: `
+          <p>Click the link below to reset your password:</p>
+          <a href="${resetLink}" target="_blank" style="color: #1d4ed8; text-decoration: none;">Reset Password</a>
+        `,
+      };
+    
+      try {
+        let info = await transporter.sendMail(mailOptions);
+        return info;
+      } catch (error) {
+        throw error;
+      }
+    }
+    
+
+    
 }
 

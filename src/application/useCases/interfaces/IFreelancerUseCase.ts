@@ -24,4 +24,8 @@ export interface FreelancerUseCaseInterface{
 
     getMyOrders(freelancrId:string):Promise<any>
     completeOrder(orderId:string,description:string,file:string|null):Promise<any>
+    fetchReviews(freelancerId:string):Promise<any>
+    fetchWallet(freelancerId:string):Promise<any>
+
+    dashboardData(userId:string):Promise<any>
 }

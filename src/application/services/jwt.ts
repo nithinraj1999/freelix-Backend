@@ -22,6 +22,7 @@ export class JWT implements jwtInterface {
     return jwt.sign(payload, this.refreshTokenSecret, { expiresIn: '20d' }); // Refresh Token expires in 7 days
   }
 
+  
   // Verify Access Token
   verifyAccessToken(token: string): any {
     try {
@@ -39,4 +40,6 @@ export class JWT implements jwtInterface {
       throw new Error('Invalid or expired refresh token');
     }
   }
+
+
 }

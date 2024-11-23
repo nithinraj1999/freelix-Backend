@@ -9,6 +9,12 @@ import BidModel from "../models/bidModel";
 import notificationModel from "../models/notification";
 import skillsModel from "../models/skillsModel";
 import OrderModel from "../models/orderModel";
+import EscrowModel from "../models/escrow";
+import mongoose from 'mongoose';
+import WalletModel from "../models/wallet";
+import ReviewModel from "../models/reviewModel";
+import MessageModel from "../models/message";
+
 export class UserRepository implements IUserRepository {
   
   async checkEmailExist(email: string): Promise<User | null> {
@@ -262,10 +268,296 @@ export class UserRepository implements IUserRepository {
             paymentStatus:"completed",
             total:bidAmount
           })
+
+          // ========= store funds in escrow
+
+          const escrow = await EscrowModel.create({
+            clientId:userId,
+            freelancerId:freelancerId,
+            projectId:jobId,
+            amount:bidAmount
+          })
+          
           return order
         }catch(error){
           throw error
         }
       }
 
+      async getAllHirings(clientId:string){
+        try{
+          const hirings = await OrderModel.find({clientId:clientId}).populate("projectId","title").populate("freelancerId" ,"name")
+          return hirings
+        }catch(error){
+          throw error
+        }
+      }
+      
+
+      // async  releasePayment(projectId: string, clientId: string, freelancerId: string, total: string) {
+      //   try {
+          
+      //     const totalAmount = parseFloat(total);
+      
+      //     const freelancerAmount = totalAmount * 0.7;
+      //     const platformCharge = totalAmount * 0.3;
+      
+      //     const escrowUpdate = await EscrowModel.updateOne(
+      //       { clientId, freelancerId, projectId },
+      //       { $set: { amount: platformCharge } }
+      //     );
+      
+      //     if (escrowUpdate.modifiedCount === 0) {
+      //       throw new Error('Escrow update failed. Payment not released.');
+      //     }
+      
+      //     // Check if freelancer's wallet exists
+      //     let freelancerWallet = await WalletModel.findOne({ userId: freelancerId });
+          
+      //     if (!freelancerWallet) {
+      //       // If wallet doesn't exist, create it
+      //       freelancerWallet = new WalletModel({
+      //         userId: freelancerId,
+      //         balance: freelancerAmount,
+      //       });
+      
+      //       const saveResult = await freelancerWallet.save();
+      //       if (!saveResult) {
+      //         throw new Error('Failed to create freelancer wallet.');
+      //       }
+      //     } else {
+      //       // If wallet exists, update the balance
+      //       freelancerWallet.balance += freelancerAmount;
+      
+      //       const updateResult = await freelancerWallet.save(); // Save the updated balance
+      //       if (!updateResult) {
+      //         throw new Error('Failed to update freelancer wallet.');
+      //       }
+      //     }
+      //     const order = await OrderModel.updateOne({projectId:projectId},{$set:{isPaymentReleased:true}})
+
+      
+      //     return {
+      //       success: true,
+      //       freelancerAmount,
+      //     };
+      //   } catch (error) {
+      //     console.error('Error releasing payment:', error);
+      //     throw error;
+      //   }
+      // }
+      
+      async releasePayment(
+        projectId: string,
+        clientId: string,
+        freelancerId: string,
+        total: string
+      ) {
+        try {
+          const totalAmount = parseFloat(total);
+      
+          const freelancerAmount = totalAmount * 0.7;
+          const platformCharge = totalAmount * 0.3;
+      
+          const escrowUpdate = await EscrowModel.updateOne(
+            { clientId, freelancerId, projectId },
+            { $set: { amount: platformCharge } }
+          );
+      
+          if (escrowUpdate.modifiedCount === 0) {
+            throw new Error('Escrow update failed. Payment not released.');
+          }
+      
+          // Check if freelancer's wallet exists
+          let freelancerWallet = await WalletModel.findOne({ userId: freelancerId });
+      
+          if (!freelancerWallet) {
+            // If wallet doesn't exist, create it
+            freelancerWallet = new WalletModel({
+              userId: freelancerId,
+              balance: freelancerAmount,
+              walletHistory: [
+                {
+                  date: new Date(),
+                  amount: freelancerAmount,
+                  type: 'Credit',
+                  description: `Payment received for project ${projectId}`,
+                },
+              ],
+            });
+      
+            const saveResult = await freelancerWallet.save();
+            if (!saveResult) {
+              throw new Error('Failed to create freelancer wallet.');
+            }
+          } else {
+            // If wallet exists, update the balance and add transaction history
+            freelancerWallet.balance += freelancerAmount;
+      
+            freelancerWallet.walletHistory.push({
+              date: new Date(),
+              amount: freelancerAmount,
+              type: 'Credit',
+              description: `Payment received for project ${projectId}`,
+            });
+      
+            const updateResult = await freelancerWallet.save(); // Save the updated balance and history
+            if (!updateResult) {
+              throw new Error('Failed to update freelancer wallet.');
+            }
+          }
+      
+          const order = await OrderModel.updateOne(
+            { projectId: projectId },
+            { $set: { isPaymentReleased: true } }
+          );
+      
+          return {
+            success: true,
+            freelancerAmount,
+          };
+        } catch (error) {
+          console.error('Error releasing payment:', error);
+          throw error;
+        }
+      }
+      
+      
+      async submitReview(clientId:string,freelancerId:string,review:string){
+        try{
+          const reviewDoc = await ReviewModel.create({
+            clientId:clientId,
+            freelancerId:freelancerId,
+            comment:review
+          })
+          return reviewDoc
+        }catch(error){
+          throw error
+        }
+      }
+
+      // async fetchAllContacts(userId:string){
+      //   try{
+         
+      //     const messages = await MessageModel.find({
+      //       $or: [{ senderId: userId }, { recipientId: userId }],
+      //     }).populate("senderId","name")
+      //     .lean();
+      
+      //     // Extract unique contact IDs
+      //     const contactIds = new Set<string>();
+      //     messages.forEach((message) => {
+      //       if (message.senderId !== userId) contactIds.add(message.senderId);
+      //       if (message.recipientId !== userId) contactIds.add(message.recipientId);
+      //     });
+      
+      //     // Prepare contacts list
+      //     const contacts = Array.from(contactIds).map((id) => ({
+      //       id,
+      //       name: `User ${id}`, 
+      //     }));
+
+      //     return contacts
+      
+      //   }catch(error){
+      //     throw error
+      //   }
+      // }
+
+      
+
+      async fetchAllContacts(userId: string) {
+        try {
+          const messages = await MessageModel.find({
+            $or: [{ senderId: userId }, { recipientId: userId }],
+          })
+            .populate<{ senderId: any }>("senderId", "name")
+            .populate<{ recipientId: any }>("recipientId", "name")
+            .lean<any[]>();
+      
+          // Extract unique contacts
+          const contactMap = new Map<string, { id: string; name: string }>();
+          messages.forEach((message) => {
+            // Normalize senderId and recipientId
+            const sender =
+              typeof message.senderId === "string"
+                ? { _id: message.senderId, name: null }
+                : message.senderId;
+            const recipient =
+              typeof message.recipientId === "string"
+                ? { _id: message.recipientId, name: null }
+                : message.recipientId;
+      
+            // Add sender to the map
+            if (sender._id !== userId) {
+              contactMap.set(sender._id.toString(), {
+                id: sender._id.toString(),
+                name: sender.name,
+              });
+            }
+      
+            // Add recipient to the map
+            if (recipient._id !== userId) {
+              contactMap.set(recipient._id.toString(), {
+                id: recipient._id.toString(),
+                name: recipient.name,
+              });
+            }
+          });
+      
+          // Convert Map to Array
+          const contacts = Array.from(contactMap.values());
+          console.log(contacts);
+       
+          return contacts;
+        } catch (error) {
+          throw error;
+        }
+      }
+      
+
+
+      async fetchChat(userId:string,contactId:string){
+        try {
+          const chat = await MessageModel.find({
+            $or: [
+              { senderId: userId, recipientId: contactId },
+              { senderId: contactId, recipientId: userId }
+            ]
+          }).sort({ createdAt: 1 }); 
+    
+         return chat
+        } catch (error) {
+          console.error(error);
+          throw error
+        }
+      }
+
+      async updatePassword(userId:string,password:string){
+        try{
+          const updated = await userModel.updateOne({_id:userId},{$set:{password:password}})
+          return updated
+        }catch(error){
+          throw error
+        }
+      } 
+
+      async getUserData(userId:string){
+        try{
+          const userData = await userModel.findOne({_id:userId},{name:1,email:1,phone:1,profilePicture:1})
+          return userData
+        }catch(error){
+          throw error
+        }
+      }
+
+      async editData(profilePicture:string,name:string,email:string,userId:string){
+        try{
+          const userData = await userModel.updateOne({_id:userId},{$set:{name:name,email:email,profilePicture:profilePicture}})
+          return userData
+        }
+        catch(error){
+          throw error
+        }
+      }
     }      

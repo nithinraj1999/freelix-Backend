@@ -200,6 +200,10 @@ export class FreelancerController {
     try {
       const { jobId, freelancerId, bidAmount, deliveryDays, proposal } =
         req.body;
+      const isAlreadybid =await  await this.freelancerUseCase.isBidderAlreadyExist(jobId, freelancerId);
+      if(isAlreadybid){
+        res.json({success:false,message:"already bidded"})
+      }else{
 
       const bid = await this.freelancerUseCase.submitBid(
         jobId,
@@ -209,6 +213,7 @@ export class FreelancerController {
         proposal
       );
       res.status(200).json({ success: true, bid: bid });
+    }
     } catch (error) {
       console.error(error);
       return res.status(500).json({
@@ -329,7 +334,6 @@ export class FreelancerController {
     try {
    
       const file = req.file ?req.file.path :null
-     
       const {orderId,description} =req.body
       const completeOrder = await this.freelancerUseCase.completeOrder(orderId,description,file);
       res.json({success: true });
@@ -338,7 +342,37 @@ export class FreelancerController {
       res.status(500).json({success: false, message: 'An error occurred .'});
     }
   }
-       
-} 
+  async fetchReviews(req: Request, res: Response){
+    try {
+      const {freelancerId}  =req.body
+      const allReviews = await this.freelancerUseCase.fetchReviews(freelancerId);
+      res.json({success: true,allReviews:allReviews});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({success: false, message: 'An error occurred .'});
+    }
+  }
+
+  async fetchWallet(req: Request, res: Response){
+    try{
+      const {freelancerId}=req.body
+      const wallet = await this.freelancerUseCase.fetchWallet(freelancerId);
+      res.json({success: true,wallet:wallet});
+    }catch(error){
+      console.error(error);
+      
+    }
+  }
+
+  async dashboardData(req: Request, res: Response){
+    try{      
+      const {userId} =req.body
+      const data = await this.freelancerUseCase.dashboardData(userId);
+      res.json(data);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}  
 
 

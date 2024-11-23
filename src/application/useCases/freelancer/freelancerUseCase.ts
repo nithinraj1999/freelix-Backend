@@ -269,4 +269,32 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
       throw error;
     }
   }
+
+  async fetchReviews(freelancerId:string){
+    try{
+      const reviews = await this.freelancerRepository.fetchReviews(freelancerId);
+      return reviews
+    }catch(error){
+      throw error
+    }
+  }
+
+  async fetchWallet(freelancerId:string){
+    try{
+      const wallet = await this.freelancerRepository.fetchWallet(freelancerId);
+      return wallet
+    }catch(error){
+      throw error
+    }
+  }
+
+  async dashboardData(userId:string){
+    try{
+      const data = await this.freelancerRepository.dashboardData(userId);
+      return data
+    }catch(error){
+      throw error
+    }
+  }
 }
+ 

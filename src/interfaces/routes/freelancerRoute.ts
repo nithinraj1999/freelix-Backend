@@ -41,6 +41,11 @@ router.post('/delete-portfolio',freelancerAuth, freelancerController.deletePortf
 router.post('/my-orders',freelancerAuth,freelancerController.getMyOrders.bind(freelancerController));
 router.post('/complete-order',freelancerAuth,upload.single('file'),freelancerController.completeOrder.bind(freelancerController));
 
+router.post('/fetch-reviews',freelancerAuth,freelancerController.fetchReviews.bind(freelancerController));
+
+router.post('/fetch-wallet',freelancerAuth,freelancerController.fetchWallet.bind(freelancerController));
+
+router.post('/get-dashboard-data',freelancerAuth,freelancerController.dashboardData.bind(freelancerController));
 
 export default router
 

@@ -7,6 +7,10 @@ import BidModel from "../models/bidModel";
 import { IBid } from "../models/interface/IBidModel";
 import notificationModel from "../models/notification";
 import OrderModel from "../models/orderModel";
+import ReviewModel from "../models/reviewModel";
+import WalletModel from "../models/wallet";
+import mongoose from 'mongoose';
+
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -87,83 +91,7 @@ export class FreelancerRepository implements IFreelancerRepository {
       console.error();
     }
   }
-  // async jobList(
-  //   projectType: string,
-  //   minPrice: string,
-  //   maxPrice: string,
-  //   skills: string[],
-  //   deliveryDays: string,
-  //   sort: string,
-  //   search:string
-  // ) {
-  //   try {
-  //     const query: {
-  //       isDelete: boolean;
-  //       paymentType?: string;
-  //       fixedPrice?: { $gte?: number; $lte?: number };
-  //       $and?: { "hourlyPrice.from"?: { $gte: number }; "hourlyPrice.to"?: { $lte: number } }[];
-  //       skills?: { $in: string[] };
-  //     } = {
-  //       isDelete: false,
-  //     };
-  
-  //     if (projectType) {
-  //       query.paymentType = projectType;
-  //     }
-  
-  //     // Handle price filters
-  //     if (minPrice || maxPrice) {
-  //       const min = minPrice ? parseInt(minPrice, 10) : undefined;
-  //       const max = maxPrice ? parseInt(maxPrice, 10) : undefined;
-  
-  //       if (projectType === 'fixed') {
-  //         query.fixedPrice = {};
-  //         if (min !== undefined) query.fixedPrice.$gte = min;
-  //         if (max !== undefined) query.fixedPrice.$lte = max;
-  //       } else if (projectType === 'hourly') {
-  //         query.$and = [];
-  //         if (min !== undefined) {
-  //           query.$and.push({ "hourlyPrice.from": { $gte: min } });
-  //         }
-  //         if (max !== undefined) {
-  //           query.$and.push({ "hourlyPrice.to": { $lte: max } });
-  //         }
-  //       }
-  //     }
-  
-  //     // Handle skills filter
-  //     if (skills && skills.length > 0) {
-  //       query.skills = { $in: skills };
-  //     }
-  
-  //     // Handle sorting based on the 'sort' parameter
-  //     let sortOption = {};
-  //     if (sort === 'lowToHigh') {
-  //       if (projectType === 'fixed') {
-  //         sortOption = { fixedPrice: 1 };  // Ascending order for fixedPrice
-  //       } else if (projectType === 'hourly') {
-  //         sortOption = { "hourlyPrice.from": 1 };  // Ascending order for hourlyPrice
-  //       }
-  //     } else if (sort === 'highToLow') {
-  //       if (projectType === 'fixed') {
-  //         sortOption = { fixedPrice: -1 };  // Descending order for fixedPrice
-  //       } else if (projectType === 'hourly') {
-  //         sortOption = { "hourlyPrice.from": -1 };  // Descending order for hourlyPrice
-  //       }
-  //     }
-  //     if(search){
-
-  //     }
-  
-  //     // Execute query with sorting
-  //     const jobList = await jobPostModel.find(query).sort(sortOption);
-  //     return jobList;
-  //   } catch (error) {
-  //     console.error(error);
-  //     throw error;
-  //   }
-  // }
-  
+ 
   async jobList(
     projectType: string,
     minPrice: string,
@@ -471,4 +399,154 @@ async completeOrder(orderId:string,description:string,file:string){
     throw error
   }
 }
+
+
+async fetchReviews(freelancerId:string){
+  try{
+    const reviews = await ReviewModel.find({ freelancerId: freelancerId })
+    .populate({
+      path: 'clientId', // The reference to the User model
+      select: 'name profilePicture' // Specify the fields to populate
+    });    return reviews
+  }catch(error){
+    throw error
+  }
+}
+
+async fetchWallet(freelancerId:string){
+  try{
+    const wallet  = await WalletModel.findOne({userId:freelancerId})
+    return wallet
+  }catch(error){
+    console.error(error);
+    throw error
+  }
+}
+
+
+
+async dashboardData(userId: string) {
+  try {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const revenueData = await OrderModel.aggregate([
+      {
+        $match: {
+          freelancerId: userObjectId, 
+          status: "Completed", 
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$total" }, 
+          totalEarnings: { 
+            $sum: { 
+              $multiply: ["$total", 0.7] 
+            } 
+          },
+        },
+      },
+    ]);
+
+    const pendingData = await OrderModel.aggregate([
+      {
+        $match: {
+          freelancerId: userObjectId, 
+          status: "pending", 
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalPendingEarnings: { 
+            $sum: { 
+              $multiply: ["$total", 0.7]
+            } 
+          },
+        },
+      },
+    ]);
+    const totalOrders = await OrderModel.aggregate([
+      {
+        $match: {
+          freelancerId: userObjectId, 
+        },
+      },
+      {
+        $count: "totalOrders", 
+      },
+    ]);
+
+    const totalBids = await BidModel.aggregate([
+      {
+        $match: {
+          freelancerId: userObjectId, 
+        },
+      },
+      {
+        $count: "totalBids", 
+      },
+    ]);
+    const pendingOrders = await OrderModel.aggregate([
+      {
+        $match: {
+          freelancerId: userObjectId, 
+          status: "pending", 
+        },
+      },
+      {
+        $count: "totalPendingOrders", 
+      },
+    ]);
+
+    const orderByDate = await OrderModel.aggregate([
+      {
+        $match: {
+          freelancerId: userObjectId, 
+          status: "Completed", 
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          orderDate: 1,
+          total: 1,
+        },
+      },
+    ]);
+    
+    const totalPendingOrders = pendingOrders.length > 0 ? pendingOrders[0].totalPendingOrders : 0;
+    const totalBidsCount = totalBids.length > 0 ? totalBids[0].totalBids : 0;
+    const totalOrdersCount = totalOrders.length > 0 ? totalOrders[0].totalOrders : 0;
+    const pendingEarnings = pendingData.length > 0 ? pendingData[0].totalPendingEarnings : 0;
+    const revenue = revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
+    const earnings = revenueData.length > 0 ? revenueData[0].totalEarnings : 0;
+
+    console.log(revenue);
+    console.log(earnings);
+    console.log(pendingEarnings);
+    console.log(totalOrdersCount);
+    console.log(totalBidsCount);
+    console.log(totalPendingOrders);
+    console.log(orderByDate);
+
+
+    return {
+      revenue,  
+      earnings, 
+      pendingEarnings,
+      totalOrdersCount,
+      totalBidsCount,
+      totalPendingOrders,
+      orderByDate
+    };
+  } catch (error) {
+    console.error("Error calculating total revenue and earnings:", error);
+    throw error;
+  }
+}
+
+
+
 }

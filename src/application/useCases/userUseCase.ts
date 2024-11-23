@@ -7,7 +7,7 @@ import { IEmailService } from "../services/interfaces/IEmailService";
 import { IOtpService } from "../services/interfaces/IOtpService";
 import { jwtInterface } from "../services/interfaces/jwtInterface";
 import { IJobPost } from "../../infrastructure/models/jobPostModel";
-
+import { Cloudinary } from "../services/cloudinary";
 export class UserUseCase implements IUserUseCase {
   private userRepository: IUserRepository;
   private bcrypt: Ibcrypt;
@@ -38,7 +38,7 @@ export class UserUseCase implements IUserUseCase {
         if (data.password) {
           data.password = await this.bcrypt.hash(data.password);
         }
-        
+  
         const otp = await this.otpService.generateOtp();
         await this.userRepository.saveUserOtp(otp,data.email,data );  // Store user data temporarily in OTP collection
         await this.emailService.sendEmail(data.email, otp);
@@ -204,4 +204,116 @@ async storeOrder(bidAmount:string,userId:string,bidId:string,freelancerId:string
     
   }
 }
+
+
+async getAllHirings(clientId:string){
+  try{
+    
+    const allHiring = await this.userRepository.getAllHirings(clientId)
+    return allHiring
+  }catch(error){
+    
+    console.error(error);
+    throw error
+  }
 }
+
+
+async releasePayment(projectId:string,clientId:string,freelancerId:string,total:string){
+  try{
+    console.log("releasePayment");
+    
+    const releadPayment = await this.userRepository.releasePayment(projectId,clientId,freelancerId,total)
+    return releadPayment
+  }catch(error){
+    
+    console.error(error);
+    throw error
+  }
+}
+
+async submitReview(clientId:string,freelancerId:string,review:string){
+  try{
+    const releadPayment = await this.userRepository.submitReview(clientId,freelancerId,review);
+    return releadPayment
+  }catch(error){
+    
+    console.error(error);
+    throw error
+  }
+}
+
+async fetchAllContacts(userId:string){
+  try{
+    const contacts = await this.userRepository.fetchAllContacts(userId)
+    return contacts
+  }catch(error){
+    console.error(error);
+    throw error
+  }
+}
+
+async fetchChat(userId:string,contactId:string){
+  try{
+    const chat = await this.userRepository.fetchChat(userId,contactId)
+    return chat
+  }catch(error){
+    throw error
+  }
+}
+
+async resetPassword(email:string){
+  try{
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const resetLink =` http://localhost:5173/reset-password?userId=${user._id}`
+    await this.emailService.sendEmailToResetPassword(email,resetLink);
+    return { success: true, message: "Password reset link sent" };
+
+  }catch(error){
+    throw error
+  }
+}
+
+async validateAndStorePassword(userId:string,password:string,confirmPassword:string){
+  try{
+    if(password !== confirmPassword){
+      return { success: false, message:"password is not matching"};
+    }
+    const hashedPassword = await this.bcrypt.hash(password);
+    const updatedPassword = await this.userRepository.updatePassword(userId,hashedPassword);
+    return { success: true};
+  }catch(error){
+    throw error
+  }
+}
+
+async getUserData(userId:string){
+  try{
+    const userData = await this.userRepository.getUserData(userId);
+    return userData
+  }catch(error){
+    throw error
+  }
+}
+
+async editData(profilePicture:string,name:string,email:string,userId:string){
+  try{
+
+    let portfolioUrl: string | null = null;
+
+      if (profilePicture) {
+        const cloudinaryInstance = new Cloudinary();
+        const image = await cloudinaryInstance.uploadProfilePic(profilePicture);
+        portfolioUrl = image.url; 
+      }
+      console.log("url ", portfolioUrl);
+    const editedData = await this.userRepository.editData(profilePicture,name,email,userId);
+    return editedData
+  }catch(error){
+    throw error
+  }
+}
+} 

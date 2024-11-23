@@ -19,7 +19,7 @@ export class UserController {
 
   async register(req: Request, res: Response) {
     try {
-      console.log(req.body);
+     
       const {password,confirmPassword} =req.body
       if(password !== confirmPassword){
         res.json({message:"password is not matching"})
@@ -42,7 +42,6 @@ export class UserController {
   async verification(req: Request, res: Response) {
     try {
         const { otp, email } = req.body;
-        console.log("verification", req.body);
 
         const verify = await this.userUseCase.verification(otp, email);
         if (verify) {
@@ -86,7 +85,6 @@ export class UserController {
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-      console.log(user.profilePicture);
       
       res.status(200).json({
         success: true,
@@ -178,7 +176,6 @@ export class UserController {
 
   async editPost(req: Request, res: Response) {
     try {
-      console.log("edit post", req.body);
       const editedPost = await this.userUseCase.editPost(req.body);
       res.status(200).json({ success: true, editedPost: editedPost });
     } catch (error) {
@@ -279,6 +276,119 @@ export class UserController {
     }  
   }
 
+  async getAllHiring(req: Request, res: Response){
+    try{
+      
+      const {clientId} = req.body
+      const allHirings = await this.userUseCase.getAllHirings(clientId);
+ 
+    res.status(200).json({success:true,allHirings:allHirings})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+    }
+  }
+
+  async releasePayment(req: Request, res: Response){
+    try{
+        const {projectId,clientId,freelancerId,total} =req.body
+        const allHirings = await this.userUseCase.releasePayment(projectId,clientId,freelancerId,total);
+        res.status(200).json({success:true})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+    }
+  }
 
 
+  async submitReview(req: Request, res: Response){
+    try{
+      const {clientId,freelancerId,review} = req.body
+      const submission = await this.userUseCase.submitReview(clientId,freelancerId,review);
+
+      res.status(200).json({success:true})
+  }catch(error){
+    console.error(error);
+    res.status(500).json({success:false})
+  }
+  }
+
+  async fetchAllContacts(req: Request, res: Response){
+    try{
+      const {userId} =req.body
+      const allContacts = await this.userUseCase.fetchAllContacts(userId);
+      res.status(200).json({success:true,allContacts:allContacts})
+
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+    }
+  }
+
+  async fetchChat(req: Request, res: Response){
+    try{
+      const {userId,contactId} =req.query
+      const chat = await this.userUseCase.fetchChat(userId as string, contactId as string);
+      res.status(200).json({success:true,chat:chat})
+    }catch(error){
+      console.error(error);
+      res.status(500).json({success:false})
+
+    }
+
+  }
+
+
+  async forgetPassword(req: Request, res: Response){
+    try{
+      const {email} = req.body
+      
+      const sendEmail = await this.userUseCase.resetPassword(email)
+      res.json(sendEmail)
+    }catch(error){
+      console.log(error);
+      
+    }
+  }
+
+  async resetPassword(req: Request, res: Response){
+    try{
+      const {params,password,confirmPassword} =req.body
+      const userId = params
+      const updatedPassword = await this.userUseCase.validateAndStorePassword(userId,password,confirmPassword)
+      res.json(updatedPassword)
+    }catch(error){
+      console.error(error);
+      
+    }
+  }
+
+  async getUserData(req: Request, res: Response){
+    try{
+      const {userId} =req.body
+      const userDetails = await this.userUseCase.getUserData(userId)
+      res.json({success:true,userDetails:userDetails})
+    }catch(error){
+      console.error(error);
+      
+    }
+  }
+
+  async editData(req: Request, res: Response) {
+    try {
+      const { profilePicture, name, email, userId } = req.body;
+  
+      const userDetails = await this.userUseCase.editData(profilePicture, name, email, userId);
+  
+      if (!userDetails) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      res.json({ success: true, message: "User details updated successfully.", data: userDetails });
+    } catch (error) {
+      console.error("Error in editData:", error);
+      res.status(500).json({ success: false, message: "Internal server error." });
+    }
+  }
+  
 }

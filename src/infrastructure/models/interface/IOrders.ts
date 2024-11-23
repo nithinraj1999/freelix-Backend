@@ -32,5 +32,6 @@ export interface Order {
   paymentStatus: PaymentStatus; // Payment status
   total:Number
   orderDate: Date; // Date the order was created
-  delivery:Delivery
+  delivery:Delivery;
+  isPaymentReleased:Boolean;
 }
