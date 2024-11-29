@@ -5,7 +5,7 @@ export interface IFreelancerRepository {
     findFreelancerById(id:string) :Promise<any>
     switchToBuying(id:string):Promise<any>
     switchToSelling(id:string):Promise<any>
-    jobList(projectType:string,minPrice:string,maxPrice:string,skills:any,deliveryDays:string,sort:string,search:string,page:string,experience:string):Promise<any>
+    jobList(projectType:string,minPrice:string,maxPrice:string,skills:any,deliveryDays:string,sort:string,search:string,page:string,experience:string,freelancerSkills:any):Promise<any>
     getJobListCount():Promise<any>
     editProfile(data:any,file: string | null):Promise<any>
     jobDetails(jobID:string):Promise<any>
@@ -30,5 +30,5 @@ export interface IFreelancerRepository {
 
     dashboardData(userId:string):Promise<any>
 
-
+    getSkills():Promise<any>
 }

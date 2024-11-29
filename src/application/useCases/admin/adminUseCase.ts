@@ -220,4 +220,22 @@ async addSkills(skill:string,description:string){
     throw error
   }
 }
+
+async getDashboardData(){
+  try{
+    const data = await this.adminRepository.getDashboardData()
+    return data
+  }catch(error){
+    throw error
+  }
+}
+
+async getAllSkills(){
+  try{
+    const skills = await this.adminRepository.getAllSkills()
+    return skills
+  }catch(error){
+    throw error
+  }
+}
 }

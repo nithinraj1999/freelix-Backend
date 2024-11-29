@@ -2,6 +2,10 @@ import { IAdminRepository } from "./interface/adminRepositoryInterface";
 import { User } from "../../domain/entities/user";
 import userModel from "../models/userModel";
 import skillsModel from "../models/skillsModel";
+import OrderModel from "../models/orderModel";
+import jobPostModel from "../models/jobPostModel";
+import EscrowModel from "../models/escrow";
+import WalletModel from "../models/wallet";
 export interface editUser {
     name?: string;
     email?: string;
@@ -38,6 +42,8 @@ export class AdminRepository implements IAdminRepository {
 
     async blockClient(clientID:string){
         try{
+          console.log("repo",clientID);
+           
             const client = await userModel.updateOne({_id:clientID },{$set:{isBlock:true}});
             return client
         }catch(error){
@@ -251,8 +257,68 @@ async addSkills(skill:string,description:string){
     throw error
   }
 }
+async getDashboardData(){
+  try{
+    const revenueData = await OrderModel.aggregate([
+      {
+        $match: { 
+          status: "Completed", 
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$total" }, 
+          totalEarnings: { 
+            $sum: { 
+              $multiply: ["$total", 0.3] 
+            } 
+          },
+        },
+      },
+    ]);
+
+    const totalFreelancers = await userModel.countDocuments({ hasFreelancerAccount: true });
+    const totalJobPost = await jobPostModel.countDocuments()
+    const escrowBalance = await EscrowModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          escrowBalance: { $sum: "$amount" }, 
+         
+        },
+      },
+    ]);
+    const walletAmount = await WalletModel.findOne({isAdmin:true},{balance:1,_id:0})
+    const monthlyRevenue = await OrderModel.aggregate([
+      {
+        $match: {
+          status: "Completed", 
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          orderDate: 1,
+          total: 1,
+        },
+      },
+    ]);
+    return {revenueData,totalFreelancers,totalJobPost,escrowBalance,walletAmount,monthlyRevenue}
+  }catch(error){
+    throw error
+  }
+}
 
 
+async getAllSkills(){
+  try{
+    const skills = await skillsModel.find()
+    return skills
+  }catch(error){
+    throw error
+  }
+}
 
 }
 

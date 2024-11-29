@@ -17,7 +17,7 @@ export const editProfileSchema = Joi.object({
     userID: Joi.string().pattern(/^[a-fA-F0-9]{24}$/).required(), // userID is required
     name: Joi.string().pattern(/^[a-zA-Z\s]*$/).min(1).optional(),
     title: Joi.string().pattern(/^\S.*\S$/).optional(),
-    description: Joi.string().pattern(/^\S.*\S$/).optional(),
+    description: Joi.string().optional(),
     skills: Joi.array().items(Joi.string().pattern(/^\S.*\S$/)).optional(),
     file: Joi.string().optional(), // Optional file
     portfolio: Joi.array().items(Joi.object({

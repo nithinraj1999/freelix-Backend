@@ -63,9 +63,9 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     }
   }
 
-  async getJobList(projectType:string,minPrice:string,maxPrice:string,skills:any,deliveryDays:string,sort:string,search:string,page:string,experience:string) {
+  async getJobList(projectType:string,minPrice:string,maxPrice:string,skills:any,deliveryDays:string,sort:string,search:string,page:string,experience:string,freelancerSkills:any) {
     try {
-      const jobList = await this.freelancerRepository.jobList(projectType,minPrice,maxPrice,skills,deliveryDays,sort,search,page,experience);
+      const jobList = await this.freelancerRepository.jobList(projectType,minPrice,maxPrice,skills,deliveryDays,sort,search,page,experience,freelancerSkills);
       return jobList;
     } catch (error) {
       console.error(error);
@@ -292,6 +292,15 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     try{
       const data = await this.freelancerRepository.dashboardData(userId);
       return data
+    }catch(error){
+      throw error
+    }
+  }
+
+  async getSkills(){
+    try{
+      const skills = await this.freelancerRepository.getSkills();
+      return skills
     }catch(error){
       throw error
     }

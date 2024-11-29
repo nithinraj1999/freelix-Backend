@@ -16,4 +16,6 @@ export interface IAdminUseCase{
     createFreelancer(data:User,profileUrl:string | null):Promise<any>
     editFreelancer(data:User,profileUrl:string | null):Promise<any>
     addSkills(skill:string,description:string):Promise<any>
+    getDashboardData():Promise<any>
+    getAllSkills():Promise<any>
 }

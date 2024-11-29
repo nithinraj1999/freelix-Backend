@@ -4,6 +4,7 @@ interface IReview extends Document {
   clientId: mongoose.Types.ObjectId;
   freelancerId: mongoose.Types.ObjectId;
   comment: string;
+  rating:Number;
   createdAt: Date;
 }
 
@@ -23,6 +24,10 @@ const reviewSchema = new Schema<IReview>({
     type: String,
     required: true,
     maxlength: 1000
+  },
+  rating:{
+    type:Number,
+    required: true,
   },
   createdAt: {
     type: Date,

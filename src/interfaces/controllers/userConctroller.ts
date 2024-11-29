@@ -42,13 +42,11 @@ export class UserController {
   async verification(req: Request, res: Response) {
     try {
         const { otp, email } = req.body;
-
         const verify = await this.userUseCase.verification(otp, email);
         if (verify) {
             res.status(201).json({ success: true, message: "otp verified." });
         }else{
           res.json({ success: false, message: "otp not verified." });
-
         }
     } catch (error) {
         // res.status(500).json({ success: false, message: "otp not verified." });
@@ -152,9 +150,12 @@ export class UserController {
 
   async getAllJobPosts(req: Request, res: Response) {
     try {
-      const { userID } = req.body;
-      const jobPosts = await this.userUseCase.getAllJobPosts(userID);
-      res.status(200).json({ success: true, jobPosts: jobPosts });
+      const { userID,searchQuery,page } = req.body;
+      console.log("getAllJobPosts",req.body);
+      console.log(req.query);
+      
+      const jobPosts = await this.userUseCase.getAllJobPosts(userID,searchQuery,page);
+      res.status(200).json({ success: true, jobPosts });
     } catch (error) {
       console.error(error);
       res
@@ -248,7 +249,7 @@ export class UserController {
     try{
       const {bidAmount,userId,bidId,freelancerId,jobId} = req.body
       const order = await this.userUseCase.storeOrder(bidAmount,userId,bidId,freelancerId,jobId);
-      const stripe = new Stripe('sk_test_51QIqFWLXI5UC7UZcwfCUUCtsFtTkoHuwk6viSqmkxt636cMdhwZ2ZQZjrKfj0mfUl2MQEV0KYyYZeJqm3ylGNjXc00TFDP8rti');
+      const stripe = new Stripe(process.env.STRIPE_SECRET as string);
       const lineItems = [
         {
           price_data: {
@@ -303,8 +304,10 @@ export class UserController {
 
   async submitReview(req: Request, res: Response){
     try{
-      const {clientId,freelancerId,review} = req.body
-      const submission = await this.userUseCase.submitReview(clientId,freelancerId,review);
+      const {clientId,freelancerId,review,rating} = req.body
+      console.log(req.body);
+      
+      const submission = await this.userUseCase.submitReview(clientId,freelancerId,review,rating);
 
       res.status(200).json({success:true})
   }catch(error){
@@ -312,7 +315,7 @@ export class UserController {
     res.status(500).json({success:false})
   }
   }
-
+   
   async fetchAllContacts(req: Request, res: Response){
     try{
       const {userId} =req.body
@@ -377,13 +380,10 @@ export class UserController {
   async editData(req: Request, res: Response) {
     try {
       const { profilePicture, name, email, userId } = req.body;
-  
       const userDetails = await this.userUseCase.editData(profilePicture, name, email, userId);
-  
       if (!userDetails) {
         return res.status(404).json({ success: false, message: "User not found." });
       }
-  
       res.json({ success: true, message: "User details updated successfully.", data: userDetails });
     } catch (error) {
       console.error("Error in editData:", error);

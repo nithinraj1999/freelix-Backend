@@ -118,9 +118,9 @@ async getAllFreelancers(){
     throw error;
   }
 }
-async getAllJobPosts(userID:string){ 
+async getAllJobPosts(userID:string,searchQuery:string,page:string){ 
   try{
-    const MyjobPosts = await this.userRepository.getAllJobPosts(userID);
+    const MyjobPosts = await this.userRepository.getAllJobPosts(userID,searchQuery,page);
     return MyjobPosts;
   }catch(error){
     console.error(error);
@@ -232,9 +232,9 @@ async releasePayment(projectId:string,clientId:string,freelancerId:string,total:
   }
 }
 
-async submitReview(clientId:string,freelancerId:string,review:string){
+async submitReview(clientId:string,freelancerId:string,review:string,rating:string){
   try{
-    const releadPayment = await this.userRepository.submitReview(clientId,freelancerId,review);
+    const releadPayment = await this.userRepository.submitReview(clientId,freelancerId,review,rating);
     return releadPayment
   }catch(error){
     

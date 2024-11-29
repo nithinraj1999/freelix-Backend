@@ -5,25 +5,18 @@ const jwtInstance = new JWT();
 
 const authMiddleware = (req: Request & { user?: { id: string; role: string; } }, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
-
-    // Check if authHeader is a string and contains the Bearer scheme
     if (!authHeader || typeof authHeader !== 'string') {
         return res.status(401).json({ message: 'Authorization header is missing or invalid' });
     }
-
-    const token = authHeader.split(' ')[1]; // Extract the token from the "Bearer" scheme
-
+    const token = authHeader.split(' ')[1]; 
     if (!token) {
         return res.status(401).json({ message: 'Access token is missing' });
     }
-
     try {
-        const decoded = jwtInstance.verifyAccessToken(token); // Verify the access token
-        req.user = decoded; // Assign user data from token
-
-        // Check if the user has the "admin" role
+        const decoded = jwtInstance.verifyAccessToken(token);
+        req.user = decoded; 
         if (req.user?.role === 'admin') {
-            return next(); // Proceed if the role is "admin"
+            return next(); 
         } else {
             return res.status(403).json({ message: 'Forbidden: You do not have permission' });
         }

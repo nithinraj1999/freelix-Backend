@@ -100,7 +100,10 @@ export class FreelancerController {
 
   async getJobList(req: Request, res: Response) {
     try {
-    console.log("query.....",req.query);
+    
+    const {freelancerSkills} = req.body
+    console.log(freelancerSkills);
+    
     const projectType = req.query.projectType as string ;
     const minPrice = req.query.minPrice as string ;
     const maxPrice = req.query.maxPrice as string ; 
@@ -111,7 +114,7 @@ export class FreelancerController {
     const page = req.query.page as string ;
     const experience = req.query.experience as string ;
 
-      const jobListAndCount = await this.freelancerUseCase.getJobList(projectType,minPrice,maxPrice,skills,deliveryDays,sort,search,page,experience);
+      const jobListAndCount = await this.freelancerUseCase.getJobList(projectType,minPrice,maxPrice,skills,deliveryDays,sort,search,page,experience,freelancerSkills);
       const jobListCount = await this.freelancerUseCase.getJobListCount()
       const {jobList,count} =jobListAndCount
       res.status(200).json({ success: true, jobList: jobList,jobListCount:count });
@@ -357,6 +360,8 @@ export class FreelancerController {
     try{
       const {freelancerId}=req.body
       const wallet = await this.freelancerUseCase.fetchWallet(freelancerId);
+      console.log(wallet);
+      
       res.json({success: true,wallet:wallet});
     }catch(error){
       console.error(error);
@@ -369,6 +374,16 @@ export class FreelancerController {
       const {userId} =req.body
       const data = await this.freelancerUseCase.dashboardData(userId);
       res.json(data);
+    }catch(error){
+      console.error(error);
+    }
+  }
+
+  async getSkills(req: Request, res: Response){
+    try{      
+      
+      const skills = await this.freelancerUseCase.getSkills();
+      res.json(skills);
     }catch(error){
       console.error(error);
     }

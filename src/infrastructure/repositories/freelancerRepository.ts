@@ -10,7 +10,7 @@ import OrderModel from "../models/orderModel";
 import ReviewModel from "../models/reviewModel";
 import WalletModel from "../models/wallet";
 import mongoose from 'mongoose';
-
+import skillsModel from "../models/skillsModel";
 export class FreelancerRepository implements IFreelancerRepository {
   async createFreelancerAccount(
     data: IFreelancer,
@@ -102,6 +102,7 @@ export class FreelancerRepository implements IFreelancerRepository {
     search: string,
     page:string,
     experience:string,
+    freelancerSkills:any
   ) {
     try {
       const query: {
@@ -149,7 +150,9 @@ export class FreelancerRepository implements IFreelancerRepository {
       if (search) {
         query.title = { $regex: search, $options: 'i' };  // 'i' for case-insensitive search
       }
-  
+      if (freelancerSkills?.length) {
+        query.skills = { $in: freelancerSkills }; // Match jobs where any freelancer skill is in the job's skills array
+      }
       // Handle sorting based on the 'sort' parameter
       let sortOption = {};
       if (sort === 'lowToHigh') {
@@ -412,7 +415,7 @@ async fetchReviews(freelancerId:string){
     throw error
   }
 }
-
+ 
 async fetchWallet(freelancerId:string){
   try{
     const wallet  = await WalletModel.findOne({userId:freelancerId})
@@ -523,13 +526,13 @@ async dashboardData(userId: string) {
     const revenue = revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
     const earnings = revenueData.length > 0 ? revenueData[0].totalEarnings : 0;
 
-    console.log(revenue);
-    console.log(earnings);
-    console.log(pendingEarnings);
-    console.log(totalOrdersCount);
-    console.log(totalBidsCount);
-    console.log(totalPendingOrders);
-    console.log(orderByDate);
+    // console.log(revenue);
+    // console.log(earnings);
+    // console.log(pendingEarnings);
+    // console.log(totalOrdersCount);
+    // console.log(totalBidsCount);
+    // console.log(totalPendingOrders);
+    // console.log(orderByDate);
 
 
     return {
@@ -547,6 +550,13 @@ async dashboardData(userId: string) {
   }
 }
 
-
+async getSkills(){
+  try{
+    const skills  = await skillsModel.find({},{skill:1,_id:0})
+    return skills
+  }catch(error){
+    throw error
+  }
+}
 
 }

@@ -36,10 +36,10 @@ export const initSocket = (server: HttpServer) => {
 
 
     socket.on('sendMessage', async (message) => {
-      const { senderId, recipientId, text,name } = message;
+      const { senderId, recipientId, text,name,timestamp } = message;
     
       try {
-        const newMessage = new MessageModel({ senderId, recipientId, text });
+        const newMessage = new MessageModel({ senderId, recipientId, text,timestamp });
         await newMessage.save();
     
         const recipientSocketId = userSocketMap.get(recipientId);
@@ -48,6 +48,7 @@ export const initSocket = (server: HttpServer) => {
             name,
             senderId,
             text,
+            timestamp,
             recipientId,
           });
           console.log(`Message sent to recipient: ${recipientId}`);
@@ -63,8 +64,35 @@ export const initSocket = (server: HttpServer) => {
       }
     });
     
+    socket.on("startVideoCall", ({ senderId, recipientId, roomId }) => {
+      const recipientSocketId = userSocketMap.get(recipientId);
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("incomingVideoCall", {
+          roomId,
+          senderId,
+        });
+        console.log(`Video call invitation sent to recipient: ${recipientId}`);
+      } else {
+        console.log(`Recipient ${recipientId} is not online.`);
+      }
+    });
+
+    socket.on('blockFreelancer', (userId) => {
+      io.emit('freelancerBlocked', userId); 
+    });
+  
+    socket.on('unblockFreelancer', (userId) => {
+      io.emit('freelancerUnblocked', userId); 
+    });
     
 
+    socket.on('blockClient', (userId) => {
+      io.emit('clientBlocked', userId); 
+    });
+  
+    socket.on('unblockClient', (userId) => {
+      io.emit('clientUnblocked', userId); 
+    });
   });
    
   return io; // Return the io instance

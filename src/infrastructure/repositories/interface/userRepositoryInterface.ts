@@ -12,7 +12,7 @@ export interface IUserRepository {
   findById(userID:string):Promise<User | null>;
   createJobPost(data:IJobPost,file:string|null):Promise<any>
   getAllFreelancers():Promise<any>
-  getAllJobPosts(userID:string):Promise<any>;
+  getAllJobPosts(userID:string,searchQuery:string,page:string):Promise<any>;
   deleteJobPost(jobId:string):Promise<any>
   editPost(data:any):Promise<any>
   jobDetails(jobId:string):Promise<any>
@@ -23,7 +23,7 @@ export interface IUserRepository {
   storeOrder(bidAmount:string,userId:string,bidId:string,freelancerId:string,jobId:string):Promise<any>
   getAllHirings(clientId:string):Promise<any>
   releasePayment(projectId:string,clientId:string,freelancerId:string,total:string):Promise<any>
-  submitReview(clientId:string,freelancerId:string,review:string):Promise<any>
+  submitReview(clientId:string,freelancerId:string,review:string,rating:string):Promise<any>
   fetchAllContacts(userId:string):Promise<any>
   fetchChat(userId:string,contactId:string):Promise<any>
   updatePassword(userId:string,password:string):Promise<any>

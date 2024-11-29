@@ -14,4 +14,6 @@ export interface IAdminRepository {
   createFreelancer(data:object,imagePath:string | null,hashedPassword:string):Promise<any>
   editFreelancer(data:object,imagePath:string | null):Promise<any>
   addSkills(skill:string,description:string):Promise<any>
+  getDashboardData():Promise<any>
+  getAllSkills():Promise<any>
 }
