@@ -21,9 +21,7 @@ const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()
 const emailService = new EmailService()
 const otpService = new OtpService()
-
 const userRepository = new UserRepository();
-
 const userUseCase = new UserUseCase(userRepository,bcrypt,emailService,otpService,jwtToken)
 const userController = new UserController(userUseCase,jwtToken);
 
@@ -51,8 +49,9 @@ router.post('/forget-password',userController.forgetPassword.bind(userController
 router.post('/reset-password',userController.resetPassword.bind(userController));
 router.post('/get-userdata',userAuthMiddleware,userController.getUserData.bind(userController));
 router.put('/edit-profile',userAuthMiddleware,upload.single('profilePicture'),userController.editData.bind(userController));
+router.post('/download-file',userAuthMiddleware,userController.downloadFile.bind(userController));
 
-    
+
 export default router 
 
  

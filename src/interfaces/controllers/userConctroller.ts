@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
 import { IUserUseCase } from "../../application/useCases/interfaces/IUserUseCase";
 import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
-import { User as UserEntity } from "../../domain/entities/user"; // Change this to match your import path
+import { User as UserEntity } from "../../domain/entities/user"; 
 import { NotificationService } from "../../application/services/notificationService";
 import { userSocketMap } from "../../application/services/socket";
 import Stripe from "stripe";
+import { S3Bucket } from "../../application/services/s3bucket";
+import { PassThrough, pipeline } from "stream";
+import { promisify } from "util";
+import { GetObjectCommandOutput } from '@aws-sdk/client-s3';
+import { Readable } from 'stream'; // Node.js stream module
 
 export class UserController {
   private userUseCase: IUserUseCase;
@@ -151,8 +156,7 @@ export class UserController {
   async getAllJobPosts(req: Request, res: Response) {
     try {
       const { userID,searchQuery,page } = req.body;
-      console.log("getAllJobPosts",req.body);
-      console.log(req.query);
+   
       
       const jobPosts = await this.userUseCase.getAllJobPosts(userID,searchQuery,page);
       res.status(200).json({ success: true, jobPosts });
@@ -379,14 +383,47 @@ export class UserController {
 
   async editData(req: Request, res: Response) {
     try {
-      const { profilePicture, name, email, userId } = req.body;
-      const userDetails = await this.userUseCase.editData(profilePicture, name, email, userId);
+      const { name, email, userId } = req.body;
+      const userDetails = await this.userUseCase.editData(req.file, name, email, userId);
+      
       if (!userDetails) {
         return res.status(404).json({ success: false, message: "User not found." });
       }
       res.json({ success: true, message: "User details updated successfully.", data: userDetails });
     } catch (error) {
       console.error("Error in editData:", error);
+      res.status(500).json({ success: false, message: "Internal server error." });
+    }
+  }
+  
+
+  async  downloadFile(req: Request, res: Response): Promise<void> {
+    try {
+      const { orderId } = req.body;
+
+      const deliverable = await this.userUseCase.getDeliverable(orderId);
+      const file = deliverable.delivery.fileUrl;
+  
+      const baseUrl = "https://freelixs3.s3.eu-north-1.amazonaws.com/";
+      const fileKey = file.startsWith(baseUrl) ? file.replace(baseUrl, "") : file;
+  
+      const awsS3instance = new S3Bucket();
+      const response: GetObjectCommandOutput = await awsS3instance.downloads3Object(fileKey);
+  
+      if (response.Body && response.Body instanceof Readable) {
+        console.log(response.ContentType);
+  
+        res.setHeader("Content-Disposition", `attachment; filename="${fileKey}"`);
+        res.setHeader("Content-Type", response.ContentType || "application/octet-stream");
+  
+        response.Body.pipe(res);
+      } else {
+        res.status(400).json({ success: false, message: "File not found or unable to retrieve file" });
+      }
+  
+  
+    } catch (error) {
+      console.error("Error while downloading", error);
       res.status(500).json({ success: false, message: "Internal server error." });
     }
   }

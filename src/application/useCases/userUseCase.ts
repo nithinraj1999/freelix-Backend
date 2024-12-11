@@ -8,6 +8,7 @@ import { IOtpService } from "../services/interfaces/IOtpService";
 import { jwtInterface } from "../services/interfaces/jwtInterface";
 import { IJobPost } from "../../infrastructure/models/jobPostModel";
 import { Cloudinary } from "../services/cloudinary";
+import { S3Bucket } from "../services/s3bucket";
 export class UserUseCase implements IUserUseCase {
   private userRepository: IUserRepository;
   private bcrypt: Ibcrypt;
@@ -299,19 +300,33 @@ async getUserData(userId:string){
   }
 }
 
-async editData(profilePicture:string,name:string,email:string,userId:string){
+async editData(profilePicture:any,name:string,email:string,userId:string){
   try{
+    let image: string | null = null
+    if (profilePicture) {
+      const {originalname,path,mimetype} =profilePicture
+      console.log(originalname);
+        const awsS3instance = new S3Bucket()
+        image = await awsS3instance.uploadProfilePic(
+            originalname,
+            path,
+            mimetype,
+          'profile-pics'
+        )
+    }
 
-    let portfolioUrl: string | null = null;
-
-      if (profilePicture) {
-        const cloudinaryInstance = new Cloudinary();
-        const image = await cloudinaryInstance.uploadProfilePic(profilePicture);
-        portfolioUrl = image.url; 
-      }
-      console.log("url ", portfolioUrl);
-    const editedData = await this.userRepository.editData(profilePicture,name,email,userId);
+    const editedData = await this.userRepository.editData(image,name,email,userId);
     return editedData
+  }catch(error){
+    throw error
+  }
+}
+
+async getDeliverable(orderId:string){
+  try{
+    const deliverable = await this.userRepository.getDeliverable(orderId);
+    return deliverable
+
   }catch(error){
     throw error
   }

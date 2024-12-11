@@ -28,5 +28,6 @@ export interface IUserRepository {
   fetchChat(userId:string,contactId:string):Promise<any>
   updatePassword(userId:string,password:string):Promise<any>
   getUserData(userId:string):Promise<any>
-  editData(profilePicture:string,name:string,email:string,userId:string):Promise<any>
+  editData(profilePicture:string|null,name:string,email:string,userId:string):Promise<any>
+  getDeliverable(orderId:string):Promise<any>
 }

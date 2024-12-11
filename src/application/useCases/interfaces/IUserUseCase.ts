@@ -25,5 +25,6 @@ export interface IUserUseCase{
 
     validateAndStorePassword(userId:string,password:string,confirmPassword:string):Promise<any>
     getUserData(userId:string):Promise<any>
-    editData(profilePicture:string,name:string,email:string,userId:string):Promise<any>
+    editData(profilePicture:any,name:string,email:string,userId:string):Promise<any>
+    getDeliverable(orderId:string):Promise<any>
 }

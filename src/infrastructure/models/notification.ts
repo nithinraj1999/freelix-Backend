@@ -30,13 +30,11 @@ export interface INotification {
 
 const notificationSchema = new Schema({
   userID: { type: Schema.Types.ObjectId, ref: "User", required: true }, 
-  freelancerId: { type: Schema.Types.ObjectId, required: true }, // Reference to the user receiving the notification
-
-  freelancerName: { type: String,  required: true }, // Type of notification
+  freelancerId: { type: Schema.Types.ObjectId, required: true }, 
+  freelancerName: { type: String,  required: true },
   isRead: { type: Boolean, default: false },
-  bidAmount: { type: Number,required: true  },  // Fields for job notifications
-  
-  createdAt: { type: Date, default: Date.now }, // Timestamp
+  bidAmount: { type: Number,required: true  },  
+  createdAt: { type: Date, default: Date.now }, 
 });
 
 const notificationModel: Model<NotifikcationType & Document> = mongoose.model<NotifikcationType & Document>(
