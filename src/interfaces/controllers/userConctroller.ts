@@ -6,8 +6,6 @@ import { NotificationService } from "../../application/services/notificationServ
 import { userSocketMap } from "../../application/services/socket";
 import Stripe from "stripe";
 import { S3Bucket } from "../../application/services/s3bucket";
-import { PassThrough, pipeline } from "stream";
-import { promisify } from "util";
 import { GetObjectCommandOutput } from '@aws-sdk/client-s3';
 import { Readable } from 'stream'; // Node.js stream module
 
@@ -18,13 +16,13 @@ export class UserController {
   constructor(userUseCase: IUserUseCase, jwt: jwtInterface) {
     this.userUseCase = userUseCase;
     this.jwt = jwt;
-  }
+  } 
 
   //================================== user registration =======================================
 
   async register(req: Request, res: Response) {
     try {
-     
+
       const {password,confirmPassword} =req.body
       if(password !== confirmPassword){
         res.json({message:"password is not matching"})

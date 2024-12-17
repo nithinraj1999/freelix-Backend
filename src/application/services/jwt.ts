@@ -12,18 +12,15 @@ export class JWT implements jwtInterface {
     this.refreshTokenSecret = process.env.JWT_REFRESH_SECRET || 'defaultRefreshSecret';  // Refresh Token Secret
   }
 
-  // Generate Access Token (short-lived)
   generateAccessToken(payload: any): string {
     return jwt.sign(payload, this.accessTokenSecret, { expiresIn: '10d' }); 
   }
-
-  // Generate Refresh Token (long-lived)
+ 
   generateRefreshToken(payload: any): string {
     return jwt.sign(payload, this.refreshTokenSecret, { expiresIn: '20d' }); // Refresh Token expires in 7 days
   }
 
   
-  // Verify Access Token
   verifyAccessToken(token: string): any {
     try {
       return jwt.verify(token, this.accessTokenSecret);
@@ -32,7 +29,6 @@ export class JWT implements jwtInterface {
     }
   }
 
-  // Verify Refresh Token
   verifyRefreshToken(token: string): any {
     try {
       return jwt.verify(token, this.refreshTokenSecret);

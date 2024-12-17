@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { createServer } from 'node:http';
 import { initSocket } from './application/services/socket';
 import morgan from "morgan"
-
+import { errorHandlingMiddleware } from './interfaces/middleware/errorHandler';
 dotenv.config(); 
   
 

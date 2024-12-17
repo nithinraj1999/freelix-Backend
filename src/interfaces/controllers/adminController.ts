@@ -12,6 +12,9 @@ export class AdminController {
 
   async loginAdmin(req: Request, res: Response) {
     try {
+
+      // throw new Error('Unhandled test error');
+
       const { email, password } = req.body;
 
       const admin = await this.adminUseCase.authenticateAdmin(email, password);
@@ -52,6 +55,7 @@ export class AdminController {
         });
       }
     } catch (error) {
+      
       console.error(error);
       res.status(500).json({ success: false, message: "Login failed" });
     }

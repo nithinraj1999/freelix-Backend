@@ -6,13 +6,14 @@ import { AdminRepository } from '../../infrastructure/repositories/adminReposito
 import { AdminController } from '../controllers/adminController';
 import { upload } from '../../application/services/multer';
 import authMiddleware from '../middleware/userAuth';
-
+import { errorHandlingMiddleware } from '../middleware/errorHandler';
 const router = express.Router();
 const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()
 const adminRepository = new AdminRepository();
 const adminUseCase = new AdminUseCase(adminRepository,bcrypt,jwtToken)
 const adminController = new AdminController(adminUseCase,jwtToken);
+
 
 router.post('/login', adminController.loginAdmin.bind(adminController) );
 router.get('/clients-details',authMiddleware, adminController.getClientData.bind(adminController) );
@@ -31,5 +32,6 @@ router.post('/add-skills',authMiddleware, adminController.addSkills.bind(adminCo
 router.get('/dashboard-data',authMiddleware, adminController.getDashboardData.bind(adminController));
 router.get('/get-all-skills',authMiddleware,adminController.getAllSkills.bind(adminController));
 
+// router.use(errorHandlingMiddleware); // Place it here
 
 export default router
