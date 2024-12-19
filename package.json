@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc && powershell -Command \"Copy-Item -Recurse -Path src\\uploads -Destination dist\\uploads\""
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

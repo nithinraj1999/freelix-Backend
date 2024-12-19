@@ -118,8 +118,8 @@ class AdminController {
             var _a;
             try {
                 const data = req.body;
-                const profilePicPath = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path)
-                    ? req.file.path
+                const profilePicPath = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.buffer)
+                    ? req.file.buffer
                     : null;
                 const response = yield this.adminUseCase.createUser(data, profilePicPath);
                 res.json({ succes: true });

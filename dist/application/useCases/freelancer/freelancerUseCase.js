@@ -23,11 +23,11 @@ class FreelancerUseCase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let image = null;
-                const { originalname, path, mimetype } = file;
+                const { originalname, buffer, mimetype } = file;
                 console.log(originalname);
                 if (file) {
                     const awsS3instance = new s3bucket_1.S3Bucket();
-                    image = yield awsS3instance.uploadProfilePic(originalname, path, mimetype, 'profile-pics');
+                    image = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'profile-pics');
                     console.log(image);
                 }
                 const response = yield this.freelancerRepository.createFreelancerAccount(data, image);
@@ -98,9 +98,9 @@ class FreelancerUseCase {
             try {
                 let image = null;
                 if (file) {
-                    const { originalname, path, mimetype } = file;
+                    const { originalname, buffer, mimetype } = file;
                     const awsS3instance = new s3bucket_1.S3Bucket();
-                    image = yield awsS3instance.uploadProfilePic(originalname, path, mimetype, 'portfolios');
+                    image = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'portfolios');
                     console.log(image);
                 }
                 const jobList = yield this.freelancerRepository.editProfile(data, image);
@@ -263,10 +263,10 @@ class FreelancerUseCase {
                 // let project: string | null = null
                 let image = null;
                 if (file) {
-                    const { originalname, path, mimetype } = file;
+                    const { originalname, buffer, mimetype } = file;
                     console.log(originalname);
                     const awsS3instance = new s3bucket_1.S3Bucket();
-                    image = yield awsS3instance.uploadProfilePic(originalname, path, mimetype, 'project-files');
+                    image = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'project-files');
                     console.log(image);
                 }
                 // if (file) {
