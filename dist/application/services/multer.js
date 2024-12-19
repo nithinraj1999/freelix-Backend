@@ -8,7 +8,7 @@ const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'src/uploads/');
+        cb(null, '/uploads');
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -29,7 +29,7 @@ exports.upload = (0, multer_1.default)({
             cb(null, true);
         }
         else {
-            cb(new Error('Only images, PDFs, and ZIP files are allowed'), false); // Reject non-allowed files
+            cb(new Error('Only images, PDFs, and ZIP files are allowed'), false);
         }
     },
 });

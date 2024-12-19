@@ -18,7 +18,6 @@ class AdminController {
     loginAdmin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // throw new Error('Unhandled test error');
                 const { email, password } = req.body;
                 const admin = yield this.adminUseCase.authenticateAdmin(email, password);
                 if (!admin) {
@@ -294,7 +293,9 @@ class AdminController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { skill, description } = req.body;
+                console.log(req.body);
                 const skills = yield this.adminUseCase.addSkills(skill, description);
+                console.log(skills);
                 if (skills) {
                     res.json({ success: true });
                 }
@@ -319,7 +320,12 @@ class AdminController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const skills = yield this.adminUseCase.getAllSkills();
-                res.json({ skills });
+                if (skills) {
+                    res.json({ success: true, skills });
+                }
+                else {
+                    res.json({ success: false });
+                }
             }
             catch (error) {
                 console.error(error);

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IAdminUseCase } from "../../application/useCases/interfaces/IAdminUseCase";
 import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
+import { log } from "winston";
 
 export class AdminController {
   private adminUseCase: IAdminUseCase;
@@ -14,7 +15,7 @@ export class AdminController {
   async loginAdmin(req: Request, res: Response) {
     try {
 
-      // throw new Error('Unhandled test error');
+
 
       const { email, password } = req.body;
 
@@ -276,7 +277,11 @@ export class AdminController {
   async addSkills(req: Request, res: Response) {
     try {
       const { skill, description } = req.body;
+      console.log(req.body);
+      
       const skills = await this.adminUseCase.addSkills(skill, description);
+      console.log(skills);
+      
       if (skills) {
         res.json({ success: true });
       }
@@ -297,7 +302,12 @@ export class AdminController {
   async getAllSkills(req: Request, res: Response) {
     try {
       const skills = await this.adminUseCase.getAllSkills();
-      res.json({skills})
+     
+      if(skills){
+        res.json({success:true,skills})
+      }else{
+        res.json({success:false})
+      }
     } catch (error) {
       console.error(error);
     }
