@@ -25,14 +25,14 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
     async createFreelancer(data: IFreelancer, file: any | null) {
         try {
             let image = null
-            const {originalname,path,mimetype} =file
+            const {originalname,buffer,mimetype} =file
             console.log(originalname);
             
             if (file) {
                 const awsS3instance = new S3Bucket()
                 image = await awsS3instance.uploadProfilePic(
                     originalname,
-                    path,
+                    buffer,
                     mimetype,
                   'profile-pics'
                 )
