@@ -25,13 +25,13 @@ export class S3Bucket implements IS3bucket {
     constructor() {}
     uploadProfilePic = async (
         originalname: string,
-        path: string,
+        buffer: string,
         fileType: string,
         folder: string
     ) => {
         const bucketName = process.env.AWS_BUCKET_NAME
         const key = `${folder}/${Date.now()}-${originalname}`
-        const buffer = await fs.readFile(path)
+        // const buffer = await fs.readFile(path)
 
         try {
             const command = new PutObjectCommand({

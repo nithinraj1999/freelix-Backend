@@ -392,6 +392,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, userId } = req.body;
+                console.log("req.file", req.file);
                 const userDetails = yield this.userUseCase.editData(req.file, name, email, userId);
                 if (!userDetails) {
                     return res.status(404).json({ success: false, message: "User not found." });

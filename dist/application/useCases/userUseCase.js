@@ -320,10 +320,10 @@ class UserUseCase {
             try {
                 let image = null;
                 if (profilePicture) {
-                    const { originalname, path, mimetype } = profilePicture;
+                    const { originalname, buffer, mimetype } = profilePicture;
                     console.log(originalname);
                     const awsS3instance = new s3bucket_1.S3Bucket();
-                    image = yield awsS3instance.uploadProfilePic(originalname, path, mimetype, 'profile-pics');
+                    image = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'profile-pics');
                 }
                 const editedData = yield this.userRepository.editData(image, name, email, userId);
                 return editedData;

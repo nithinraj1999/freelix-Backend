@@ -304,12 +304,14 @@ async editData(profilePicture:any,name:string,email:string,userId:string){
   try{
     let image: string | null = null
     if (profilePicture) {
-      const {originalname,path,mimetype} =profilePicture
+      const {originalname,buffer,mimetype} =profilePicture
+      
+      
       console.log(originalname);
         const awsS3instance = new S3Bucket()
         image = await awsS3instance.uploadProfilePic(
             originalname,
-            path,
+            buffer,
             mimetype,
           'profile-pics'
         )

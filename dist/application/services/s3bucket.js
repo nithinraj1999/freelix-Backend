@@ -8,13 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.S3Bucket = void 0;
 const client_s3_1 = require("@aws-sdk/client-s3");
-const promises_1 = __importDefault(require("fs/promises"));
 const s3 = new client_s3_1.S3Client({
     region: process.env.AWS_REGION,
     credentials: {
@@ -28,10 +24,10 @@ const getKeyFromUrl = (url) => {
 };
 class S3Bucket {
     constructor() {
-        this.uploadProfilePic = (originalname, path, fileType, folder) => __awaiter(this, void 0, void 0, function* () {
+        this.uploadProfilePic = (originalname, buffer, fileType, folder) => __awaiter(this, void 0, void 0, function* () {
             const bucketName = process.env.AWS_BUCKET_NAME;
             const key = `${folder}/${Date.now()}-${originalname}`;
-            const buffer = yield promises_1.default.readFile(path);
+            // const buffer = await fs.readFile(path)
             try {
                 const command = new client_s3_1.PutObjectCommand({
                     Bucket: bucketName,

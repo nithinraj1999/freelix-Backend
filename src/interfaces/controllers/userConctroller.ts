@@ -382,6 +382,8 @@ export class UserController {
   async editData(req: Request, res: Response) {
     try {
       const { name, email, userId } = req.body;
+      console.log("req.file",req.file);
+      
       const userDetails = await this.userUseCase.editData(req.file, name, email, userId);
       
       if (!userDetails) {

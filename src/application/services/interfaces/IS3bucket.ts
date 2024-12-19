@@ -1,7 +1,7 @@
 export interface IS3bucket {
     uploadProfilePic(
         originalname: string,
-        path: string,
+        buffer: string,
         fileType: string,
         folder: string
     ): any,
