@@ -8,6 +8,8 @@ import { NotificationService } from '../../services/notificationService'
 import { userSocketMap } from '../../services/socket'
 import { IBid } from '../../../infrastructure/models/interface/IBidModel'
 import { S3Bucket } from '../../services/s3bucket'
+
+
 export class FreelancerUseCase implements FreelancerUseCaseInterface {
     private freelancerRepository: IFreelancerRepository
     private bcrypt: Ibcrypt
@@ -323,12 +325,12 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
             let image = null
             
             if (file) {
-                const {originalname,path,mimetype} =file
+                const {originalname,buffer,mimetype} =file
                 console.log(originalname);
                 const awsS3instance = new S3Bucket()
                 image = await awsS3instance.uploadProfilePic(
                     originalname,
-                    path,
+                    buffer,
                     mimetype,
                   'project-files'
                 )

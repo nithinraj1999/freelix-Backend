@@ -115,8 +115,8 @@ export class AdminController {
   async createUser(req: Request, res: Response) {
     try {
       const data = req.body;
-      const profilePicPath: string | null = req.file?.path
-        ? req.file.path
+      const profilePicPath: any | null = req.file?.buffer
+        ? req.file.buffer
         : null;
       const response = await this.adminUseCase.createUser(data, profilePicPath);
       res.json({ succes: true });

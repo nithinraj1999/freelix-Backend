@@ -7,7 +7,7 @@ export interface IAdminUseCase{
     getTotalClients():Promise<any>
     blockClient(clientID:string):Promise<any>
     unblockClient(clientID:string):Promise<any>
-    createUser(data:User,profileUrl:string | null):Promise<any>
+    createUser(data:User,profileUrl:any | null):Promise<any>
     editUser(data:User,profileUrl:string | null):Promise<any>
 
     getFreelancerData():Promise<any>
