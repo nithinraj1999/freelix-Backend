@@ -29,7 +29,7 @@ app.use((0, cors_1.default)({
 app.use((0, morgan_1.default)("tiny"));
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: process.env.ORIGIN,
+    origin: "https://freelix-frontend-if5u.vercel.app",
     credentials: true,
 }));
 app.use(express_1.default.json({ limit: '2mb' }));
