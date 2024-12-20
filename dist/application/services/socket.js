@@ -25,6 +25,7 @@ const initSocket = (server) => {
             methods: ['GET', 'POST'],
             credentials: true,
         },
+        transports: ['websocket'],
     });
     io.on('connection', (socket) => {
         socket.on('registerUser', (userId) => {
