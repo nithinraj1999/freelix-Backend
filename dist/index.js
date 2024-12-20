@@ -23,7 +23,7 @@ const io = (0, socket_1.initSocket)(server);
 exports.io = io;
 app.use((0, cors_1.default)({
     origin: process.env.ORIGIN,
-    methods: ['GET', 'POST', 'PUT'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
 app.use((0, morgan_1.default)("tiny"));

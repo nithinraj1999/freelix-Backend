@@ -23,7 +23,7 @@ const io = initSocket(server);
 
 app.use(cors({
     origin: process.env.ORIGIN, 
-    methods: ['GET', 'POST','PUT'],
+    methods: ['GET', 'POST','PUT','DELETE'],
     credentials: true,
   },
 ));
