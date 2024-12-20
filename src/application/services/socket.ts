@@ -10,7 +10,7 @@ export const userSocketMap = new Map<string, string>()
 export const initSocket = (server: HttpServer) => {
     const io = new Server(server, {
         cors: {
-            origin: process.env.ORIGIN, // Your frontend origin
+            origin:"https://freelix-frontend-if5u.vercel.app",
             methods: ['GET', 'POST'],
             credentials: true,
         },
