@@ -21,7 +21,7 @@ exports.userSocketMap = new Map();
 const initSocket = (server) => {
     const io = new socket_io_1.Server(server, {
         cors: {
-            origin: "https://freelix-frontend-if5u.vercel.app",
+            origin: process.env.ORIGIN, // Your frontend origin
             methods: ['GET', 'POST'],
             credentials: true,
         },

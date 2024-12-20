@@ -22,16 +22,16 @@ const server = (0, node_http_1.createServer)(app);
 const io = (0, socket_1.initSocket)(server);
 exports.io = io;
 app.use((0, cors_1.default)({
-    origin: "https://freelix-frontend-if5u.vercel.app",
+    origin: process.env.ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
 app.use((0, morgan_1.default)("tiny"));
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({
-    origin: "https://freelix-frontend-if5u.vercel.app",
-    credentials: true,
-}));
+// app.use(cors({
+//   origin: process.env.ORIGIN, 
+//   credentials: true,
+// }));
 app.use(express_1.default.json({ limit: '2mb' }));
 app.use(express_1.default.urlencoded({ limit: '2mb', extended: true }));
 (0, mongodbConnection_1.connectToMongoDB)();

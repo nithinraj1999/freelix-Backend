@@ -11,9 +11,9 @@ import { createServer } from 'node:http';
 import { initSocket } from './application/services/socket';
 import morgan from "morgan"
 import { errorHandlingMiddleware } from './interfaces/middleware/errorHandler';
- 
 
-dotenv.config();
+
+dotenv.config(); 
 
 const port = process.env.PORT 
 const app: Application = express();
@@ -22,7 +22,7 @@ const server = createServer(app);
 const io = initSocket(server);
 
 app.use(cors({
-    origin:"https://freelix-frontend-if5u.vercel.app", 
+    origin: process.env.ORIGIN, 
     methods: ['GET', 'POST','PUT','DELETE'],
     credentials: true,
   },
@@ -31,10 +31,10 @@ app.use(cors({
 app.use(morgan("tiny"))
   
 app.use(cookieParser());  
-app.use(cors({
-  origin:"https://freelix-frontend-if5u.vercel.app", 
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: process.env.ORIGIN, 
+//   credentials: true,
+// }));
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ limit: '2mb', extended: true }));
 
