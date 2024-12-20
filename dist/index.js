@@ -22,7 +22,7 @@ const server = (0, node_http_1.createServer)(app);
 const io = (0, socket_1.initSocket)(server);
 exports.io = io;
 app.use((0, cors_1.default)({
-    origin: process.env.ORIGIN,
+    origin: "https://freelix-frontend-if5u.vercel.app",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
