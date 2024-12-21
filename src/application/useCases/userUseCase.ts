@@ -222,7 +222,6 @@ async getAllHirings(clientId:string){
 
 async releasePayment(projectId:string,clientId:string,freelancerId:string,total:string){
   try{
-    console.log("releasePayment");
     
     const releadPayment = await this.userRepository.releasePayment(projectId,clientId,freelancerId,total)
     return releadPayment

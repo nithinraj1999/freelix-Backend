@@ -228,7 +228,6 @@ class UserUseCase {
     releasePayment(projectId, clientId, freelancerId, total) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("releasePayment");
                 const releadPayment = yield this.userRepository.releasePayment(projectId, clientId, freelancerId, total);
                 return releadPayment;
             }

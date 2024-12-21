@@ -275,8 +275,8 @@ class UserController {
                     payment_method_types: ["card"],
                     line_items: lineItems,
                     mode: "payment",
-                    success_url: `http://localhost:5173/success`,
-                    cancel_url: "http://localhost:5173/cencel",
+                    success_url: process.env.STRIPE_SUCCESS_URL,
+                    cancel_url: process.env.STRIPE_CANCEL_URL,
                 });
                 res.json({ id: session.id });
             }
@@ -392,7 +392,6 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, userId } = req.body;
-                console.log("req.file", req.file);
                 const userDetails = yield this.userUseCase.editData(req.file, name, email, userId);
                 if (!userDetails) {
                     return res.status(404).json({ success: false, message: "User not found." });
