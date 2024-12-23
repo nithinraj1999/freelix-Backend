@@ -115,10 +115,8 @@ export class AdminController {
   async createUser(req: Request, res: Response) {
     try {
       const data = req.body;
-      const profilePicPath: any | null = req.file?.buffer
-        ? req.file.buffer
-        : null;
-      const response = await this.adminUseCase.createUser(data, profilePicPath);
+     
+      const response = await this.adminUseCase.createUser(data, req.file);
       res.json({ succes: true });
     } catch (error) {
       console.error(error);
@@ -127,10 +125,10 @@ export class AdminController {
   async editUser(req: Request, res: Response) {
     try {
       const data = req.body;
-      const profilePicPath: string | null = req.file?.path || null;
+      
 
       // Pass the data and profile picture path to the use case for updating the user
-      const response = await this.adminUseCase.editUser(data, profilePicPath);
+      const response = await this.adminUseCase.editUser(data, req.file);
       res.json({
         success: true,
         message: "User updated successfully",
@@ -208,13 +206,10 @@ export class AdminController {
   async createFreelancer(req: Request, res: Response) {
     try {
       const data = req.body;
-      console.log("bbhbjhbh", req.body);
-      const profilePicPath: string | null = req.file?.path
-        ? req.file.path
-        : null;
+      
       const response = await this.adminUseCase.createFreelancer(
         data,
-        profilePicPath
+        req.file
       );
       res.json({ success: true, message: "Freelancer created successfully" });
     } catch (error) {

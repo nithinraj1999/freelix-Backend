@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminUseCase = void 0;
-const cloudinary_1 = require("../../services/cloudinary");
+const s3bucket_1 = require("../../services/s3bucket");
 class AdminUseCase {
     constructor(adminRepository, bcrypt, jwtToken) {
         this.adminRepository = adminRepository;
@@ -84,13 +84,18 @@ class AdminUseCase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let profileUrl = null;
-                // If profilePic is provided, upload it to Cloudinary
+                // if (profilePic) {
+                //   const cloudinaryInstance = new Cloudinary();
+                //   const image = await cloudinaryInstance.uploadProfilePic(profilePic);
+                //   profileUrl = image.url; // Get the image URL from Cloudinary
+                // }
                 if (profilePic) {
-                    const cloudinaryInstance = new cloudinary_1.Cloudinary();
-                    const image = yield cloudinaryInstance.uploadProfilePic(profilePic);
-                    profileUrl = image.url; // Get the image URL from Cloudinary
+                    const { originalname, buffer, mimetype } = profilePic;
+                    console.log(originalname);
+                    const awsS3instance = new s3bucket_1.S3Bucket();
+                    profileUrl = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'profile-pics');
+                    console.log(profileUrl);
                 }
-                // Hash the user's password
                 if (data.password) {
                     const hashedPassword = yield this.bcrypt.hash(data.password);
                     const response = yield this.adminRepository.createUser(data, profileUrl, hashedPassword);
@@ -100,7 +105,7 @@ class AdminUseCase {
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to create user");
+                throw new Error('Failed to create user');
             }
         });
     }
@@ -109,17 +114,17 @@ class AdminUseCase {
             try {
                 let profileUrl = null;
                 if (profilePic) {
-                    const cloudinaryInstance = new cloudinary_1.Cloudinary();
-                    const image = yield cloudinaryInstance.uploadProfilePic(profilePic);
-                    profileUrl = image.url; // Get the image URL from Cloudinary
+                    const { originalname, buffer, mimetype } = profilePic;
+                    console.log(originalname);
+                    const awsS3instance = new s3bucket_1.S3Bucket();
+                    profileUrl = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'profile-pics');
                 }
-                // Call the repository to create the user, passing the profileUrl (can be null)
                 const response = yield this.adminRepository.editUser(data, profileUrl);
                 return response;
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to create user");
+                throw new Error('Failed to create user');
             }
         });
     }
@@ -131,7 +136,7 @@ class AdminUseCase {
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to retrieve freelancers"); // Optional: Rethrow with a message
+                throw new Error('Failed to retrieve freelancers'); // Optional: Rethrow with a message
             }
         });
     }
@@ -144,7 +149,7 @@ class AdminUseCase {
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to block freelancer");
+                throw new Error('Failed to block freelancer');
             }
         });
     }
@@ -157,7 +162,7 @@ class AdminUseCase {
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to unblock freelancer");
+                throw new Error('Failed to unblock freelancer');
             }
         });
     }
@@ -166,13 +171,11 @@ class AdminUseCase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let profileUrl = null;
-                // If profilePic is provided, upload it to Cloudinary
                 if (profilePic) {
-                    const cloudinaryInstance = new cloudinary_1.Cloudinary();
-                    const image = yield cloudinaryInstance.uploadProfilePic(profilePic);
-                    profileUrl = image.url; // Get the image URL from Cloudinary
+                    const { originalname, buffer, mimetype } = profilePic;
+                    const awsS3instance = new s3bucket_1.S3Bucket();
+                    profileUrl = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'profile-pics');
                 }
-                // Hash the freelancer's password
                 if (data.password) {
                     const hashedPassword = yield this.bcrypt.hash(data.password);
                     const response = yield this.adminRepository.createFreelancer(data, profileUrl, hashedPassword);
@@ -181,7 +184,7 @@ class AdminUseCase {
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to create freelancer");
+                throw new Error('Failed to create freelancer');
             }
         });
     }
@@ -191,17 +194,16 @@ class AdminUseCase {
             try {
                 let profileUrl = null;
                 if (profilePic) {
-                    const cloudinaryInstance = new cloudinary_1.Cloudinary();
-                    const image = yield cloudinaryInstance.uploadProfilePic(profilePic);
-                    profileUrl = image.url; // Get the image URL from Cloudinary
+                    const { originalname, buffer, mimetype } = profilePic;
+                    const awsS3instance = new s3bucket_1.S3Bucket();
+                    profileUrl = yield awsS3instance.uploadProfilePic(originalname, buffer, mimetype, 'profile-pics');
                 }
-                // Call the repository to edit the freelancer, passing the profileUrl (can be null)
                 const response = yield this.adminRepository.editFreelancer(data, profileUrl);
                 return response;
             }
             catch (error) {
                 console.error(error);
-                throw new Error("Failed to edit freelancer");
+                throw new Error('Failed to edit freelancer');
             }
         });
     }

@@ -115,13 +115,9 @@ class AdminController {
     }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const data = req.body;
-                const profilePicPath = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.buffer)
-                    ? req.file.buffer
-                    : null;
-                const response = yield this.adminUseCase.createUser(data, profilePicPath);
+                const response = yield this.adminUseCase.createUser(data, req.file);
                 res.json({ succes: true });
             }
             catch (error) {
@@ -131,12 +127,10 @@ class AdminController {
     }
     editUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const data = req.body;
-                const profilePicPath = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) || null;
                 // Pass the data and profile picture path to the use case for updating the user
-                const response = yield this.adminUseCase.editUser(data, profilePicPath);
+                const response = yield this.adminUseCase.editUser(data, req.file);
                 res.json({
                     success: true,
                     message: "User updated successfully",
@@ -221,14 +215,9 @@ class AdminController {
     // Create a freelancer
     createFreelancer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const data = req.body;
-                console.log("bbhbjhbh", req.body);
-                const profilePicPath = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path)
-                    ? req.file.path
-                    : null;
-                const response = yield this.adminUseCase.createFreelancer(data, profilePicPath);
+                const response = yield this.adminUseCase.createFreelancer(data, req.file);
                 res.json({ success: true, message: "Freelancer created successfully" });
             }
             catch (error) {

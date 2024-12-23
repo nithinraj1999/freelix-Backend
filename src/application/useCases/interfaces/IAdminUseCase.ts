@@ -8,12 +8,12 @@ export interface IAdminUseCase{
     blockClient(clientID:string):Promise<any>
     unblockClient(clientID:string):Promise<any>
     createUser(data:User,profileUrl:any | null):Promise<any>
-    editUser(data:User,profileUrl:string | null):Promise<any>
+    editUser(data:User,profileUrl:any):Promise<any>
 
     getFreelancerData():Promise<any>
     blockFreelancer(clientID:string):Promise<any>
     unblockFreelancer(clientID:string):Promise<any>
-    createFreelancer(data:User,profileUrl:string | null):Promise<any>
+    createFreelancer(data:User,profileUrl:any):Promise<any>
     editFreelancer(data:User,profileUrl:string | null):Promise<any>
     addSkills(skill:string,description:string):Promise<any>
     getDashboardData():Promise<any>
