@@ -574,7 +574,7 @@ class UserRepository {
                 if (email) {
                     data.email = email;
                 }
-                const userData = yield userModel_1.default.updateOne({ _id: userId }, { $set: data });
+                const userData = yield userModel_1.default.findOneAndUpdate({ _id: userId }, { $set: data }, { new: true });
                 return userData;
             }
             catch (error) {

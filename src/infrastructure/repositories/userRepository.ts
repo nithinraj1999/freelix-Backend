@@ -630,9 +630,10 @@ export class UserRepository implements IUserRepository {
             if (email) {
                 data.email = email
             }
-            const userData = await userModel.updateOne(
+            const userData = await userModel.findOneAndUpdate(
                 { _id: userId },
-                { $set: data }
+                { $set: data },
+                {new:true}
             )
             return userData
         } catch (error) {
