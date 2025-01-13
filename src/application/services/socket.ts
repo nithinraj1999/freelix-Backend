@@ -1,8 +1,8 @@
 import { Server, Socket } from 'socket.io'
-import { createServer } from 'node:http'
-import { Server as HttpServer } from 'http' // Import HttpServer type
+import { Server as HttpServer } from 'http' 
 import dotenv from 'dotenv'
 import MessageModel from '../../infrastructure/models/message'
+
 dotenv.config()
 
 export const userSocketMap = new Map<string, string>()
@@ -10,7 +10,7 @@ export const userSocketMap = new Map<string, string>()
 export const initSocket = (server: HttpServer) => {
     const io = new Server(server, {
         cors: {
-            origin: process.env.ORIGIN, // Your frontend origin
+            origin: process.env.ORIGIN, 
             methods: ['GET', 'POST'],
             credentials: true,
         },

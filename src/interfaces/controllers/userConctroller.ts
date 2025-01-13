@@ -269,7 +269,7 @@ export class UserController {
         payment_method_types:["card"],
         line_items:lineItems,
         mode:"payment",
-        success_url: process.env.STRIPE_SUCCESS_URL,
+        success_url:process.env.STRIPE_SUCCESS_URL,
         cancel_url:process.env.STRIPE_CANCEL_URL,
       })
       
