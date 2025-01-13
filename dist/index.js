@@ -17,6 +17,8 @@ const socket_1 = require("./application/services/socket");
 const morgan_1 = __importDefault(require("morgan"));
 dotenv_1.default.config();
 const port = process.env.PORT;
+console.log('port', port);
+console.log('mongoURL', process.env.MONGODB_ORIGIN);
 const app = (0, express_1.default)();
 const server = (0, node_http_1.createServer)(app);
 const io = (0, socket_1.initSocket)(server);
@@ -26,12 +28,8 @@ app.use((0, cors_1.default)({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
-app.use((0, morgan_1.default)("tiny"));
+app.use((0, morgan_1.default)('tiny'));
 app.use((0, cookie_parser_1.default)());
-// app.use(cors({
-//   origin: process.env.ORIGIN, 
-//   credentials: true,
-// }));
 app.use(express_1.default.json({ limit: '2mb' }));
 app.use(express_1.default.urlencoded({ limit: '2mb', extended: true }));
 (0, mongodbConnection_1.connectToMongoDB)();
