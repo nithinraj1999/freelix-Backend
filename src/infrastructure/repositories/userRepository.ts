@@ -345,7 +345,7 @@ export class UserRepository implements IUserRepository {
     async getAllHirings(clientId: string) {
         try {
             const hirings = await OrderModel.find({ clientId: clientId })
-                .populate('projectId', 'title')
+                .populate('projectId','title')
                 .populate('freelancerId', 'name')
             return hirings
         } catch (error) {
@@ -353,58 +353,7 @@ export class UserRepository implements IUserRepository {
         }
     }
 
-    // async  releasePayment(projectId: string, clientId: string, freelancerId: string, total: string) {
-    //   try {
-
-    //     const totalAmount = parseFloat(total);
-
-    //     const freelancerAmount = totalAmount * 0.7;
-    //     const platformCharge = totalAmount * 0.3;
-
-    //     const escrowUpdate = await EscrowModel.updateOne(
-    //       { clientId, freelancerId, projectId },
-    //       { $set: { amount: platformCharge } }
-    //     );
-
-    //     if (escrowUpdate.modifiedCount === 0) {
-    //       throw new Error('Escrow update failed. Payment not released.');
-    //     }
-
-    //     // Check if freelancer's wallet exists
-    //     let freelancerWallet = await WalletModel.findOne({ userId: freelancerId });
-
-    //     if (!freelancerWallet) {
-    //       // If wallet doesn't exist, create it
-    //       freelancerWallet = new WalletModel({
-    //         userId: freelancerId,
-    //         balance: freelancerAmount,
-    //       });
-
-    //       const saveResult = await freelancerWallet.save();
-    //       if (!saveResult) {
-    //         throw new Error('Failed to create freelancer wallet.');
-    //       }
-    //     } else {
-    //       // If wallet exists, update the balance
-    //       freelancerWallet.balance += freelancerAmount;
-
-    //       const updateResult = await freelancerWallet.save(); // Save the updated balance
-    //       if (!updateResult) {
-    //         throw new Error('Failed to update freelancer wallet.');
-    //       }
-    //     }
-    //     const order = await OrderModel.updateOne({projectId:projectId},{$set:{isPaymentReleased:true}})
-
-    //     return {
-    //       success: true,
-    //       freelancerAmount,
-    //     };
-    //   } catch (error) {
-    //     console.error('Error releasing payment:', error);
-    //     throw error;
-    //   }
-    // }
-
+ 
     async releasePayment(
         projectId: string,
         clientId: string,
@@ -420,8 +369,8 @@ export class UserRepository implements IUserRepository {
             const escrowUpdate = await EscrowModel.findOneAndUpdate(
                 { clientId, freelancerId, projectId },
                 { $set: { amount: platformCharge } },
-                { new: true } // Return the updated document
-            ).populate('projectId') // Populate the projectId field
+                { new: true }
+            ).populate('projectId') 
 
             let freelancerWallet = await WalletModel.findOne({
                 userId: freelancerId,

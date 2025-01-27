@@ -27,8 +27,6 @@ export class UserController {
       if(password !== confirmPassword){
         res.json({message:"password is not matching"})
       }else{
-
-    
       const user = await this.userUseCase.registerUser(req.body);
       res.status(201).json({
         success:true,
@@ -284,8 +282,12 @@ export class UserController {
       
       const {clientId} = req.body
       const allHirings = await this.userUseCase.getAllHirings(clientId);
+      if(allHirings){
+        res.status(200).json({success:true,allHirings:allHirings})
+      }else{
+        res.status(404).json({ success: false, message: "No hirings found" });
+      }
  
-    res.status(200).json({success:true,allHirings:allHirings})
     }catch(error){
       console.error(error);
       res.status(500).json({success:false})
@@ -307,8 +309,6 @@ export class UserController {
   async submitReview(req: Request, res: Response){
     try{
       const {clientId,freelancerId,review,rating} = req.body
-      console.log(req.body);
-      
       const submission = await this.userUseCase.submitReview(clientId,freelancerId,review,rating);
 
       res.status(200).json({success:true})
