@@ -1,8 +1,9 @@
 import express, { Application } from 'express'
 import { connectToMongoDB } from './infrastructure/database/mongodbConnection'
-import userRoutes from './interfaces/routes/userRoute'
-import adminRoute from './interfaces/routes/adminRoute'
-import freelancerRoute from './interfaces/routes/freelancerRoute'
+import userRoute from './interfaces/routes/userRoutes/userRoute'
+import authRoute from './interfaces/routes/userRoutes/auth/authRoutes'
+import adminRoute from './interfaces/routes/adminRoutes/adminRoute'
+import freelacerRoute from './interfaces/routes/freelancerRoutes/freelancerRoute'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -37,10 +38,11 @@ app.use(express.json({ limit: '2mb' }))
 app.use(express.urlencoded({ limit: '2mb', extended: true }))
 
 connectToMongoDB()
+app.use('/api', authRoute)
 
-app.use('/api', userRoutes)
+app.use('/api', userRoute)
 app.use('/api/admin', adminRoute)
-app.use('/api/freelancer', freelancerRoute)
+app.use('/api/freelancer', freelacerRoute)
 
 export { io }
 
