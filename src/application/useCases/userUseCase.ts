@@ -32,19 +32,19 @@ export class UserUseCase implements IUserUseCase {
  
   async registerUser(data: User): Promise<void> {
     try {
-      const existingUser = await this.userRepository.findByEmail(data.email);
-      if (existingUser) {
-        throw new Error("User with this email already exists.");
-      } else {
-        if (data.password) {
-          data.password = await this.bcrypt.hash(data.password);
-        }
+      // const existingUser = await this.userRepository.findByEmail(data.email);
+      // if (existingUser) {
+      //   throw new Error("User with this email already exists.");
+      // } else {
+      //   if (data.password) {
+      //     data.password = await this.bcrypt.hash(data.password);
+      //   }
   
-        const otp = await this.otpService.generateOtp();
-        await this.userRepository.saveUserOtp(otp,data.email,data );  // Store user data temporarily in OTP collection
-        await this.emailService.sendEmail(data.email, otp);
-        return;
-      }
+      //   const otp = await this.otpService.generateOtp();
+      //   await this.userRepository.saveUserOtp(otp,data.email,data );  // Store user data temporarily in OTP collection
+      //   await this.emailService.sendEmail(data.email, otp);
+      //   return;
+      // }
     } catch (error) {
       throw error;
     }
@@ -53,12 +53,12 @@ export class UserUseCase implements IUserUseCase {
 
   async verification(otp: string, email: string) {
     try {
-      const findOTP = await this.userRepository.findOTP(otp, email);
-      if (findOTP) {
-        const savedData = await this.userRepository.save(findOTP.userData);
-        const token = this.jwtToken.generateAccessToken({ email: email });
-        return { findOTP, token };
-      }
+      // const findOTP = await this.userRepository.findOTP(otp, email);
+      // if (findOTP) {
+      //   const savedData = await this.userRepository.save(findOTP.userData);
+      //   const token = this.jwtToken.generateAccessToken({ email: email });
+      //   return { findOTP, token };
+      // }
     } catch (error) { 
       console.error(error);
       throw error

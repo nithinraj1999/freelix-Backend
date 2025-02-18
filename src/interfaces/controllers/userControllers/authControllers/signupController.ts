@@ -1,8 +1,10 @@
 import { Request, Response,NextFunction } from 'express'
-import { ISignupUseCase } from '../../../../domain/interfaces/user/useCaseInterfaces/signupUseCase'
+import { ISignupUseCase } from '../../../../domain/interfaces/user/useCaseInterfaces/ISignupUseCase'
 
 export class SignupController {
+    
     private signupUseCase: ISignupUseCase
+
     constructor(signupUseCase: ISignupUseCase) {
         this.signupUseCase = signupUseCase
     }

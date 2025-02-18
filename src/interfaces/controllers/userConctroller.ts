@@ -20,35 +20,36 @@ export class UserController {
 
   //================================== user registration =======================================
 
-  async register(req: Request, res: Response) {
-    try {
+  // async register(req: Request, res: Response) {
+  //   try {
 
-      const {password,confirmPassword} =req.body
-      if(password !== confirmPassword){
-        res.json({message:"password is not matching"})
-      }else{
-      const user = await this.userUseCase.registerUser(req.body);
-      res.status(201).json({
-        success:true,
-        userID: user,
-        email:req.body.email,
-        message:
-          "User registration successful. Please verify the OTP sent to your email.",
-      });
-    }
-    } catch (err) {
-      res.json({ success: false,message:"Email already exist" });    }
-  }
-
+  //     const {password,confirmPassword} =req.body
+  //     if(password !== confirmPassword){
+  //       res.json({message:"password is not matching"})
+  //     }else{
+  //     const user = await this.userUseCase.registerUser(req.body);
+  //     res.status(201).json({
+  //       success:true,
+  //       userID: user,
+  //       email:req.body.email,
+  //       message:
+  //         "User registration successful. Please verify the OTP sent to your email.",
+  //     });
+  //   }
+  //   } catch (err) {
+  //     res.json({ success: false,message:"Email already exist" });    }
+  // }
+  
+//otp verification
   async verification(req: Request, res: Response) {
     try {
-        const { otp, email } = req.body;
-        const verify = await this.userUseCase.verification(otp, email);
-        if (verify) {
-            res.status(201).json({ success: true, message: "otp verified." });
-        }else{
-          res.json({ success: false, message: "otp not verified." });
-        }
+        // const { otp, email } = req.body;
+        // const verify = await this.userUseCase.verification(otp, email);
+        // if (verify) {
+        //     res.status(201).json({ success: true, message: "otp verified." });
+        // }else{
+        //   res.json({ success: false, message: "otp not verified." });
+        // }
     } catch (error) {
         // res.status(500).json({ success: false, message: "otp not verified." });
         console.log(error);

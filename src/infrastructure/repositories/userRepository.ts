@@ -117,8 +117,8 @@ export class UserRepository implements IUserRepository {
             const skillsArray: string[] = Array.isArray(skills)
                 ? skills
                 : typeof skills === 'string'
-                ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
-                : [] // Default to an empty array if skills is undefined or not a string
+                ? JSON.parse(skills) 
+                : [] 
 
             const response = await jobPostModel.create({
                 userID: userID,
@@ -126,7 +126,7 @@ export class UserRepository implements IUserRepository {
                 category: category,
                 subCategory: subCategory,
                 skills: skillsArray,
-                file: file, // File will either be a string or null
+                file: file, 
                 description: description,
                 experience: experience,
                 paymentType: paymentType,
@@ -140,7 +140,6 @@ export class UserRepository implements IUserRepository {
             return response
         } catch (error) {
             console.error('Error creating job post:', error)
-            // Rethrow the error so that it can be handled by the use case or controller
             throw new Error('Failed to create job post')
         }
     }
@@ -189,7 +188,7 @@ export class UserRepository implements IUserRepository {
             const result = await jobPostModel.findByIdAndUpdate(
                 { _id: jobId },
                 { $set: { isDelete: true } }
-            ) // Delete job by ID
+            ) 
             return result
         } catch (error) {
             console.error(`Error deleting job with ID ${jobId}:`, error)
