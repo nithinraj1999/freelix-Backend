@@ -66,24 +66,24 @@ export class UserUseCase implements IUserUseCase {
   }
 
   async authenticateUser(email: string, password: string) {
-    try {
-      const user = await this.userRepository.findByEmail(email);
-      if (user) {
-        if(user.password){
-          const hashedPassword = user.password;
-          const isPasswordValid = await this.bcrypt.compare(
-            password,
-            hashedPassword
-          );
-          if (isPasswordValid) {
-            return user;
-          }
-        }
+    // try {
+    //   const user = await this.userRepository.findByEmail(email);
+    //   if (user) {
+    //     if(user.password){
+    //       const hashedPassword = user.password;
+    //       const isPasswordValid = await this.bcrypt.compare(
+    //         password,
+    //         hashedPassword
+    //       );
+    //       if (isPasswordValid) {
+    //         return user;
+    //       }
+    //     }
        
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
 
   async resendOTP(email: string) {

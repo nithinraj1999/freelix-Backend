@@ -1,4 +1,4 @@
-import { IFreelancer } from '../../domain/entities/freelancer'
+// import { IFreelancer } from '../../domain/entities/freelancer'
 import { IFreelancerRepository } from './interface/freelancerRepositoryInterface'
 import userModel from '../models/userModel'
 import jobPostModel from '../models/jobPostModel'
@@ -13,7 +13,7 @@ import mongoose from 'mongoose'
 import skillsModel from '../models/skillsModel'
 export class FreelancerRepository implements IFreelancerRepository {
     async createFreelancerAccount(
-        data: IFreelancer,
+        data: any,
         profileImagePath: string | null
     ) {
         try {

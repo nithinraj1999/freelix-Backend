@@ -28,10 +28,11 @@ const userController = new UserController(userUseCase,jwtToken);
  
 // router.post('/signup',validateSchema(signupSchema), userController.register.bind(userController));
 // router.post('/verification', userController.verification.bind(userController));
-router.post('/login',validateSchema(loginSchema), userController.loginUser.bind(userController));
-router.post('/resend-otp', userController.resendOTP.bind(userController));
+// router.post('/login',validateSchema(loginSchema), userController.loginUser.bind(userController));
+// router.post('/resend-otp', userController.resendOTP.bind(userController));
 
 //----------
+
 router.post('/create-job-post',userAuthMiddleware,upload.single('file'),validateSchema(jobCreationSchema) ,userController.createJobPost.bind(userController));
 router.post('/my-job-posts',userAuthMiddleware,userController.getAllJobPosts.bind(userController));
 router.put('/delete-post',userAuthMiddleware,userController.deletePost.bind(userController));
