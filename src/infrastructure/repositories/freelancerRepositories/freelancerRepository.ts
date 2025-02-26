@@ -1,11 +1,11 @@
+import { IFreelancerRepository } from '../../../domain/interfaces/freelancer/repository/IFreelancerRepository'
 
-
-export class FreelancerRepository{
+export class FreelancerRepository implements IFreelancerRepository{
+    
     private freelancerModel
-    constructor(freelancerModel:any){
+    constructor(freelancerModel: any) {
         this.freelancerModel = freelancerModel
     }
-
 
     async getAllFreelancers() {
         try {

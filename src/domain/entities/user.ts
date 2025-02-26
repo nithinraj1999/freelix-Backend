@@ -2,6 +2,7 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  socketId?:string;
   password: string;  // Optional because social logins may not have it
   phone: number;
   role: "client" | "freelancer" | "admin";

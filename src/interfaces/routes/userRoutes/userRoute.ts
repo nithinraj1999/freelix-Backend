@@ -33,11 +33,11 @@ const userController = new UserController(userUseCase,jwtToken);
 
 //----------
 
-router.post('/create-job-post',userAuthMiddleware,upload.single('file'),validateSchema(jobCreationSchema) ,userController.createJobPost.bind(userController));
-router.post('/my-job-posts',userAuthMiddleware,userController.getAllJobPosts.bind(userController));
-router.put('/delete-post',userAuthMiddleware,userController.deletePost.bind(userController));
-router.post('/edit-post',validateSchema(editJobPostSchema),userAuthMiddleware,userController.editPost.bind(userController));
-router.post('/my-job-details',userAuthMiddleware,userController.jobPostdetails.bind(userController));
+// router.post('/create-job-post',userAuthMiddleware,upload.single('file'),validateSchema(jobCreationSchema) ,userController.createJobPost.bind(userController));
+// router.post('/my-job-posts',userAuthMiddleware,userController.getAllJobPosts.bind(userController));
+// router.put('/delete-post',userAuthMiddleware,userController.deletePost.bind(userController));
+// router.post('/edit-post',validateSchema(editJobPostSchema),userAuthMiddleware,userController.editPost.bind(userController));
+// router.post('/my-job-details',userAuthMiddleware,userController.jobPostdetails.bind(userController));
 
 //-------
 router.post('/all-bids',userAuthMiddleware,userController.fetchAllBids.bind(userController));

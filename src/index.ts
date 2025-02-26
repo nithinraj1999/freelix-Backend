@@ -1,8 +1,9 @@
 import express, { Application } from 'express'
 import { connectToMongoDB } from './infrastructure/database/mongodbConnection'
 import userRoute from './interfaces/routes/userRoutes/userRoute'
-import authRoute from './interfaces/routes/userRoutes/auth/authRoutes'
+import authRoute from './interfaces/routes/userRoutes/authRoutes'
 import adminRoute from './interfaces/routes/adminRoutes/adminRoute'
+import jobPostRoute from './interfaces/routes/userRoutes/jobPostRoutes'
 import freelacerRoute from './interfaces/routes/freelancerRoutes/freelancerRoute'
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -39,7 +40,7 @@ app.use(express.urlencoded({ limit: '2mb', extended: true }))
 
 connectToMongoDB()
 app.use('/api', authRoute)
-
+app.use('/api',jobPostRoute)
 app.use('/api', userRoute)
 app.use('/api/admin', adminRoute)
 app.use('/api/freelancer', freelacerRoute)
