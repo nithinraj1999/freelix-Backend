@@ -136,10 +136,10 @@ export class UserController {
           socketId: userSocketMap.get(freelancer._id.toString()), // Convert ObjectId to string and get socketId
         }));
 
-      NotificationService.sendJobPostNotification(
-        freelancersWithSocketIds,
-        jobPost
-      );
+      // NotificationService.sendJobPostNotification(
+      //   freelancersWithSocketIds,
+      //   jobPost
+      // );
 
       res.status(200).json({ success: true, data: jobPost });
     } catch (error) {

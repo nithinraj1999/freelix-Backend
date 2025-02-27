@@ -6,6 +6,7 @@ export class JobPostController {
     private JobPostUsecase: IJobPostUseCase
     private userSocketMap
     private notificationService
+    
     constructor(
         JobPostUsecase: IJobPostUseCase,
         userSocketMap: any,
@@ -103,6 +104,16 @@ export class JobPostController {
         } catch (error) {
             console.error(error)
             res.json({ success: false })
+        }
+    }
+
+    async getSkills(req: Request, res: Response, next: NextFunction) {
+        try {
+            const skills = await this.JobPostUsecase.getSkills()
+            res.status(200).json({ success: true, skills: skills })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ success: false })
         }
     }
 }

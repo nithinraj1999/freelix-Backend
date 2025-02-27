@@ -65,7 +65,7 @@ export class NotificationService {
         }
     }    
 
-     sendNotification(clientSocketID:string,bidDetails:IBid){
+     static sendNotification(clientSocketID:string,bidDetails:IBid){
         try{
             
             if (clientSocketID) { 

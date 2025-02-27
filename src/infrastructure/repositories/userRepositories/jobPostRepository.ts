@@ -1,6 +1,8 @@
 import { IJobPostRepository } from '../../../domain/interfaces/user/repositoryInterfaces/IJobPostRepository'
 import { IJobPost } from '../../../domain/entities/jobPost'
+
 export class JobPostRepository implements IJobPostRepository {
+    
     private jobPostModel: any
     constructor(jobPostModel: any) {
         this.jobPostModel = jobPostModel

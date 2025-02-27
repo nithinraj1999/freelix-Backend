@@ -7,4 +7,5 @@ export interface IJobPostUseCase{
     editPost(data:any):Promise<any>
     jobDetails(jobId:string):Promise<any>
     getAllFreelancers():Promise<any>
+    getSkills():Promise<any>
 }

@@ -1,7 +1,7 @@
 import { Ibcrypt } from '../../services/interfaces/bcryptInterface'
 import { jwtInterface } from '../../services/interfaces/jwtInterface'
 import { Cloudinary } from '../../services/cloudinary'
-import { IFreelancer } from '../../../domain/entities/freelancer'
+
 import { IFreelancerRepository } from '../../../infrastructure/repositories/interface/freelancerRepositoryInterface'
 import { FreelancerUseCaseInterface } from '../interfaces/IFreelancerUseCase'
 import { NotificationService } from '../../services/notificationService'
@@ -24,7 +24,7 @@ export class FreelancerUseCase implements FreelancerUseCaseInterface {
         this.jwtToken = jwtToken
     }
 
-    async createFreelancer(data: IFreelancer, file: any | null) {
+    async createFreelancer(data: any, file: any | null) {
         try {
             let image = null
             const {originalname,buffer,mimetype} =file

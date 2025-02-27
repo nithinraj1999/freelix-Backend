@@ -6,10 +6,12 @@ export class JobPostUsecase implements IJobPostUseCase{
 
     private jobPostRepository:IJobPostRepository;
     private freelancerrepository
+    private skillRepository
 
-    constructor(jobPostRepository:IJobPostRepository,freelancerrepository:any) {
+    constructor(jobPostRepository:IJobPostRepository,freelancerrepository:any,skillRepository:any) {
         this.jobPostRepository = jobPostRepository
         this.freelancerrepository = freelancerrepository
+        this.skillRepository =skillRepository
     }
 
     async createJobPost(data: IJobPost, file: string | null) {
@@ -67,6 +69,16 @@ async getAllFreelancers(){
     } catch (error) {
       console.error("Error in use case:", error);
       throw error;
+    }
+  }
+
+
+  async getSkills(){
+    try{
+      const skills = await this.skillRepository.getSkills()
+      return skills
+    }catch(error){
+      throw error
     }
   }
 }
