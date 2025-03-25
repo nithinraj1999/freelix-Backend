@@ -13,7 +13,7 @@ export class Cloudinary implements ICloudinary{
 
      uploadProfilePic = async (filePath: string) => {
         return cloudinary.uploader.upload(filePath, {
-          folder: 'profile_pics',
+          folder: 'articleimage',
         });
       };
 }
