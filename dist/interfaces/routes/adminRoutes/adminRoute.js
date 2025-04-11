@@ -1,0 +1,36 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const bcrypt_1 = require("../../../application/services/bcrypt");
+const jwt_1 = require("../../../application/services/jwt");
+const adminUseCase_1 = require("../../../application/useCases/admin/adminUseCase");
+const adminRepository_1 = require("../../../infrastructure/repositories/adminRepository");
+const adminController_1 = require("../../controllers/adminController");
+const multer_1 = require("../../../application/services/multer");
+const userAuth_1 = __importDefault(require("../../middleware/userAuth"));
+const router = express_1.default.Router();
+const bcrypt = new bcrypt_1.BcryptPasswordHasher(10);
+const jwtToken = new jwt_1.JWT();
+const adminRepository = new adminRepository_1.AdminRepository();
+const adminUseCase = new adminUseCase_1.AdminUseCase(adminRepository, bcrypt, jwtToken);
+const adminController = new adminController_1.AdminController(adminUseCase, jwtToken);
+router.post('/login', adminController.loginAdmin.bind(adminController));
+router.get('/clients-details', userAuth_1.default, adminController.getClientData.bind(adminController));
+router.post('/block-client', userAuth_1.default, adminController.blockClient.bind(adminController));
+router.post('/unblock-client', userAuth_1.default, adminController.unblockClient.bind(adminController));
+router.post('/create-user', userAuth_1.default, multer_1.upload.single('profilePicture'), adminController.createUser.bind(adminController));
+router.post('/edit-user', userAuth_1.default, multer_1.upload.single('profilePicture'), adminController.editUser.bind(adminController));
+router.get('/refresh-token', adminController.refreshToken.bind(adminController));
+router.get('/freelancers-details', userAuth_1.default, adminController.getFreelancerData.bind(adminController));
+router.post('/create-freelancer', userAuth_1.default, multer_1.upload.single('profilePicture'), adminController.createFreelancer.bind(adminController));
+router.post('/edit-freelancer', userAuth_1.default, multer_1.upload.single('profilePicture'), adminController.editFreelancer.bind(adminController));
+router.post('/block-freelancer', userAuth_1.default, adminController.blockFreelancer.bind(adminController));
+router.post('/unblock-freelancer', userAuth_1.default, adminController.unblockFreelancer.bind(adminController));
+router.post('/add-skills', userAuth_1.default, adminController.addSkills.bind(adminController));
+router.get('/dashboard-data', userAuth_1.default, adminController.getDashboardData.bind(adminController));
+router.get('/get-all-skills', userAuth_1.default, adminController.getAllSkills.bind(adminController));
+// router.use(errorHandlingMiddleware); // Place it here
+exports.default = router;

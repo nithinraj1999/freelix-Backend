@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationService = void 0;
 const index_1 = require("../../index"); // Import the io instance
 class NotificationService {
-    static sendJobPostNotification(freelancers, jobData) {
+    sendJobPostNotification(freelancers, jobData) {
         try {
             freelancers.forEach((freelancer) => {
                 console.log("socketid..", freelancer.socketId);

@@ -63,7 +63,7 @@ export class AdminRepository implements IAdminRepository {
     async createUser(data:User,profileUrl:string,hashedPassword:string){
         try{
             const {name,email,phone} = data
-            const newUser:User = {
+            const newUser:Partial<User> = {
                 name: name,
                 email: email,
                 phone: phone,
@@ -152,22 +152,22 @@ export class AdminRepository implements IAdminRepository {
     hashedPassword: string
   ) {
     try {
-      const { name, email, phone, description, skills, education, languages } = data;
+      const { name, email, phone, description, skills, languages } = data;
       const skillsArray: string[] = Array.isArray(skills) 
       ? skills 
       : typeof skills === 'string' 
-        ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
-        : []; // Default to an empty array if skills is undefined or not a string
+        ? JSON.parse(skills) 
+        : []; 
 
 
         const languageArray: string[] = Array.isArray(languages) 
         ? languages 
         : typeof languages === 'string' 
-          ? JSON.parse(languages) // Use JSON.parse to convert the string into an array
-          : []; // Default to an empty array if skills is undefined or not a string
+          ? JSON.parse(languages) 
+          : []; 
         
           
-      const newFreelancer: User = {
+      const newFreelancer: Partial<User> = {
         name,
         email,
         phone,
@@ -195,7 +195,7 @@ export class AdminRepository implements IAdminRepository {
   // Edit a freelancer
   async editFreelancer(data: User, profileUrl: string | null) {
     try {
-      const { name, email, phone, description, skills, education, languages, _id } = data;
+      const { name, email, phone, description, skills, languages, _id } = data;
       const skillsArray: string[] = Array.isArray(skills) 
       ? skills 
       : typeof skills === 'string' 

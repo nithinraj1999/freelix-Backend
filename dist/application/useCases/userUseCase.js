@@ -22,19 +22,18 @@ class UserUseCase {
     registerUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const existingUser = yield this.userRepository.findByEmail(data.email);
-                if (existingUser) {
-                    throw new Error("User with this email already exists.");
-                }
-                else {
-                    if (data.password) {
-                        data.password = yield this.bcrypt.hash(data.password);
-                    }
-                    const otp = yield this.otpService.generateOtp();
-                    yield this.userRepository.saveUserOtp(otp, data.email, data); // Store user data temporarily in OTP collection
-                    yield this.emailService.sendEmail(data.email, otp);
-                    return;
-                }
+                // const existingUser = await this.userRepository.findByEmail(data.email);
+                // if (existingUser) {
+                //   throw new Error("User with this email already exists.");
+                // } else {
+                //   if (data.password) {
+                //     data.password = await this.bcrypt.hash(data.password);
+                //   }
+                //   const otp = await this.otpService.generateOtp();
+                //   await this.userRepository.saveUserOtp(otp,data.email,data );  // Store user data temporarily in OTP collection
+                //   await this.emailService.sendEmail(data.email, otp);
+                //   return;
+                // }
             }
             catch (error) {
                 throw error;
@@ -44,12 +43,12 @@ class UserUseCase {
     verification(otp, email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const findOTP = yield this.userRepository.findOTP(otp, email);
-                if (findOTP) {
-                    const savedData = yield this.userRepository.save(findOTP.userData);
-                    const token = this.jwtToken.generateAccessToken({ email: email });
-                    return { findOTP, token };
-                }
+                // const findOTP = await this.userRepository.findOTP(otp, email);
+                // if (findOTP) {
+                //   const savedData = await this.userRepository.save(findOTP.userData);
+                //   const token = this.jwtToken.generateAccessToken({ email: email });
+                //   return { findOTP, token };
+                // }
             }
             catch (error) {
                 console.error(error);
@@ -59,21 +58,23 @@ class UserUseCase {
     }
     authenticateUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield this.userRepository.findByEmail(email);
-                if (user) {
-                    if (user.password) {
-                        const hashedPassword = user.password;
-                        const isPasswordValid = yield this.bcrypt.compare(password, hashedPassword);
-                        if (isPasswordValid) {
-                            return user;
-                        }
-                    }
-                }
-            }
-            catch (error) {
-                console.error(error);
-            }
+            // try {
+            //   const user = await this.userRepository.findByEmail(email);
+            //   if (user) {
+            //     if(user.password){
+            //       const hashedPassword = user.password;
+            //       const isPasswordValid = await this.bcrypt.compare(
+            //         password,
+            //         hashedPassword
+            //       );
+            //       if (isPasswordValid) {
+            //         return user;
+            //       }
+            //     }
+            //   }
+            // } catch (error) {
+            //   console.error(error);
+            // }
         });
     }
     resendOTP(email) {

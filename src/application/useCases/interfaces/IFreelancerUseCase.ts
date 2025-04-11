@@ -1,9 +1,8 @@
 import { promises } from "node:dns";
-import { IFreelancer } from "../../../domain/entities/freelancer";
 import { IBid } from "../../../domain/entities/bid";
 
 export interface FreelancerUseCaseInterface{
-    createFreelancer(data:IFreelancer,file:any | null):Promise<any>
+    createFreelancer(data:any,file:any | null):Promise<any>
     findFreelancerById (id:string):Promise<any>
     switchToBuying(id:string):Promise<any>
     switchToSelling(id:string):Promise<any>

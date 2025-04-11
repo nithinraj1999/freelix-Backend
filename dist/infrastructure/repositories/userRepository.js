@@ -126,15 +126,15 @@ class UserRepository {
                 const skillsArray = Array.isArray(skills)
                     ? skills
                     : typeof skills === 'string'
-                        ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
-                        : []; // Default to an empty array if skills is undefined or not a string
+                        ? JSON.parse(skills)
+                        : [];
                 const response = yield jobPostModel_1.default.create({
                     userID: userID,
                     title: title,
                     category: category,
                     subCategory: subCategory,
                     skills: skillsArray,
-                    file: file, // File will either be a string or null
+                    file: file,
                     description: description,
                     experience: experience,
                     paymentType: paymentType,
@@ -148,7 +148,6 @@ class UserRepository {
             }
             catch (error) {
                 console.error('Error creating job post:', error);
-                // Rethrow the error so that it can be handled by the use case or controller
                 throw new Error('Failed to create job post');
             }
         });
@@ -195,7 +194,7 @@ class UserRepository {
     deleteJobPost(jobId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield jobPostModel_1.default.findByIdAndUpdate({ _id: jobId }, { $set: { isDelete: true } }); // Delete job by ID
+                const result = yield jobPostModel_1.default.findByIdAndUpdate({ _id: jobId }, { $set: { isDelete: true } });
                 return result;
             }
             catch (error) {
@@ -343,56 +342,13 @@ class UserRepository {
             }
         });
     }
-    // async  releasePayment(projectId: string, clientId: string, freelancerId: string, total: string) {
-    //   try {
-    //     const totalAmount = parseFloat(total);
-    //     const freelancerAmount = totalAmount * 0.7;
-    //     const platformCharge = totalAmount * 0.3;
-    //     const escrowUpdate = await EscrowModel.updateOne(
-    //       { clientId, freelancerId, projectId },
-    //       { $set: { amount: platformCharge } }
-    //     );
-    //     if (escrowUpdate.modifiedCount === 0) {
-    //       throw new Error('Escrow update failed. Payment not released.');
-    //     }
-    //     // Check if freelancer's wallet exists
-    //     let freelancerWallet = await WalletModel.findOne({ userId: freelancerId });
-    //     if (!freelancerWallet) {
-    //       // If wallet doesn't exist, create it
-    //       freelancerWallet = new WalletModel({
-    //         userId: freelancerId,
-    //         balance: freelancerAmount,
-    //       });
-    //       const saveResult = await freelancerWallet.save();
-    //       if (!saveResult) {
-    //         throw new Error('Failed to create freelancer wallet.');
-    //       }
-    //     } else {
-    //       // If wallet exists, update the balance
-    //       freelancerWallet.balance += freelancerAmount;
-    //       const updateResult = await freelancerWallet.save(); // Save the updated balance
-    //       if (!updateResult) {
-    //         throw new Error('Failed to update freelancer wallet.');
-    //       }
-    //     }
-    //     const order = await OrderModel.updateOne({projectId:projectId},{$set:{isPaymentReleased:true}})
-    //     return {
-    //       success: true,
-    //       freelancerAmount,
-    //     };
-    //   } catch (error) {
-    //     console.error('Error releasing payment:', error);
-    //     throw error;
-    //   }
-    // }
     releasePayment(projectId, clientId, freelancerId, total) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const totalAmount = parseFloat(total);
                 const freelancerAmount = totalAmount * 0.7;
                 const platformCharge = totalAmount * 0.3;
-                const escrowUpdate = yield escrow_1.default.findOneAndUpdate({ clientId, freelancerId, projectId }, { $set: { amount: platformCharge } }, { new: true } // Return the updated document
-                ).populate('projectId'); // Populate the projectId field
+                const escrowUpdate = yield escrow_1.default.findOneAndUpdate({ clientId, freelancerId, projectId }, { $set: { amount: platformCharge } }, { new: true }).populate('projectId');
                 let freelancerWallet = yield wallet_1.default.findOne({
                     userId: freelancerId,
                 });

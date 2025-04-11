@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
-const notificationService_1 = require("../../application/services/notificationService");
 const socket_1 = require("../../application/services/socket");
 const stripe_1 = __importDefault(require("stripe"));
 const s3bucket_1 = require("../../application/services/s3bucket");
@@ -24,39 +23,35 @@ class UserController {
         this.jwt = jwt;
     }
     //================================== user registration =======================================
-    register(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { password, confirmPassword } = req.body;
-                if (password !== confirmPassword) {
-                    res.json({ message: "password is not matching" });
-                }
-                else {
-                    const user = yield this.userUseCase.registerUser(req.body);
-                    res.status(201).json({
-                        success: true,
-                        userID: user,
-                        email: req.body.email,
-                        message: "User registration successful. Please verify the OTP sent to your email.",
-                    });
-                }
-            }
-            catch (err) {
-                res.json({ success: false, message: "Email already exist" });
-            }
-        });
-    }
+    // async register(req: Request, res: Response) {
+    //   try {
+    //     const {password,confirmPassword} =req.body
+    //     if(password !== confirmPassword){
+    //       res.json({message:"password is not matching"})
+    //     }else{
+    //     const user = await this.userUseCase.registerUser(req.body);
+    //     res.status(201).json({
+    //       success:true,
+    //       userID: user,
+    //       email:req.body.email,
+    //       message:
+    //         "User registration successful. Please verify the OTP sent to your email.",
+    //     });
+    //   }
+    //   } catch (err) {
+    //     res.json({ success: false,message:"Email already exist" });    }
+    // }
+    //otp verification
     verification(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { otp, email } = req.body;
-                const verify = yield this.userUseCase.verification(otp, email);
-                if (verify) {
-                    res.status(201).json({ success: true, message: "otp verified." });
-                }
-                else {
-                    res.json({ success: false, message: "otp not verified." });
-                }
+                // const { otp, email } = req.body;
+                // const verify = await this.userUseCase.verification(otp, email);
+                // if (verify) {
+                //     res.status(201).json({ success: true, message: "otp verified." });
+                // }else{
+                //   res.json({ success: false, message: "otp not verified." });
+                // }
             }
             catch (error) {
                 // res.status(500).json({ success: false, message: "otp not verified." });
@@ -138,7 +133,10 @@ class UserController {
                 const freelancersWithSocketIds = freelancers
                     .filter((freelancer) => socket_1.userSocketMap.has(freelancer._id.toString())) // Keep only freelancers with a valid socket ID
                     .map((freelancer) => (Object.assign(Object.assign({}, freelancer), { socketId: socket_1.userSocketMap.get(freelancer._id.toString()) })));
-                notificationService_1.NotificationService.sendJobPostNotification(freelancersWithSocketIds, jobPost);
+                // NotificationService.sendJobPostNotification(
+                //   freelancersWithSocketIds,
+                //   jobPost
+                // );
                 res.status(200).json({ success: true, data: jobPost });
             }
             catch (error) {
@@ -290,7 +288,12 @@ class UserController {
             try {
                 const { clientId } = req.body;
                 const allHirings = yield this.userUseCase.getAllHirings(clientId);
-                res.status(200).json({ success: true, allHirings: allHirings });
+                if (allHirings) {
+                    res.status(200).json({ success: true, allHirings: allHirings });
+                }
+                else {
+                    res.status(404).json({ success: false, message: "No hirings found" });
+                }
             }
             catch (error) {
                 console.error(error);
@@ -315,7 +318,6 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { clientId, freelancerId, review, rating } = req.body;
-                console.log(req.body);
                 const submission = yield this.userUseCase.submitReview(clientId, freelancerId, review, rating);
                 res.status(200).json({ success: true });
             }

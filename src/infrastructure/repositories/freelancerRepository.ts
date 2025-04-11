@@ -1,4 +1,3 @@
-// import { IFreelancer } from '../../domain/entities/freelancer'
 import { IFreelancerRepository } from './interface/freelancerRepositoryInterface'
 import userModel from '../models/userModel'
 import jobPostModel from '../models/jobPostModel'
@@ -11,35 +10,25 @@ import ReviewModel from '../models/reviewModel'
 import WalletModel from '../models/wallet'
 import mongoose from 'mongoose'
 import skillsModel from '../models/skillsModel'
+
 export class FreelancerRepository implements IFreelancerRepository {
     async createFreelancerAccount(
         data: any,
         profileImagePath: string | null
     ) {
         try {
-            const { name, description, skills, languages, education, userID } =
-                data
-            // let profileUrl: string | null = null
-
-            // If profilePic is provided, upload it to Cloudinary
-            // if (profileImagePath) {
-            //     const cloudinaryInstance = new Cloudinary()
-            //     const image = await cloudinaryInstance.uploadProfilePic(
-            //         profileImagePath
-            //     )
-            //     profileUrl = image.url // Get the image URL from Cloudinary
-            // }
+            const { name, description, skills, languages, education, userID } = data
             const skillsArray: string[] = Array.isArray(skills)
                 ? skills
                 : typeof skills === 'string'
-                ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
-                : [] // Default to an empty array if skills is undefined or not a string
+                ? JSON.parse(skills) 
+                : [] 
 
             const languageArray: string[] = Array.isArray(languages)
                 ? languages
                 : typeof languages === 'string'
-                ? JSON.parse(languages) // Use JSON.parse to convert the string into an array
-                : [] // Default to an empty array if skills is undefined or not a string
+                ? JSON.parse(languages) 
+                : [] 
 
             const response = await userModel.updateOne(
                 { _id: userID },
@@ -125,7 +114,6 @@ export class FreelancerRepository implements IFreelancerRepository {
                 query.paymentType = projectType
             }
 
-            // Handle price filters
             if (minPrice || maxPrice) {
                 const min = minPrice ? parseInt(minPrice, 10) : undefined
                 const max = maxPrice ? parseInt(maxPrice, 10) : undefined
@@ -145,38 +133,34 @@ export class FreelancerRepository implements IFreelancerRepository {
                 }
             }
 
-            // Handle skills filter
             if (skills && skills.length > 0) {
                 query.skills = { $in: skills }
             }
 
-            // Handle search by title with regex
             if (search) {
-                query.title = { $regex: search, $options: 'i' } // 'i' for case-insensitive search
+                query.title = { $regex: search, $options: 'i' } 
             }
             if (freelancerSkills?.length) {
-                query.skills = { $in: freelancerSkills } // Match jobs where any freelancer skill is in the job's skills array
+                query.skills = { $in: freelancerSkills } 
             }
-            // Handle sorting based on the 'sort' parameter
             let sortOption = {}
             if (sort === 'lowToHigh') {
                 if (projectType === 'fixed') {
-                    sortOption = { fixedPrice: 1 } // Ascending order for fixedPrice
+                    sortOption = { fixedPrice: 1 } 
                 } else if (projectType === 'hourly') {
-                    sortOption = { 'hourlyPrice.from': 1 } // Ascending order for hourlyPrice
+                    sortOption = { 'hourlyPrice.from': 1 } 
                 }
             } else if (sort === 'highToLow') {
                 if (projectType === 'fixed') {
-                    sortOption = { fixedPrice: -1 } // Descending order for fixedPrice
+                    sortOption = { fixedPrice: -1 } 
                 } else if (projectType === 'hourly') {
-                    sortOption = { 'hourlyPrice.from': -1 } // Descending order for hourlyPrice
+                    sortOption = { 'hourlyPrice.from': -1 } 
                 }
             }
 
             if (experience && experience != 'any') {
                 query.experience = experience
             }
-            // Execute query with sorting
             const skip = parseInt(page) * 3 - 3
             const jobList = await jobPostModel
                 .find(query)
@@ -452,8 +436,8 @@ export class FreelancerRepository implements IFreelancerRepository {
             const reviews = await ReviewModel.find({
                 freelancerId: freelancerId,
             }).populate({
-                path: 'clientId', // The reference to the User model
-                select: 'name profilePicture', // Specify the fields to populate
+                path: 'clientId',
+                select: 'name profilePicture', 
             })
             return reviews
         } catch (error) {

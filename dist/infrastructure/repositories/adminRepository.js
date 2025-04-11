@@ -158,17 +158,17 @@ class AdminRepository {
     createFreelancer(data, profileUrl, hashedPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, email, phone, description, skills, education, languages } = data;
+                const { name, email, phone, description, skills, languages } = data;
                 const skillsArray = Array.isArray(skills)
                     ? skills
                     : typeof skills === 'string'
-                        ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
-                        : []; // Default to an empty array if skills is undefined or not a string
+                        ? JSON.parse(skills)
+                        : [];
                 const languageArray = Array.isArray(languages)
                     ? languages
                     : typeof languages === 'string'
-                        ? JSON.parse(languages) // Use JSON.parse to convert the string into an array
-                        : []; // Default to an empty array if skills is undefined or not a string
+                        ? JSON.parse(languages)
+                        : [];
                 const newFreelancer = {
                     name,
                     email,
@@ -197,7 +197,7 @@ class AdminRepository {
     editFreelancer(data, profileUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, email, phone, description, skills, education, languages, _id } = data;
+                const { name, email, phone, description, skills, languages, _id } = data;
                 const skillsArray = Array.isArray(skills)
                     ? skills
                     : typeof skills === 'string'

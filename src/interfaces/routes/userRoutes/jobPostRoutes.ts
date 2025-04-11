@@ -6,7 +6,7 @@ import { JobPostRepository } from '../../../infrastructure/repositories/userRepo
 import jobPostModel from '../../../infrastructure/models/jobPostModel';
 import { JobPostUsecase } from '../../../application/useCases/user/jobPostUseCase/jobPostUseCase';
 import { userSocketMap } from '../../../application/services/socket';
-import { FreelancerRepository } from '../../../infrastructure/repositories/freelancerRepositories/freelancerRepository';
+import {FreelancerRepository} from "../../../infrastructure/repositories/freelancerRepositories/freelancerRepository"
 import userModel from '../../../infrastructure/models/userModel';
 import { NotificationService } from '../../../application/services/notificationService';
 import { upload } from '../../../application/services/multer';

@@ -27,25 +27,16 @@ class FreelancerRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, description, skills, languages, education, userID } = data;
-                // let profileUrl: string | null = null
-                // If profilePic is provided, upload it to Cloudinary
-                // if (profileImagePath) {
-                //     const cloudinaryInstance = new Cloudinary()
-                //     const image = await cloudinaryInstance.uploadProfilePic(
-                //         profileImagePath
-                //     )
-                //     profileUrl = image.url // Get the image URL from Cloudinary
-                // }
                 const skillsArray = Array.isArray(skills)
                     ? skills
                     : typeof skills === 'string'
-                        ? JSON.parse(skills) // Use JSON.parse to convert the string into an array
-                        : []; // Default to an empty array if skills is undefined or not a string
+                        ? JSON.parse(skills)
+                        : [];
                 const languageArray = Array.isArray(languages)
                     ? languages
                     : typeof languages === 'string'
-                        ? JSON.parse(languages) // Use JSON.parse to convert the string into an array
-                        : []; // Default to an empty array if skills is undefined or not a string
+                        ? JSON.parse(languages)
+                        : [];
                 const response = yield userModel_1.default.updateOne({ _id: userID }, {
                     $set: {
                         title: name,
@@ -106,7 +97,6 @@ class FreelancerRepository {
                 if (projectType) {
                     query.paymentType = projectType;
                 }
-                // Handle price filters
                 if (minPrice || maxPrice) {
                     const min = minPrice ? parseInt(minPrice, 10) : undefined;
                     const max = maxPrice ? parseInt(maxPrice, 10) : undefined;
@@ -127,39 +117,35 @@ class FreelancerRepository {
                         }
                     }
                 }
-                // Handle skills filter
                 if (skills && skills.length > 0) {
                     query.skills = { $in: skills };
                 }
-                // Handle search by title with regex
                 if (search) {
-                    query.title = { $regex: search, $options: 'i' }; // 'i' for case-insensitive search
+                    query.title = { $regex: search, $options: 'i' };
                 }
                 if (freelancerSkills === null || freelancerSkills === void 0 ? void 0 : freelancerSkills.length) {
-                    query.skills = { $in: freelancerSkills }; // Match jobs where any freelancer skill is in the job's skills array
+                    query.skills = { $in: freelancerSkills };
                 }
-                // Handle sorting based on the 'sort' parameter
                 let sortOption = {};
                 if (sort === 'lowToHigh') {
                     if (projectType === 'fixed') {
-                        sortOption = { fixedPrice: 1 }; // Ascending order for fixedPrice
+                        sortOption = { fixedPrice: 1 };
                     }
                     else if (projectType === 'hourly') {
-                        sortOption = { 'hourlyPrice.from': 1 }; // Ascending order for hourlyPrice
+                        sortOption = { 'hourlyPrice.from': 1 };
                     }
                 }
                 else if (sort === 'highToLow') {
                     if (projectType === 'fixed') {
-                        sortOption = { fixedPrice: -1 }; // Descending order for fixedPrice
+                        sortOption = { fixedPrice: -1 };
                     }
                     else if (projectType === 'hourly') {
-                        sortOption = { 'hourlyPrice.from': -1 }; // Descending order for hourlyPrice
+                        sortOption = { 'hourlyPrice.from': -1 };
                     }
                 }
                 if (experience && experience != 'any') {
                     query.experience = experience;
                 }
-                // Execute query with sorting
                 const skip = parseInt(page) * 3 - 3;
                 const jobList = yield jobPostModel_1.default
                     .find(query)
@@ -425,8 +411,8 @@ class FreelancerRepository {
                 const reviews = yield reviewModel_1.default.find({
                     freelancerId: freelancerId,
                 }).populate({
-                    path: 'clientId', // The reference to the User model
-                    select: 'name profilePicture', // Specify the fields to populate
+                    path: 'clientId',
+                    select: 'name profilePicture',
                 });
                 return reviews;
             }
