@@ -3,13 +3,12 @@ import { BcryptPasswordHasher } from '../../../application/services/bcrypt';
 import { FreelancerUseCase } from '../../../application/useCases/freelancer/freelancerUseCase';
 import { FreelancerRepository } from '../../../infrastructure/repositories/freelancerRepository';
 import { JWT } from '../../../application/services/jwt';
-import { FreelancerController } from '../../controllers/freelancerController';
 import {upload} from '../../../application/services/multer'
 import validateSchema from '../../middleware/validator';
 import { editProfileSchema } from '../../../domain/validation/freelancerValidator';
 import freelancerAuth from '../../middleware/freelancerAuth';
 import { becomeFreelancerSchema } from '../../../domain/validation/freelancerValidator';
-
+import { FreelancerController } from '../../controllers/freelancerController/freelancerAccountController';
 const router = express.Router();
 const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()

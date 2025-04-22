@@ -104,4 +104,24 @@ export class FreelancerController {
       res.status(500).json({ success: false })
     }
   }
+
+
+  async getSkills(req: Request, res: Response) {
+    try {
+        const skills = await this.freelancerUseCase.getSkills()
+        res.json(skills)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+    async dashboardData(req: Request, res: Response) {
+        try {
+            const { userId } = req.body
+            const data = await this.freelancerUseCase.dashboardData(userId)
+            res.json(data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }
