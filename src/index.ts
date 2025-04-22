@@ -4,21 +4,27 @@ import userRoute from './interfaces/routes/userRoutes/userRoute'
 import authRoute from './interfaces/routes/userRoutes/authRoutes'
 import adminRoute from './interfaces/routes/adminRoutes/adminRoute'
 import jobPostRoute from './interfaces/routes/userRoutes/jobPostRoutes'
-import freelacerRoute from './interfaces/routes/freelancerRoutes/freelancerRoute'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import { Server, Socket } from 'socket.io'
 import { createServer } from 'node:http'
 import { initSocket } from './application/services/socket'
 import morgan from 'morgan'
-import { errorHandlingMiddleware } from './interfaces/middleware/errorHandler'
 import bidRoute from "./interfaces/routes/userRoutes/bidRoute"
 import notificationRoute from "./interfaces/routes/userRoutes/notificationRoute"
 import orderRoute from "./interfaces/routes/userRoutes/orderRoute"
 import paymentRoute from "./interfaces/routes/userRoutes/paymentRoute"
 import chatRoute from './interfaces/routes/userRoutes/chatRoute'
 import reviewRoute from "./interfaces/routes/userRoutes/reviewRoute"
+
+//-------
+import freelancerBidRoutes from './interfaces/routes/freelancerRoutes/freelancerBidRoutes'
+import freelancerJobPostRoutes from './interfaces/routes/freelancerRoutes/freelancerJobPostRoutes'
+import freelancerOrderRoutes from "./interfaces/routes/freelancerRoutes/freelancerOrderRouters"
+import freelancerRoutes from './interfaces/routes/freelancerRoutes/freelancerRoute'
+import freelancerWalletRoutes from './interfaces/routes/freelancerRoutes/freelancerWallet'
+import freelancerReviewRoutes from './interfaces/routes/freelancerRoutes/freelancerReview'
+//------
 dotenv.config()
 
 const port = process.env.PORT
@@ -56,7 +62,15 @@ app.use('/api', chatRoute)
 app.use('/api', reviewRoute)
 
 app.use('/api/admin', adminRoute)
-app.use('/api/freelancer', freelacerRoute)
+
+app.use('/api/freelancer', freelancerRoutes)
+app.use('/api/freelancer', freelancerBidRoutes)
+app.use('/api/freelancer', freelancerJobPostRoutes)
+app.use('/api/freelancer', freelancerOrderRoutes)
+app.use('/api/freelancer', freelancerWalletRoutes)
+app.use('/api/freelancer', freelancerReviewRoutes)
+
+
 
 export { io }
 

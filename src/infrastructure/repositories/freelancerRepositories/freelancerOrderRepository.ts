@@ -19,7 +19,7 @@ export class FreelancerOrderRepository implements IFreelancerOrderRepository {
     }
 
 
-     async completeOrder(orderId: string, description: string, file: string) {
+     async completeOrder(orderId: string, description: string, file: any) {
             try {
                 const uploadDate = new Date()
                 const orders = await this.orderModel.updateOne(

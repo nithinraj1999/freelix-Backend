@@ -17,7 +17,6 @@ export class ReviewController {
                 review,
                 rating
             )
-
             res.status(200).json({ success: true })
         } catch (error) {
             console.error(error)
