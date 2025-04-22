@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { IAdminUseCase } from "../../application/useCases/interfaces/IAdminUseCase";
 import { jwtInterface } from "../../application/services/interfaces/jwtInterface";
-import { log } from "winston";
 
 export class AdminController {
   private adminUseCase: IAdminUseCase;
