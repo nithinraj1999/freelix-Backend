@@ -25,6 +25,17 @@ import freelancerRoutes from './interfaces/routes/freelancerRoutes/freelancerRou
 import freelancerWalletRoutes from './interfaces/routes/freelancerRoutes/freelancerWallet'
 import freelancerReviewRoutes from './interfaces/routes/freelancerRoutes/freelancerReview'
 //------
+
+import adminAuthRoutes from './interfaces/routes/adminRoutes/adminAuthRoutes'
+import adminClientRoutes from './interfaces/routes/adminRoutes/adminClientRoutes'
+import adminFreelancerRoutes from './interfaces/routes/adminRoutes/adminFreelancerRoutes'
+import adminSkillsRoutes from './interfaces/routes/adminRoutes/adminSkillRoutes'
+import adminDashboardRoutes from './interfaces/routes/adminRoutes/adminDashboardRoutes'
+
+
+
+
+//-----
 dotenv.config()
 
 const port = process.env.PORT
@@ -61,7 +72,16 @@ app.use('/api', paymentRoute)
 app.use('/api', chatRoute)
 app.use('/api', reviewRoute)
 
-app.use('/api/admin', adminRoute)
+// app.use('/api/admin',adminRoute)
+
+
+app.use('/api/admin', adminAuthRoutes)
+app.use('/api/admin', adminClientRoutes)
+app.use('/api/admin', adminFreelancerRoutes)
+app.use('/api/admin', adminSkillsRoutes)
+app.use('/api/admin', adminDashboardRoutes)
+
+
 
 app.use('/api/freelancer', freelancerRoutes)
 app.use('/api/freelancer', freelancerBidRoutes)

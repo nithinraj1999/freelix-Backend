@@ -319,7 +319,6 @@ async getAllSkills(){
     throw error
   }
 }
-
 }
 
 

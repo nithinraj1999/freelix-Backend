@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   socketId?:string;
-  password: string;  // Optional because social logins may not have it
+  password: string;  
   phone: number;
   role: "client" | "freelancer" | "admin";
   profilePicture: string;

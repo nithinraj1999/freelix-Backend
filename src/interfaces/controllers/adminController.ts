@@ -17,6 +17,7 @@ export class AdminController {
 
 
       const { email, password } = req.body;
+console.log("controller....",req.body);
 
       const admin = await this.adminUseCase.authenticateAdmin(email, password);
       if (!admin) {

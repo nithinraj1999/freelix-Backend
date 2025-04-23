@@ -5,6 +5,7 @@ import { jwtInterface } from '../../services/interfaces/jwtInterface'
 import { Cloudinary } from '../../services/cloudinary'
 import { User } from '../../../domain/entities/user'
 import { S3Bucket } from '../../services/s3bucket'
+
 export class AdminUseCase implements IAdminUseCase {
     private adminRepository: IAdminRepository
     private bcrypt: Ibcrypt
@@ -21,7 +22,11 @@ export class AdminUseCase implements IAdminUseCase {
 
     async authenticateAdmin(email: string, password: string) {
         try {
+            console.log("useCase.....");
+            
             const user = await this.adminRepository.findByEmail(email)
+            console.log(user);
+            
             if (user) {
                 if (user.password) {
                     const hashedPassword = user.password
