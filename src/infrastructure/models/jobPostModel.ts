@@ -1,21 +1,20 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 
-// Define the interface for the JobPost document
 export interface IJobPost extends Document {
-  userID?: Types.ObjectId; // Reference to the User model
+  userID?: Types.ObjectId; 
   title: string;
   category?: string;
   subCategory?: string;
   description: string;
   file?: string;
   deadline:number;
-  skills: string[]; // Array of strings
+  skills: string[]; 
   experience: string;
   paymentType:string;
   fixedPrice?: number;
   hourlyPrice?: {
-    from: number; // Start of hourly rate range
-    to: number; // End of hourly rate range
+    from: number; 
+    to: number; 
   };
   isDelete?:boolean;
   createdAt?: Date;

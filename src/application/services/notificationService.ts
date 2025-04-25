@@ -4,7 +4,7 @@ import { IBid } from "../../domain/entities/bid";
 
 export class NotificationService {
 
-    static sendJobPostNotification(freelancers: UserEntity[], jobData: any) {
+     sendJobPostNotification(freelancers: UserEntity[], jobData: any) {
         try{
 
         
@@ -65,7 +65,7 @@ export class NotificationService {
         }
     }    
 
-    static sendNotification(clientSocketID:string,bidDetails:IBid){
+     static sendNotification(clientSocketID:string,bidDetails:IBid){
         try{
             
             if (clientSocketID) { 

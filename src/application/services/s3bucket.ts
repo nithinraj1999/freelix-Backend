@@ -5,13 +5,13 @@ import {
     GetObjectCommand,
 } from '@aws-sdk/client-s3'
 import { IS3bucket } from './interfaces/IS3bucket'
-import fs from 'fs/promises'
-import { Readable } from 'stream'
+
+
 
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        accessKeyId:process.env.AWS_ACCESS_KEY_ID!,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
     },
 })
@@ -31,8 +31,11 @@ export class S3Bucket implements IS3bucket {
     ) => {
         const bucketName = process.env.AWS_BUCKET_NAME
         const key = `${folder}/${Date.now()}-${originalname}`
-        // const buffer = await fs.readFile(path)
 
+        const creds = await s3.config.credentials();
+        console.log("Resolved creds at runtime:", creds);
+        
+        
         try {
             const command = new PutObjectCommand({
                 Bucket: bucketName,

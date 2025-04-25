@@ -1,7 +1,11 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 import { User } from "../../domain/entities/user";
 
-const userSchema: Schema = new Schema({
+export interface IUserDocument extends Omit<Document, '_id'>, User {
+  
+}
+
+const userSchema: Schema = new Schema<IUserDocument>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

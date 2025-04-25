@@ -41,6 +41,7 @@ export const editJobPostSchema = Joi.object({
     skills: Joi.array()
     .optional(), // Make optional    file:Joi.string().optional(),
     totalAmount: Joi.number().positive().optional(), 
+    fixedPrice: Joi.number().positive().optional(), 
     hourlyPrice: Joi.object({
         from: Joi.number().positive().optional(),
         to: Joi.number().positive().greater(Joi.ref('from')).required(),
