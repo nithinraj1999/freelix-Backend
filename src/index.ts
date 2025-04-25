@@ -1,10 +1,13 @@
+
 import express, { Application } from 'express'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 import { connectToMongoDB } from './infrastructure/database/mongodbConnection'
 import userRoute from './interfaces/routes/userRoutes/userRoute'
 import authRoute from './interfaces/routes/userRoutes/authRoutes'
-import adminRoute from './interfaces/routes/adminRoutes/adminRoute'
 import jobPostRoute from './interfaces/routes/userRoutes/jobPostRoutes'
-import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { createServer } from 'node:http'
@@ -36,7 +39,6 @@ import adminDashboardRoutes from './interfaces/routes/adminRoutes/adminDashboard
 
 
 //-----
-dotenv.config()
 
 const port = process.env.PORT
 console.log('port', port)

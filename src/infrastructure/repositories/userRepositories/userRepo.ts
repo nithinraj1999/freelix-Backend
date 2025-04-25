@@ -92,4 +92,37 @@ export class UserRepo implements IUserRepository {
             throw error
         }
     }
+        async getUserData(userId: string) {
+            try {
+                const userData = await this.userModel.findOne(
+                    { _id: userId },
+                    { name: 1, email: 1, phone: 1, profilePicture: 1 }
+                )
+                return userData
+            } catch (error) {
+                throw error
+            }
+        }
+    
+    async getFreelancerDetails(freelancerId: string) {
+            try {
+                const details = await this.userModel.findOne({ _id: freelancerId })
+                return details
+            } catch (error) {
+                throw error
+            }
+        }
+
+            async getAllFreelancers() {
+                try {
+                    const freelancer = await this.userModel
+                        .find({ hasFreelancerAccount: true }, { _id: 1 })
+                        .lean()
+                    return freelancer
+                } catch (error) {
+                    console.error(error)
+                    throw error
+                }
+            }
+        
 }

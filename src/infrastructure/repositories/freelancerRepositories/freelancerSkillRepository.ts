@@ -1,5 +1,5 @@
 import { IFreelancerSkillRepository } from "../../../domain/interfaces/freelancer/repository/IFreelancerSkillRepository"
-export class FreelancerSkillRepository {
+export class FreelancerSkillRepository implements IFreelancerSkillRepository{
     private skillsModel: any
     constructor(skillsModel: any) {
         this.skillsModel = skillsModel

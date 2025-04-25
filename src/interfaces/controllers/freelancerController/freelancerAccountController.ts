@@ -1,10 +1,9 @@
 import { Request, Response } from 'express'
 import { jwtInterface } from '../../../application/services/interfaces/jwtInterface'
-import { FreelancerUseCaseInterface } from '../../../application/useCases/interfaces/IFreelancerUseCase'
-
+import { IFreelancerUseCase } from '../../../domain/interfaces/freelancer/useCases/IFreelancerUseCase'
 export class FreelancerController {
   constructor(
-    private freelancerUseCase: FreelancerUseCaseInterface,
+    private freelancerUseCase: IFreelancerUseCase,
     private jwt: jwtInterface
   ) {}
 

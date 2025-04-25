@@ -4,6 +4,8 @@ import freelancerAuth from '../../middleware/freelancerAuth';
 import { FreelancerOrderRepository } from '../../../infrastructure/repositories/freelancerRepositories/freelancerOrderRepository';
 import { FreelancerOrderUseCase } from '../../../application/useCases/freelancer/freelancerOrderRepository';
 import { FreelancerOrderController } from '../../controllers/freelancerController/freelancerOrderController';
+import dotenv from 'dotenv';
+dotenv.config();
 
 import OrderModel from '../../../infrastructure/models/orderModel';
 import { upload } from '../../../application/services/multer';

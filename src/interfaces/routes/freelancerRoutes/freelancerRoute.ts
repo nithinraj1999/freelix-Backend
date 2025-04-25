@@ -1,7 +1,7 @@
 import express from 'express'
 import { BcryptPasswordHasher } from '../../../application/services/bcrypt';
 import { FreelancerUseCase } from '../../../application/useCases/freelancer/freelancerUseCase';
-import { FreelancerRepository } from '../../../infrastructure/repositories/freelancerRepository';
+import { FreelancerRepository } from '../../../infrastructure/repositories/freelancerRepositories/freelancerRepository';
 import { JWT } from '../../../application/services/jwt';
 import {upload} from '../../../application/services/multer'
 import validateSchema from '../../middleware/validator';
@@ -9,12 +9,16 @@ import { editProfileSchema } from '../../../domain/validation/freelancerValidato
 import freelancerAuth from '../../middleware/freelancerAuth';
 import { becomeFreelancerSchema } from '../../../domain/validation/freelancerValidator';
 import { FreelancerController } from '../../controllers/freelancerController/freelancerAccountController';
+import userModel from '../../../infrastructure/models/userModel';
+import { FreelancerSkillRepository } from '../../../infrastructure/repositories/freelancerRepositories/freelancerSkillRepository';
+import skillsModel from '../../../infrastructure/models/skillsModel';
 const router = express.Router();
-const bcrypt = new BcryptPasswordHasher(10);
 const jwtToken = new JWT()
 
-const freelancerRepository = new FreelancerRepository();
-const freelancerUseCase = new FreelancerUseCase(freelancerRepository,bcrypt,jwtToken)
+const freelancerRepository = new FreelancerRepository(userModel);
+const freelancerSkillRepository = new FreelancerSkillRepository(skillsModel);
+
+const freelancerUseCase = new FreelancerUseCase(freelancerRepository,freelancerSkillRepository)
 const freelancerController = new FreelancerController(freelancerUseCase,jwtToken);
 
 router.post('/create-freelancer-account',upload.single('profilePicture'),validateSchema(becomeFreelancerSchema),freelancerController.createFreelancerAccount.bind(freelancerController));
