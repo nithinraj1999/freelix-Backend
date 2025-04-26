@@ -32,8 +32,7 @@ export class S3Bucket implements IS3bucket {
         const bucketName = process.env.AWS_BUCKET_NAME
         const key = `${folder}/${Date.now()}-${originalname}`
 
-        const creds = await s3.config.credentials();
-        console.log("Resolved creds at runtime:", creds);
+        
         
         
         try {
