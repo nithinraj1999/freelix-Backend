@@ -1,4 +1,4 @@
-import { User } from "../../entities/user"
+import { User } from "../../../entities/user"
 export interface IAdminAuthRepository {
     findByEmail(email: string): Promise<User | null>
   }

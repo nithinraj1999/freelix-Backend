@@ -70,7 +70,7 @@ export class UserRepo implements IUserRepository {
         }
     }
 
-    async editData(profilePicture:string,name:string,email:string,userId:string) {
+    async editData(profilePicture:string,name:string,email:string,userId:string):Promise<User> {
         try {
             const data: any = {}
             if (profilePicture) {
@@ -92,7 +92,7 @@ export class UserRepo implements IUserRepository {
             throw error
         }
     }
-        async getUserData(userId: string) {
+        async getUserData(userId: string):Promise<User> {
             try {
                 const userData = await this.userModel.findOne(
                     { _id: userId },
@@ -104,7 +104,7 @@ export class UserRepo implements IUserRepository {
             }
         }
     
-    async getFreelancerDetails(freelancerId: string) {
+    async getFreelancerDetails(freelancerId: string):Promise<User> {
             try {
                 const details = await this.userModel.findOne({ _id: freelancerId })
                 return details
@@ -113,12 +113,13 @@ export class UserRepo implements IUserRepository {
             }
         }
 
-            async getAllFreelancers() {
+            async getAllFreelancers(): Promise<Pick<User, '_id'>[]> 
+             {
                 try {
                     const freelancer = await this.userModel
                         .find({ hasFreelancerAccount: true }, { _id: 1 })
                         .lean()
-                    return freelancer
+                    return freelancer as Pick<User, '_id'>[];
                 } catch (error) {
                     console.error(error)
                     throw error

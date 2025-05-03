@@ -1,4 +1,4 @@
-export interface IBid {
+export interface Bid {
     _id?: string;
     jobId?:any
     bidAmount:number;

@@ -1,4 +1,6 @@
 import { IChatRepository } from "../../../domain/interfaces/user/repositoryInterfaces/IChatRepository"
+import { Chat } from "../../../domain/entities/chat"
+
 export class Chatrepository implements IChatRepository{
 
     private messageModel
@@ -7,7 +9,7 @@ export class Chatrepository implements IChatRepository{
     }
 
 
-    async fetchAllContacts(userId: string) {
+    async fetchAllContacts(userId: string): Promise<{ id: string; name: string }[]>  {
         try {
             const messages = await this.messageModel.find({
                 $or: [{ senderId: userId }, { recipientId: userId }],
@@ -16,10 +18,8 @@ export class Chatrepository implements IChatRepository{
                 .populate('recipientId', 'name')
                 .lean()
 
-            // Extract unique contacts
             const contactMap = new Map<string, { id: string; name: string }>()
             messages.forEach((message:any) => {
-                // Normalize senderId and recipientId
                 const sender =
                     typeof message.senderId === 'string'
                         ? { _id: message.senderId, name: null }
@@ -29,7 +29,6 @@ export class Chatrepository implements IChatRepository{
                         ? { _id: message.recipientId, name: null }
                         : message.recipientId
 
-                // Add sender to the map
                 if (sender._id !== userId) {
                     contactMap.set(sender._id.toString(), {
                         id: sender._id.toString(),
@@ -37,7 +36,6 @@ export class Chatrepository implements IChatRepository{
                     })
                 }
 
-                // Add recipient to the map
                 if (recipient._id !== userId) {
                     contactMap.set(recipient._id.toString(), {
                         id: recipient._id.toString(),
@@ -46,9 +44,7 @@ export class Chatrepository implements IChatRepository{
                 }
             })
 
-            // Convert Map to Array
             const contacts = Array.from(contactMap.values())
-            console.log(contacts)
 
             return contacts
         } catch (error) {
@@ -57,7 +53,7 @@ export class Chatrepository implements IChatRepository{
     }
 
 
-    async fetchChat(userId: string, contactId: string) {
+    async fetchChat(userId: string, contactId: string):Promise<Chat> {
         try {
             const chat = await this.messageModel.find({
                 $or: [

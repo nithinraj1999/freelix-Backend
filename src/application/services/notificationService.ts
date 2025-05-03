@@ -1,6 +1,6 @@
 import { io } from "../../index"; // Import the io instance
 import { User as UserEntity } from "../../domain/entities/user"; 
-import { IBid } from "../../domain/entities/bid";
+import { Bid } from "../../domain/entities/bid";
 
 export class NotificationService {
 
@@ -36,7 +36,7 @@ export class NotificationService {
     }
     }
 
-     static sendNewBidDetails(clientSocketID:string,bidDetails:IBid){
+     static sendNewBidDetails(clientSocketID:string,bidDetails:Bid){
         try{
             console.log("socket.......",bidDetails.jobId?._id);
             const jobId = bidDetails.jobId?._id.toString()
@@ -65,7 +65,7 @@ export class NotificationService {
         }
     }    
 
-     static sendNotification(clientSocketID:string,bidDetails:IBid){
+     static sendNotification(clientSocketID:string,bidDetails:Bid){
         try{
             
             if (clientSocketID) { 

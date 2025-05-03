@@ -8,7 +8,7 @@ export class JobPostRepository implements IJobPostRepository {
         this.jobPostModel = jobPostModel
     }
 
-    async createJobPost(data: IJobPost, file: string | null) {
+    async createJobPost(data: IJobPost, file: string | null):Promise<IJobPost> {
         try {
             const {
                 userID,
@@ -153,7 +153,7 @@ export class JobPostRepository implements IJobPostRepository {
     }
 
 
-    async jobDetails(jobId: string) {
+    async jobDetails(jobId: string):Promise<IJobPost> {
         try {
             const jobDetails = await this.jobPostModel.findOne({ _id: jobId })
             return jobDetails

@@ -1,4 +1,3 @@
-
 import mongoose, { Document, Schema } from 'mongoose';
 import { Order,OrderStatus, PaymentStatus } from './interface/IOrders';
 
@@ -12,8 +11,8 @@ const OrderSchema = new Schema<Order & Document>({
   orderDate: { type: Date, default: Date.now },
   total:{type:Number,required:true},
   delivery: {
-    description: { type: String }, // Description from the freelancer
-    fileUrl: { type: String },      // URL of the uploaded PDF file in Cloudinary
+    description: { type: String }, 
+    fileUrl: { type: String },
     uploadDate: { type: Date, default: Date.now },
   },
   isPaymentReleased:{
