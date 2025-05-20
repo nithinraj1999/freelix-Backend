@@ -9,7 +9,7 @@ export class Chatrepository implements IChatRepository{
     }
 
 
-    async fetchAllContacts(userId: string): Promise<{ id: string; name: string }[]>  {
+    async fetchAllContacts(userId: string)  {
         try {
             const messages = await this.messageModel.find({
                 $or: [{ senderId: userId }, { recipientId: userId }],
@@ -53,15 +53,18 @@ export class Chatrepository implements IChatRepository{
     }
 
 
-    async fetchChat(userId: string, contactId: string):Promise<Chat> {
+    async fetchChat(userId: string, contactId: string):Promise<any> {
         try {
+            console.log(userId);
+                        console.log(contactId);
+
             const chat = await this.messageModel.find({
                 $or: [
                     { senderId: userId, recipientId: contactId },
                     { senderId: contactId, recipientId: userId },
                 ],
-            }).sort({ createdAt: 1 })
-
+            }).sort({ timestamp: 1 })
+            
             return chat
         } catch (error) {
             console.error(error)

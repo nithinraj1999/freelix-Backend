@@ -53,7 +53,7 @@ export class JobPostRepository implements IJobPostRepository {
         }
     }
 
-    async getAllJobPosts(userID: string, searchQuery: string, page: string) {
+    async getAllJobPosts(userID: string, searchQuery: string, page: string): Promise<{ MyPost: IJobPost[]; totalDocs: number }> {
         try {
             const searchFilter = searchQuery
                 ? {

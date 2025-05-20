@@ -1,10 +1,9 @@
 import { IChatRepository } from '../../../../domain/interfaces/user/repositoryInterfaces/IChatRepository'
 import { IChatUseCase } from '../../../../domain/interfaces/user/useCaseInterfaces/IChatUseCase'
-
+import { S3Bucket } from '../../../services/s3bucket'
 export class ChatUseCase implements IChatUseCase {
-
     private chatRepository: IChatRepository
-    
+
     constructor(chatRepository: IChatRepository) {
         this.chatRepository = chatRepository
     }
@@ -27,4 +26,30 @@ export class ChatUseCase implements IChatUseCase {
             throw error
         }
     }
+
+    async fileUpload(file: any) {
+        try {
+            let image = null
+            if (file) {
+                const { originalname, buffer, mimetype } = file
+                const awsS3 = new S3Bucket()
+                image = await awsS3.uploadProfilePic(
+                    originalname,
+                    buffer,
+                    mimetype,
+                    'chat-files'
+                )
+               if(image){
+                return image
+               }
+            }
+             
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // async downloadAttachment(url:string){
+
+    // }
 }

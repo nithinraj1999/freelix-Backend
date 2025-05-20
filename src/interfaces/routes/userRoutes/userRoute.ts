@@ -9,6 +9,7 @@ import { JWT } from '../../../application/services/jwt';
 import { upload } from '../../../application/services/multer';
 import userAuthMiddleware from '../../middleware/auth';
 import userModel from '../../../infrastructure/models/userModel';
+
 const router = express.Router();
 
 // Set up dependencies

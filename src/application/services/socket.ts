@@ -37,13 +37,15 @@ export const initSocket = (server: HttpServer) => {
         })
 
         socket.on('sendMessage', async (message) => {
-            const { senderId, recipientId, text, name, timestamp } = message
+            const { senderId, recipientId, text, name, timestamp,file } = message
+console.log("...service",file);
 
             try {
                 const newMessage = new MessageModel({
                     senderId,
                     recipientId,
                     text,
+                    file,
                     timestamp,
                 })
                 await newMessage.save()
@@ -54,6 +56,7 @@ export const initSocket = (server: HttpServer) => {
                         name,
                         senderId,
                         text,
+                        file,
                         timestamp,
                         recipientId,
                     })
