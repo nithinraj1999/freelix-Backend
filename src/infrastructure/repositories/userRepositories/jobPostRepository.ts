@@ -79,12 +79,13 @@ export class JobPostRepository implements IJobPostRepository {
         }
     }
 
-    async deleteJobPost(jobId: string) {
+    async deleteJobPost(jobId: string):Promise<IJobPost | undefined> {
         try {
             const result = await this.jobPostModel.findByIdAndUpdate(
                 { _id: jobId },
                 { $set: { isDelete: true } }
             ) 
+
             return result
         } catch (error) {
             console.error(`Error deleting job with ID ${jobId}:`, error)
@@ -92,7 +93,7 @@ export class JobPostRepository implements IJobPostRepository {
     }
 
 
-    async editPost(data: any) {
+    async editPost(data: any):Promise<IJobPost |null> {
         try {
             const {
                 _id,

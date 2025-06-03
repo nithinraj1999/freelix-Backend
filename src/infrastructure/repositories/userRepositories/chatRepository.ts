@@ -9,7 +9,7 @@ export class Chatrepository implements IChatRepository{
     }
 
 
-    async fetchAllContacts(userId: string)  {
+    async fetchAllContacts(userId: string):Promise< { id: string; name: string }[]>  {
         try {
             const messages = await this.messageModel.find({
                 $or: [{ senderId: userId }, { recipientId: userId }],
@@ -53,7 +53,7 @@ export class Chatrepository implements IChatRepository{
     }
 
 
-    async fetchChat(userId: string, contactId: string):Promise<any> {
+    async fetchChat(userId: string, contactId: string):Promise<Chat> {
         try {
             console.log(userId);
                         console.log(contactId);
