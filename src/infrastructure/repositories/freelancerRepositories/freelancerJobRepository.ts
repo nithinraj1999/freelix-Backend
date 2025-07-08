@@ -39,24 +39,28 @@ export class FreelancerJobRepository implements IFreelancerJobPostRepository{
                 query.paymentType = projectType
             }
 
-            if (minPrice || maxPrice) {
-                const min = minPrice ? parseInt(minPrice, 10) : undefined
-                const max = maxPrice ? parseInt(maxPrice, 10) : undefined
+  const min = minPrice ? parseInt(minPrice, 10) : undefined
+const max = maxPrice ? parseInt(maxPrice, 10) : undefined
+    if (min !== undefined || max !== undefined) {
+        query.fixedPrice = {}
+        if (min !== undefined) query.fixedPrice.$gte = min
+        if (max !== undefined) query.fixedPrice.$lte = max
+    }
+if (projectType === 'fixed') {
 
-                if (projectType === 'fixed') {
-                    query.fixedPrice = {}
-                    if (min !== undefined) query.fixedPrice.$gte = min
-                    if (max !== undefined) query.fixedPrice.$lte = max
-                } else if (projectType === 'hourly') {
-                    query.$and = []
-                    if (min !== undefined) {
-                        query.$and.push({ 'hourlyPrice.from': { $gte: min } })
-                    }
-                    if (max !== undefined) {
-                        query.$and.push({ 'hourlyPrice.to': { $lte: max } })
-                    }
-                }
-            }
+} else if (projectType === 'hourly') {
+    const hourlyConditions = []
+    if (min !== undefined) {
+        hourlyConditions.push({ 'hourlyPrice.from': { $gte: min } })
+    }
+    if (max !== undefined) {
+        hourlyConditions.push({ 'hourlyPrice.to': { $lte: max } })
+    }
+    if (hourlyConditions.length > 0) {
+        query.$and = hourlyConditions
+    }
+}
+
 
             if (skills && skills.length > 0) {
                 query.skills = { $in: skills }
@@ -87,9 +91,13 @@ export class FreelancerJobRepository implements IFreelancerJobPostRepository{
                 query.experience = experience
             }
             const skip = parseInt(page) * 3 - 3
+            console.log(query);
+            console.log(minPrice);
+                        console.log(maxPrice);
+
             const jobList = await this.jobPostModel
                 .find(query)
-                .sort(sortOption)
+                .sort(sortOption) 
                 .skip(skip)
                 .limit(3)
             const count = await this.jobPostModel.countDocuments(query)

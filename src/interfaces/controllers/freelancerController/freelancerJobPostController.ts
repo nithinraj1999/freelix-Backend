@@ -17,7 +17,8 @@ export class FreelancerJobPostController {
         experience
       } = req.query as any
       const { freelancerSkills } = req.body
-
+      // console.log(req.query);
+      
       const { jobList, count } = await this.freelancerJobPostUseCase.getJobList(
         projectType,
         minPrice,
@@ -30,6 +31,8 @@ export class FreelancerJobPostController {
         experience,
         freelancerSkills
       )
+      // console.log(jobList);
+      
       res.status(200).json({ success: true, jobList, jobListCount: count })
     } catch (error) {
       console.error(error)

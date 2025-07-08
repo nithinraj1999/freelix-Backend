@@ -12,6 +12,7 @@ export class FreelancerOrderRepository implements IFreelancerOrderRepository {
                 .populate({ path: 'projectId', select: 'title description' })
                 .populate({ path: 'bidId', select: 'deliveryDays' })
                 .populate({ path: 'clientId', select: 'profilePicture' })
+                
             return orders
         } catch (error) {
             throw error
